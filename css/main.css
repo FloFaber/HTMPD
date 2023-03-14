@@ -1,0 +1,191 @@
+:root{
+  --primary: #ff0066;
+  --light-grey: #f1f1f3;
+  --black: #030303;
+  --white: #fcfcfc;
+  --red:   #ff0000;
+  --green: #00ff00;
+  --yellow:#ffff00;
+}
+
+html,body{
+  height: 100vh;
+}
+
+body{
+  margin: 0;
+  display: flex;
+  flex-flow: row;
+  font-family: monospace;
+  color: var(--black);
+}
+
+div#body{
+  display: flex;
+  flex-flow: column;
+  flex-grow: 1;
+}
+
+div#sidebar{
+  max-width: 200px;
+  width: 100%;
+  border-right: 1px solid var(--light-grey);
+  padding: 0 20px;
+  text-align: center;
+}
+
+div.sidebar-item{
+  position: relative;
+  text-align: center;
+}
+div.sidebar-item.active a{
+  background-color: var(--primary);
+  color: var(--white)!important;
+}
+div.sidebar-item a{
+  width: 100%;
+  display: inline-block;
+  text-decoration: none;
+}
+div.sidebar-item a:hover{
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+div.sidebar-item a:before{
+  content: "[";
+  position: absolute;
+  left: 2px;
+}
+div.sidebar-item a:after{
+  content: "]";
+  position: absolute;
+  right: 2px;
+}
+
+div#sidebar h1#title{ margin-bottom: 0;}
+div#sidebar div#subtitle{ margin-bottom: 35px; color: grey; font-size:10px;}
+
+div#content{
+  padding: 20px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+
+a{
+  color: var(--primary);
+}
+
+button{
+  background: none;
+  color: var(--primary);
+  display: inline-block;
+  outline: none;
+  border: none;
+  position: relative;
+  padding: 2px 2px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+button:hover{
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+button:before{
+  content: "[";
+  margin-right: 5px;
+/*  position: absolute;*/
+  left: 3px;
+}
+
+button:after{
+  content: "]";
+  margin-left: 5px;
+/*  position: absolute;*/
+  right: 3px;
+}
+
+button.inline{
+  font-weight: normal;
+  padding: 0 2px;
+  color: grey;
+}
+button.inline:before{
+  margin-right: 0;
+  color: var(--black);
+}
+button.inline:after{
+  margin-left: 0;
+  color: var(--black);
+}
+button.inline:hover{
+  background-color: unset;
+}
+
+button.inline:hover:before,button.inline:hover:after{ color: var(--primary); }
+button.inline.red:hover:before,button.inline.red:hover:after{ color: var(--red); }
+button.inline.green:hover:before,button.inline.green:hover:after{ color: var(--green); }
+button.inline.yellow:hover:before,button.inline.yellow:hover:after{ color: var(--yellow); }
+
+
+
+table#shortcuts th{
+  text-align: left;
+  padding-right: 25px;
+}
+
+div#notifications{
+  position: absolute;
+  top: 0; right: 0;
+  margin: 15px;
+  z-index: 10;
+  max-width: 300px;
+  width: 100%;
+}
+
+div.notification{
+  background-color: white;
+  border: 2px solid black;
+  padding: 15px;
+  margin-bottom: 5px;
+}
+
+div.notification.error{
+  border-color: red;
+}
+
+div.notification.success{
+  border-color: green;
+}
+
+div#queue{
+  margin-top: 10px;
+}
+
+div.queue-item{
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+}
+div.queue-item.active{
+  color: var(--primary);
+}
+
+span.queue-item-title{
+  cursor: pointer;
+}
+span.queue-item-title:hover{
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+span.queue-item-actions{
+  margin-right: 10px;
+}
+
+.cursor-pointer, .cursor-pointer *{ cursor: pointer!important; }
+.cursor-progress, .cursor-progress *{ cursor: progress!important; }

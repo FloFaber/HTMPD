@@ -1,0 +1,28 @@
+div#player{
+  border-bottom: 1px solid var(--light-grey);
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+div#player-controls, div#player-time{
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+div#player-song{
+  margin: 0 40px;
+  cursor: col-resize;
+  max-width: 50%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+input#volume{
+  width: 120px;
+  margin: 0;
+}
