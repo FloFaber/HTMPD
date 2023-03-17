@@ -22,6 +22,13 @@ div#player-song{
   overflow: hidden;
 }
 
+div#player-modes{
+  margin: 0 40px;
+}
+div#player-modes > div{
+  display: flex;
+}
+
 input#volume{
   width: 120px;
   margin: 0;

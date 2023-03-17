@@ -47,8 +47,21 @@ function sec2minsec(secs){
   return minutes.toString().padStart(2,"0") + ":" + seconds.toString().padStart(2,"0");
 }
 
-function song2text(songobj){
-
+function song2text(song){
+  let text = "";
+  if(song){
+    if(song.file.startsWith("http://") || song.file.startsWith("https://")){
+      if(song.name){
+        text = song.name;
+      }else{
+        text = song.file;
+      }
+    }else{
+      if(song.name){ text += song.name+": "; }
+      if(song.title){ text += song.title; }else{ text = song.file.split("/").pop(); }
+    }
+  }
+  return text;
 }
 
 function set_content_cursor(cursor = "unset"){
@@ -58,3 +71,15 @@ function set_content_cursor(cursor = "unset"){
 function map(i, in_min, in_max, out_min, out_max){
   return (i - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
+
+function darkness(state){
+  if(state){
+    $("div#darkness").css("display", "flex");
+  }else{
+    $("div#darkness").css("display", "none");
+  }
+  $("div.darkness-item").click(function(e){ console.log("CLICK"); e.stopPropagation(); });
+}
+
+function darkness_on(){ darkness(true); }
+function darkness_off(){ darkness(false); }

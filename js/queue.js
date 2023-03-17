@@ -1,5 +1,18 @@
 let last_queue_item_marked = null;
 
+$("button#queue-add").click(function(){
+  $("div#darkness").html(`
+    <div class="darkness-item">
+      <form name="add" method="post" action="${window.WEBROOT}/api/queue.php"
+            onsubmit="form_submit(event)" ondone="darkness_off;queue_refresh;">
+        <input type="text" placeholder="URI" id="uri" name="uri"/>
+        <button type="submit">add</button>
+      </form>
+    </div>
+  `);
+  darkness(true);
+});
+
 function queue_item_mark(e){
   let btn = $(e.target);
   let id = btn.parent().parent().data("id");
@@ -37,20 +50,21 @@ function queue_refresh(){
       let s = `<div class="queue-item" id="queue-item-all" data-id="all">
         <span class="queue-item-actions">
           <button class="queue-item-mark inline blue" title="mark all"> </button>
-          <button class="queue-item-remove inline red" title="remove all from queue">-</button>
-          <button class="queue-item-add inline green" title="add all to playlist">+</button>
+          <button class="queue-item-remove inline red" title="remove selected items from queue">-</button>
+          <button class="queue-item-add inline green" title="add selected items to playlist">+</button>
         </span>
       </div>`.replace(/\n(\s*)/g, "");
 
       for(let i = 0; i < r.queue.length; i++){
         let q = r.queue[i];
-        s += `<div class="queue-item" id="queue-item-${ q.id }" data-id="${ q.id }">
+        s += `<div class="queue-item ` + (window.player_data !== null && window.player_data.status.songid === q.id ? "active" : "") + `"
+                   id="queue-item-${ q.id }" data-id="${ q.id }">
           <span class="queue-item-actions">
             <button class="queue-item-mark inline blue" title="mark"> </button>
             <button class="queue-item-remove inline red" title="remove from queue">-</button>
             <button class="queue-item-add inline green" title="add to playlist">+</button>
           </span>
-          <span class="queue-item-title">${ htmlspecialchars(q.file) }</span>
+          <span class="queue-item-title">${ htmlspecialchars(song2text(q)) }</span>
         </div>`.replace(/\n(\s*)/g, ""); // remove linebreaks and spaces from indentation
       }
       if(r.queue.length === 0){

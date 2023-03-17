@@ -22,36 +22,16 @@ $action = getrp("action", $method, null);
 if($method === "get"){
 
   if($action === null){
-
-    if(($queue = $mphpd->queue()->get()) === false){
+    $path = urldecode(getrp("path", "get", null) ?? "");
+    if(($library = $mphpd->db()->ls($path ?? "", true, false)) === false){
       echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
       return false;
     }
-
-    //$r = new Response();
-    //$r->add("queue", $queue);
-    echo (new Response)->add("queue", $queue);
+    echo (new Response(200))->add("library", $library);
     return true;
-
-  }
-
-}elseif($method === "post"){
-
-  if($action === "add"){
-    if(($uri = getrp("uri", "post", null)) === null){
-      echo new Response(400); return false;
-    }
-
-    if($mphpd->queue()->add($uri) === false){
-      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]); return false;
-    }
-
-    echo new Response(); return true;
-
   }
 
 }
 
-
-// bad request
 echo new Response(400);
+return false;

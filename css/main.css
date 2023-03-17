@@ -8,6 +8,11 @@
   --yellow:#ffff00;
 }
 
+*{
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
 html,body{
   height: 100vh;
 }
@@ -90,7 +95,7 @@ button{
   font-size: inherit;
 }
 
-button:hover{
+button:hover,button.active{
   background-color: var(--primary);
   color: var(--white);
 }
@@ -155,11 +160,27 @@ div.notification{
 }
 
 div.notification.error{
-  border-color: red;
+  border-color: var(--red);
 }
 
 div.notification.success{
-  border-color: green;
+  border-color: var(--green);
+}
+
+div#darkness{
+  position: fixed;
+  top:0;left:0;right:0;bottom:0;
+  z-index: 100;
+  background-color: rgba(0,0,0,.7);
+  align-items: center;
+  justify-content: center;
+  /*display: flex;*/
+  display: none;
+}
+div.darkness-item{
+  padding: 30px;
+  background-color: var(--white);
+  border: 1px solid var(--primary);
 }
 
 div#queue{

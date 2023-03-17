@@ -1,0 +1,15 @@
+div#library,div#library-path{
+  margin-bottom: 15px;
+}
+
+div.library-item span{
+  cursor: pointer;
+}
+div.library-item span:hover, div.library-item a:hover{
+  color: var(--white);
+  background-color: var(--primary);
+}
+div.library-item a{
+  text-decoration: none;
+}
+

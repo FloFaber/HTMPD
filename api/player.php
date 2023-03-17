@@ -108,26 +108,20 @@ if($method === "get"){
     echo new Response();
     return true;
 
-  }elseif($action === "consume"){
+  }elseif(in_array($action, [ "consume", "repeat", "single", "random" ])){
 
     if(($state = getrp("state", "post", null)) === null){
       echo new Response(400);
       return false;
     }
 
-    $state = inval(boolval($state));
-    if($mphpd->player()->consume($state) === false){
+    $state = intval(boolval($state));
+    if($mphpd->player()->$action($state) === false){ // oh shit
       echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
       return false;
     }
     echo new Response();
     return true;
-
-  }elseif($action === "random"){
-
-  }elseif($action === "repeat"){
-
-  }elseif($action === "single"){
 
   }elseif($action === "seek_cur"){
 
