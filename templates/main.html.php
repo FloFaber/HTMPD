@@ -1,6 +1,7 @@
 <?php
-require_once __DIR__ . "/../inc/config.php";
-function is_active($page){
+require_once __DIR__ . "/../config.php";
+function is_active($page): bool
+{
   $uri = $_SERVER['REQUEST_URI'];
   return $uri === WEBROOT."/page/".$page || ($page === "" && $uri === WEBROOT."/");
 }
