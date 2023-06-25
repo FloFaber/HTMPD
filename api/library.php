@@ -1,17 +1,20 @@
 <?php
 
-require_once __DIR__ . "/../inc/mphpd/mphpd.php";
-require_once __DIR__ . "/../inc/config.php";
+require_once __DIR__ . "/../inc/MphpD/MphpD.php";
+require_once __DIR__ . "/../config.php";
 require_once __DIR__ . "/../inc/Response.class.php";
 require_once __DIR__ . "/../inc/utils.php";
 
+use FloFaber\MphpD\MphpD;
+use FloFaber\MphpD\MPDException;
+
 header("Content-type: application/json");
 
-$mphpd = new FloFaber\MphpD(CONFIG);
+$mphpd = new MphpD(CONFIG);
 
 try{
   $mphpd->connect();
-}catch(FloFaber\MPDException $e){
+}catch(MPDException $e){
   echo new Response(500, "ERR_CONNECTION", $e->getMessage());
   return false;
 }
