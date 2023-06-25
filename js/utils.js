@@ -49,7 +49,7 @@ function sec2minsec(secs){
 
 function song2text(song){
   let text = "";
-  if(song){
+  if(song && song.file){
     if(song.file.startsWith("http://") || song.file.startsWith("https://")){
       if(song.name){
         text = song.name;
