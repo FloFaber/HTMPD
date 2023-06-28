@@ -43,7 +43,7 @@ function notification(type, msg = ""){
 
 function sec2minsec(secs){
   let minutes = Math.floor(secs / 60);
-  let seconds = secs - minutes * 60;
+  let seconds = Math.floor(secs - minutes * 60);
   return minutes.toString().padStart(2,"0") + ":" + seconds.toString().padStart(2,"0");
 }
 
