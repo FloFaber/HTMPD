@@ -34,6 +34,17 @@ if($method === "get"){
     return true;
   }
 
+}elseif($method === "post"){
+
+  if($action === "update"){
+    if(($update = $mphpd->db()->update()) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+    echo (new Response(200))->add("job", $update);
+    return true;
+  }
+
 }
 
 echo new Response(400);
