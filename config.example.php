@@ -16,5 +16,8 @@ const CONFIG = [
  * If MphpD-WebUI should run in a subfolder eg "http://example.com/mpd" set the path after the domain as WEBROOT eg "/mpd".
  * If it should run inside the root folder, leave it empty.
  */
-const WEBROOT = "/mphpd";
+const WEBROOT = "/mpd";
 // const WEBROOT = "";
+
+// Name of the theme to be used (/theme/NAME-OF-THEME/)
+const THEME = "default";
