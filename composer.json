@@ -1,5 +1,6 @@
 {
     "require": {
-        "flofaber/mphpd": "^1.0"
+        "flofaber/mphpd": "^1.0",
+        "twig/twig": "^3.0"
     }
 }
