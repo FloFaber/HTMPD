@@ -1,0 +1,25 @@
+{
+  "name": "flofaber/mphpd",
+  "description": "A PHP library for the Music Player Daemon",
+  "require": {
+    "php": ">=7.4",
+    "ext-sockets": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "9.5.27",
+    "phpdocumentor/reflection-docblock": "^5.3",
+    "erusev/parsedown": "^1.7"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Florian Faber",
+      "email": "contact@flofaber.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "FloFaber\\MphpD\\": "src/"
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+    "require": {
+        "flofaber/mphpd": "^1.0"
+    }
+}
