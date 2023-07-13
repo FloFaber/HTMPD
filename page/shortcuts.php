@@ -1,7 +1,17 @@
 <?php
 
-$title = "Keyboard Shortcuts";
-$body = "<table id='shortcuts'>
+if (!file_exists(__DIR__ . "/../config.php")) {
+  echo "ERROR: config.php not found. Please move config.example.php to config.php and configure correctly.<br>\n";
+  die();
+}
+require_once __DIR__ . "/../config.php";
+require_once __DIR__ . "/../inc/twig.loader.php";
+
+echo $twig->render("main.html", [
+  "title" => "Keyboard Shortcuts",
+  "body" => [
+    "id" => "shortcuts",
+    "content" => "<table id='shortcuts'>
   <tr>
     <th>Shortcut</th>
     <th>Action</th>
@@ -18,7 +28,6 @@ $body = "<table id='shortcuts'>
     <td>+ / -</td>
     <td>increase / decrease volume</td>
   </tr>
-</table>
-";
-
-require __DIR__ . "/../templates/main.html.php";
+</table>"
+  ]
+]);

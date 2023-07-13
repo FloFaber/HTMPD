@@ -136,7 +136,9 @@ button.inline.red:hover:before,button.inline.red:hover:after{ color: var(--red);
 button.inline.green:hover:before,button.inline.green:hover:after{ color: var(--green); }
 button.inline.yellow:hover:before,button.inline.yellow:hover:after{ color: var(--yellow); }
 
-
+div#action-buttons{
+  margin-bottom: 10px;
+}
 
 table#shortcuts th{
   text-align: left;
@@ -184,7 +186,7 @@ div.darkness-item{
 }
 
 div#queue{
-  margin-top: 10px;
+
 }
 
 div.queue-item{
