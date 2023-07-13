@@ -1,7 +1,7 @@
 <?php
 
 if(!file_exists(__DIR__ . "/../config.php")){
-  echo "ERROR: config.php not found. Please move config.example.php to config.php and configure correnctly.<br>\n";
+  echo "ERROR: config.php not found. Please move config.example.php to config.php and configure correctly.<br>\n";
   die();
 }
 
