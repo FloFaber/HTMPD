@@ -170,7 +170,7 @@ function player_refresh(){
 
 
     }, error: function(r){
-      notification(NOTYPE_ERR, r.error);
+      notification(NOTYPE_ERR, r);
     }
   });
 }
@@ -204,7 +204,7 @@ function player_update_time(duration, elapsed){
   $("span#player-time-percent").text(percent_text);
 
   // update progress
-  let player_song = "<span>";
+  let player_song = "<span id='player-song-played'>";
   let current = $("div#player-song").text();
   let chars = Math.round((current.length * percent) / 100);
 
@@ -212,13 +212,13 @@ function player_update_time(duration, elapsed){
     for(let i = 0; i < chars; i++){
       player_song += htmlspecialchars(current[i]);
     }
-    player_song += "</span><span style='color: grey;'>";
+    player_song += "</span><span id='player-song-unplayed'>";
     for(let i = chars; i < current.length; i++){
       player_song += htmlspecialchars(current[i]);
     }
     player_song += "</span>";
   }else{
-    player_song = "<span>" + htmlspecialchars(current) + "</span>";
+    player_song = "<span id='player-song-played'>" + htmlspecialchars(current) + "</span>";
   }
 
   $("div#player-song").html(player_song);

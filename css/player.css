@@ -22,6 +22,14 @@ div#player-song{
   overflow: hidden;
 }
 
+span#player-song-played{
+
+}
+
+span#player-song-unplayed{
+  color: grey;
+}
+
 div#player-modes{
   margin: 0 40px;
 }
