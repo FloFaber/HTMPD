@@ -12,13 +12,13 @@ function is_active($page): bool
     <title>MPD WebUI</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="stylesheet" href="<?= WEBROOT ?>/css/main.css"/>
-    <link rel="stylesheet" href="<?= WEBROOT ?>/css/player.css"/>
+    <link rel="stylesheet" href="<?= WEBROOT ?>/themes/<?= THEME ?>/css/main.css"/>
+    <link rel="stylesheet" href="<?= WEBROOT ?>/themes/<?= THEME ?>/css/player.css"/>
 <?php
 if(isset($csss)){
   foreach($csss as $css){
 ?>
-    <link rel="stylesheet" href="<?= WEBROOT ?>/<?= $css ?>"/>
+    <link rel="stylesheet" href="<?= WEBROOT ?>/themes/<?= THEME ?>/<?= $css ?>"/>
 <?php
   }
 }
