@@ -84,7 +84,7 @@ function queue_refresh(){
 
     },
     error: function(r){
-      notification(NOTYPE_ERR, "asdf asdf"); //@ToDo
+      notification(NOTYPE_ERR, r);
     }
   });
 }
