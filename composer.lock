@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "flofaber/mphpd",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FloFaber/MphpD.git",
-                "reference": "c8acad27290db9365d676319a00b548234ab5827"
+                "reference": "98b152311adc5615e1f3a3f9c12ff9bcd3ef4c38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FloFaber/MphpD/zipball/c8acad27290db9365d676319a00b548234ab5827",
-                "reference": "c8acad27290db9365d676319a00b548234ab5827",
+                "url": "https://api.github.com/repos/FloFaber/MphpD/zipball/98b152311adc5615e1f3a3f9c12ff9bcd3ef4c38",
+                "reference": "98b152311adc5615e1f3a3f9c12ff9bcd3ef4c38",
                 "shasum": ""
             },
             "require": {
@@ -48,9 +48,9 @@
             "description": "A PHP library for the Music Player Daemon",
             "support": {
                 "issues": "https://github.com/FloFaber/MphpD/issues",
-                "source": "https://github.com/FloFaber/MphpD/tree/v1.0.0"
+                "source": "https://github.com/FloFaber/MphpD/tree/v1.0.1"
             },
-            "time": "2023-07-12T18:54:28+00:00"
+            "time": "2023-07-20T17:41:56+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
