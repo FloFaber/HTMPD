@@ -16,7 +16,7 @@
         <a href="/">MphpD</a>
     </div>
     <div id="header-right">
-        <span>v1.0.0</span>
+        <span>v1.0.1</span>
         <a href="/latest/overview.html">Documentation</a>
         <a href="https://github.com/FloFaber/MphpD">GitHub</a>
     </div>
@@ -26,9 +26,8 @@
 <h1>Versions</h1>
 <ul id="versions"></ul>
 <script>
-    let sorted = window.versions.sort();
-    for(let i = 0; i < sorted.length; i++){
-      let version = sorted[i];
+    for(let i = 0; i < window.versions.length; i++){
+      let version = window.versions[i];
       document.getElementById("versions").innerHTML += "<li><a href='/"+version+"/overview.html'>"+version+"</a></li>";
     }
 </script>
@@ -567,6 +566,7 @@
  - Function to parse an MPD error string to an array</li>
 
 </ul>
+
 </div>
 <div style="text-align: center; padding: 30px;">&copy; 2023 Florian Faber</div>
 <script>hljs.highlightAll();</script>
