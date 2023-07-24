@@ -142,6 +142,7 @@ function player_refresh(){
         text = "[ STOPPED ]";
       }
       $("div#player-song").text(text);
+      $("div#player-song-artist").text(cs.artist || "");
 
       // update volume
       $("input#volume").val(s.volume);
@@ -236,6 +237,6 @@ function player_increase_time(){
  * END PLAYER FUNCTIONS
 */
 
-setInterval(player_refresh, 5000);
+setInterval(player_refresh, 50000);
 setInterval(player_increase_time, 1000);
 player_refresh();

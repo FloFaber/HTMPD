@@ -5,7 +5,7 @@ div#library,div#library-path{
 div.library-item span{
   cursor: pointer;
 }
-div.library-item span:hover, div.library-item a:hover{
+div.library-item .library-item-name:hover{
   color: var(--white);
   background-color: var(--primary);
 }

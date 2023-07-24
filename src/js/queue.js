@@ -57,14 +57,18 @@ function queue_refresh(){
 
       for(let i = 0; i < r.queue.length; i++){
         let q = r.queue[i];
+        console.log(q);
         s += `<div class="queue-item ` + (window.player_data !== null && window.player_data.status.songid === q.id ? "active" : "") + `"
                    id="queue-item-${ q.id }" data-id="${ q.id }">
           <span class="queue-item-actions">
             <button class="queue-item-mark inline blue" title="mark"> </button>
-            <button class="queue-item-remove inline red" title="remove from queue">-</button>
+            <button class="queue-item-remove inline red" title="remove from queue" data-id="${q.id}">-</button>
             <button class="queue-item-add inline green" title="add to playlist">+</button>
           </span>
-          <span class="queue-item-title">${ htmlspecialchars(song2text(q)) }</span>
+          <span class="queue-item-song" data-id="${ q.id }">
+            <span class="queue-item-artist">${(q.artist ? htmlspecialchars(q.artist) + " - " : "")}</span>
+            <span class="queue-item-title" title="${q.file}">${ htmlspecialchars(song2text(q)) }</span>
+          </span>
         </div>`.replace(/\n(\s*)/g, ""); // remove linebreaks and spaces from indentation
       }
       if(r.queue.length === 0){
@@ -72,11 +76,26 @@ function queue_refresh(){
       }
       $("div#queue").html(s);
 
-      $("span.queue-item-title").click(function(){
-        let id = $(this).parent().data("id");
+      $("span.queue-item-song").click(function(){
+        let id = $(this).data("id");
         if(!id){ return; }
         $("div.queue-item").removeClass("active");
         player_play_id(id);
+      });
+
+      $("button.queue-item-remove").on("click", function(){
+        let id = $(this).data("id");
+        if(!id){ return false; }
+        $.post({
+          url: window.WEBROOT + "/api/queue.php",
+          data: { "action": "delete_id", "id": id },
+          success: function(r){
+            queue_refresh();
+            notification(NOTYPE_SUCC, "song #"+id+" removed from queue");
+          }, error: function(r){
+            notification(NOTYPE_ERR, r)
+          }
+        });
       });
 
       $("button.queue-item-mark").click(queue_item_mark);
@@ -88,6 +107,19 @@ function queue_refresh(){
     }
   });
 }
+
+$("button#queue-clear").on("click", function(){
+  $.post({
+    url: window.WEBROOT + "/api/queue.php",
+    data: { "action": "clear" },
+    success: function(r){
+      notification(NOTYPE_SUCC, "Queue cleared.");
+      queue_refresh();
+    }, error: function(r){
+      notification(NOTYPE_ERR, r);
+    }
+  })
+});
 
 //setInterval(queue_refresh, 5000);
 queue_refresh();

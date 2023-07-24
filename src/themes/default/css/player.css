@@ -13,10 +13,19 @@ div#player-controls, div#player-time{
   align-items: center;
 }
 
+div#player-song-data{
+    margin: 0 40px;
+    flex-grow: 1;
+}
+
+div#player-song-artist{
+    color: grey;
+    font-size: 11px;
+    margin-top: 3px;
+}
+
 div#player-song{
-  margin: 0 40px;
   cursor: col-resize;
-  max-width: 50%;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;

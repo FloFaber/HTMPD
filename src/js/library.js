@@ -30,7 +30,10 @@ function library_refresh(){
         let name = path.pop();
         s += `
           <div class="library-item library-item-dir">
-            <a href="#path:${f.name}">${name}/</a>
+            <span class="library-item-actions">
+              <button class="library-item-add inline green" title="add to queue" data-uri="${f.name}">+</button>
+            </span>
+            <a class="library-item-name" href="#path:${f.name}">${name}/</a>
           </div>
         `;
       }
@@ -39,17 +42,50 @@ function library_refresh(){
         let path = f.name.split("/");
         let name = path.pop();
         s += `
-          <div class="library-item library-item-dir">
-            <span>${name}</span>
+          <div class="library-item library-item-file">
+            <span class="library-item-actions">
+              <button class="library-item-add inline green" title="add to queue" data-uri="${f.name}">+</button>
+            </span>
+            <span class="library-item-name" data-uri="${f.name}">${name}</span>
           </div>
         `;
       }
       $("div#library").html(s);
+
+      $("div.library-item-file span.library-item-name").on("click", function(){
+        let uri = $(this).data("uri");
+        $.post({
+          url: window.WEBROOT + "/api/queue.php",
+          data: { "action": "add_id", "uri": uri, "play": true },
+          success: function(r){
+
+          }, error: function(r){
+            notification(NOTYPE_ERR, r);
+          }
+        })
+      });
+
+      $("button.library-item-add").on("click", function(){
+        let uri = $(this).data("uri");
+        library_add(uri);
+      });
     },
     error: function(r){
       notification(NOTYPE_ERR, r);
     }
   });
+}
+
+function library_add(uri){
+  $.post({
+    url: window.WEBROOT + "/api/queue.php",
+    data: { "action": "add", uri: uri },
+    success: function(r){
+      notification(NOTYPE_SUCC, "loaded \"" + uri + "\".");
+    }, error: function(r){
+      notification(NOTYPE_ERR, r);
+    }
+  })
 }
 
 library_refresh();

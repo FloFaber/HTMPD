@@ -9,5 +9,5 @@ require_once __DIR__ . "/../inc/twig.loader.php";
 
 echo $twig->render("main.html", [
   "title" => "Playlists",
-  "jss" => [ "js/playlist.js" ]
+  "jss" => [ "js/playlist.js" ],
 ]);

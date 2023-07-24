@@ -148,7 +148,7 @@ table#shortcuts th{
 div#notifications{
   position: absolute;
   top: 0; right: 0;
-  margin: 15px;
+  margin: 80px 15px 15px;
   z-index: 10;
   max-width: 300px;
   width: 100%;
@@ -198,12 +198,16 @@ div.queue-item.active{
   color: var(--primary);
 }
 
-span.queue-item-title{
+span.queue-item-song{
   cursor: pointer;
 }
-span.queue-item-title:hover{
+span.queue-item-song:hover{
   background-color: var(--primary);
   color: var(--white);
+}
+
+span.queue-item-artist{
+    white-space: pre;
 }
 
 span.queue-item-actions{
