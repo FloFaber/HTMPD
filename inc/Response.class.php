@@ -6,7 +6,7 @@ class Response
   private array $data;
   private int $http_status_code;
 
-  public function __construct(int $http_status_code = 200, string $error_code = "", string $error_message = "")
+  public function __construct(int $http_status_code = 200, string $error_code = "", string $error_message = "", array $data = [])
   {
     $this->data = [];
     $this->http_status_code = $http_status_code;
@@ -27,6 +27,9 @@ class Response
     }
     if(!empty($error_message)){
       $this->data["msg"] = $error_message;
+    }
+    if(!empty($data)){
+      $this->data = array_merge($this->data, $data);
     }
   }
 
