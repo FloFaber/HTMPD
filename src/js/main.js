@@ -1,6 +1,6 @@
 $("div#darkness").click(function(){ darkness(false); });
 
-$("div.sidebar-item a[href='" + window.WEBROOT + window.location.pathname + "']").parent().addClass("active");
+$("div.sidebar-item a[href='" + window.location.pathname + "']").parent().addClass("active");
 
 function form_submit(e){
   console.log(e);
