@@ -209,7 +209,7 @@ function player_update_time(duration, elapsed){
   let current = $("div#player-song").text();
   let chars = Math.round((current.length * percent) / 100);
 
-  if(chars > 0){
+  if(duration > 0){
     for(let i = 0; i < chars; i++){
       player_song += htmlspecialchars(current[i]);
     }
