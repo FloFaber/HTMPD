@@ -68,7 +68,19 @@ div.sidebar-item a:after{
   right: 2px;
 }
 
-div#sidebar h1#title{ margin-bottom: 0;}
+div#sidebar h1#title{
+  margin-bottom: 0;
+  font-style: italic;
+  margin-top: 35px;
+}
+
+span#title-part2{
+  color:grey;
+}
+div#subtitle a{
+  text-decoration: none;
+}
+
 div#sidebar div#subtitle{ margin-bottom: 35px; color: grey; font-size:10px;}
 
 div#content{

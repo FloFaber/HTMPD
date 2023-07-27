@@ -29,13 +29,9 @@ class Utils
    * Function to parse an array of given parameters.
    * @param array $params Array of strings.
    * @param int $flags One or multiple OR-ed together of the following:
-   *
    *                  * MPD_ESCAPE_NORMAL        - "beetle's juice" becomes "\"beetle\'s juice\""
-   *
    *                  * MPD_ESCAPE_DOUBLE_QUOTES - "beetle's juice" becomes "\\\"beetle\'s juice\\\""
-   *
    *                  * MPD_ESCAPE_PREFIX_SPACE  - Adds a space at the params beginning
-   *
    *                  * MPD_ESCAPE_SUFFIX_SPACE  - Adds a space at the params ending
    * @return string
    */
@@ -56,16 +52,10 @@ class Utils
       // @ToDo make sure this works aka. test this
       if(strlen($param) === 0){ continue; }
       //$param = str_replace("\\", "\\\\", $param);
-      $param = (escapeshellcmd($param));
+      $param = escapeshellcmd($param);
       $parsed .= $prefix.$quote.$param.$quote.$suffix;
     }
     return $parsed;
-  }
-
-  private function escape($str){
-
-
-
   }
 
 

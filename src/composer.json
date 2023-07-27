@@ -1,0 +1,6 @@
+{
+    "require": {
+        "flofaber/mphpd": "^1.0",
+        "ext-json": "*"
+    }
+}

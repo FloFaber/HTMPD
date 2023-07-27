@@ -26,12 +26,23 @@ if($method === "get"){
 
   if($action === null){
     $path = urldecode(getrp("path", "get", null) ?? "");
-    if(($library = $mphpd->db()->ls($path ?? "", true, false)) === false){
+    if(($library = $mphpd->db()->ls($path, true, false)) === false){
       echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
       return false;
     }
     echo (new Response(200))->add("library", $library);
     return true;
+  }elseif(in_array($action, [ "artist", "album", "genre" ])){
+
+    if(($data = $mphpd->db()->list($action)) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+    sort($data);
+
+    echo (new Response(200))->add("$action", $data);
+    return true;
+
   }
 
 }elseif($method === "post"){

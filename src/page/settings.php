@@ -1,12 +1,13 @@
 <?php
+require __DIR__ . "/../inc/config.loader.php";
 
-if (!file_exists(__DIR__ . "/../config.php")) {
-  echo "ERROR: config.php not found. Please move config.example.php to config.php and configure correctly.<br>\n";
-  die();
-}
-require_once __DIR__ . "/../config.php";
-require_once __DIR__ . "/../inc/twig.loader.php";
+$data = [];
 
-echo $twig->render("main.html", [
-  "title" => "Settings",
-]);
+require __DIR__ . "/../themes/".(THEME ?? "default")."/templates/header.comp.php";
+?>
+
+  <h2>Settings</h2>
+  <p style="color:grey;">This page is as empty as your life.</p>
+
+<?php
+require __DIR__ . "/../themes/".(THEME ?? "default")."/templates/footer.comp.php";

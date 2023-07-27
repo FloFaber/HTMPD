@@ -1,9 +1,14 @@
 {
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "67f6cabbb28fbbacc81d48dc6ab7dc4a",
     "packages": [
         {
             "name": "flofaber/mphpd",
             "version": "v1.0.2",
-            "version_normalized": "1.0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FloFaber/MphpD.git",
@@ -24,9 +29,7 @@
                 "phpdocumentor/reflection-docblock": "^5.3",
                 "phpunit/phpunit": "9.5.27"
             },
-            "time": "2023-07-24T13:46:30+00:00",
             "type": "library",
-            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "FloFaber\\MphpD\\": "src/"
@@ -47,9 +50,18 @@
                 "issues": "https://github.com/FloFaber/MphpD/issues",
                 "source": "https://github.com/FloFaber/MphpD/tree/v1.0.2"
             },
-            "install-path": "../flofaber/mphpd"
+            "time": "2023-07-24T13:46:30+00:00"
         }
     ],
-    "dev": true,
-    "dev-package-names": []
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "ext-json": "*"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }

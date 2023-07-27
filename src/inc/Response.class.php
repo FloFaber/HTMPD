@@ -39,7 +39,8 @@ class Response
     return json_encode($this->data);
   }
 
-  public function add($key, $value){
+  public function add($key, $value): Response
+  {
     $this->data[$key] = $value;
     return $this;
   }
