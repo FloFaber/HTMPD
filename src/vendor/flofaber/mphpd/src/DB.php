@@ -126,13 +126,14 @@ class DB
   {
     $m = MPD_CMD_READ_LIST_SINGLE;
     if(!empty($group)){
-      $m = MPD_CMD_READ_LIST;
+      $m = MPD_CMD_READ_GROUP;
     }
 
     $type = Utils::escape_params([ $type ]);
-    return $this->mphpd->cmd("list $type $filter", [
+    $x = $this->mphpd->cmd("list $type $filter", [
       ($group ? "group" : ""), ($group ?: "")
     ], $m);
+    return $x;
   }
 
 
