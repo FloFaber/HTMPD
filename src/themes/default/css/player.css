@@ -6,6 +6,18 @@ div#player{
   padding: 10px 20px;
 }
 
+div#player-thumbnail{
+  overflow: hidden;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+div#player-thumbnail img{
+  height: 100%;
+}
+
 div#player-controls, div#player-time{
   display: flex;
   flex-flow: column;

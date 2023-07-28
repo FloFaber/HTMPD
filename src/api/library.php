@@ -32,6 +32,35 @@ if($method === "get"){
     }
     echo (new Response(200))->add("library", $library);
     return true;
+  }elseif($action === "thumbnail"){
+
+    if(($file = getrp("file", "get", null)) === null){
+      echo new Response(400);
+      return false;
+    }
+
+    $check_only = getrp("check_only", "get", false);
+
+    if(($thumbnail = $mphpd->db()->read_picture($file)) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+
+    if(!$thumbnail){
+      echo new Response(404); return false;
+    }
+
+    if($check_only){
+      echo new Response(200, "ERR_OK"); return true;
+    }
+
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo->buffer($rawImage);
+    header("Content-type: $mimeType");
+    header("Cache-Control: max-age=604800");
+
+    echo $thumbnail;
+
   }
 
 }elseif($method === "post"){

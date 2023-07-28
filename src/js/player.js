@@ -136,6 +136,27 @@ function player_refresh(){
       let s = r.status;
       let cs = r.current_song;
 
+      if($("img#thumbnail").data("file") !== cs.file){
+
+        $.get({
+          url: window.WEBROOT + "/api/library.php",
+          data: { "action": "thumbnail", "file": cs.file, "check_only": true },
+          success: function(r){
+            $("div#player-thumbnail")
+              .css("height", $("div#player").height()+"px")
+              .css("width", $("div#player").height()+"px")
+              .css("display", "flex");
+            $("img#thumbnail")
+              .attr("src", window.WEBROOT + "/api/library.php?action=thumbnail&file=" + cs.file)
+              .data("file", cs.file);
+          }, error: function(r){
+            $("div#player-thumbnail").css("display", "none");
+          }
+        })
+
+
+      }
+
       // update song title
       let text = song2text(cs);
       if(!text){

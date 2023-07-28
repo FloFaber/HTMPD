@@ -1,4 +1,7 @@
 <div id="player">
+  <div id="player-thumbnail">
+    <img alt="thumbnail" id="thumbnail"/>
+  </div>
   <div id="player-controls">
     <div id="player-controls-buttons">
       <button id="player-previous">⏮</button>
