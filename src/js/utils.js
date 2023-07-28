@@ -81,5 +81,17 @@ function darkness(state){
   $("div.darkness-item").click(function(e){ console.log("CLICK"); e.stopPropagation(); });
 }
 
+// example hash: #artist:ABBA;album:Arrival
+function hash_parse(hash = window.location.hash){
+  let r = [];
+  hash = hash.replace("#", "");
+  let hs = hash.split(";");
+  for(let i = 0; i < hs.length; i++){
+    let hsi = hs[i].split(":");
+    r[hsi[0]] = decodeURI(hsi[1]);
+  }
+  return r;
+}
+
 function darkness_on(){ darkness(true); }
 function darkness_off(){ darkness(false); }
