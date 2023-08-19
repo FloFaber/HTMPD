@@ -65,15 +65,22 @@ class DB
    *                      If omitted returns an associative array containing a "songs" and "playtime" key.
    *
    *                      If specified an array of associative array will be returned.
+   * @param bool $case_sensitive If `true` the search will be case-sensitive, If `false` the search will be case-insensitive.
    * @return array|false `array` on success or `false` on failure.
    */
-  public function count(Filter $filter, string $group = "")
+  public function count(Filter $filter, string $group = "", bool $case_sensitive = true)
   {
     $m = MPD_CMD_READ_NORMAL;
     if(!empty($group)){
-      $m = MPD_CMD_READ_LIST;
+      $m = MPD_CMD_READ_GROUP;
     }
-    return $this->mphpd->cmd("count $filter", [
+
+    $cmd = "count";
+    if($case_sensitive === false){
+      $cmd = "searchcount";
+    }
+
+    return $this->mphpd->cmd("$cmd $filter", [
       ($group ? "group" : ""), ($group ?: "")
     ], $m);
   }
@@ -130,10 +137,9 @@ class DB
     }
 
     $type = Utils::escape_params([ $type ]);
-    $x = $this->mphpd->cmd("list $type $filter", [
+    return $this->mphpd->cmd("list $type $filter", [
       ($group ? "group" : ""), ($group ?: "")
     ], $m);
-    return $x;
   }
 
 
@@ -201,7 +207,7 @@ class DB
   /**
    * Returns a picture of `$uri` by reading embedded pictures from binary tags.
    * @param string $uri Song URI.
-   * @return false|string binary-data `string` on success and `false` on failure.
+   * @return false|string `false` on failure otherwise `string` containing either the picture or an empty string in case the file does not contain a picture.
    */
   public function read_picture(string $uri)
   {
@@ -211,6 +217,7 @@ class DB
 
       $aa = $this->mphpd->cmd("readpicture", [$uri, $offset]);
       if($aa === false){ return false; }
+      if(!isset($aa["size"])){ return ""; }
 
       $binary_size = $aa["size"];
 

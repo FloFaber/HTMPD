@@ -420,8 +420,8 @@ class Socket
 
     // return stop code if that was all to read
     if(str_starts_with($lb, "OK") OR
-       str_starts_with($lb, "ACK") OR
-       str_starts_with($lb, "list_OK"))
+      str_starts_with($lb, "ACK") OR
+      str_starts_with($lb, "list_OK"))
     {
       return 3;
     }
@@ -542,7 +542,7 @@ class Socket
 
         // If we only parse a list with a single possible key make sure $first_key is already set OR $first_key equals the current key.
         // If true push the value to the result array. That way we eliminate the risk of funky responses if this mode is used incorrectly.
-      }elseif($mode === MPD_CMD_READ_LIST_SINGLE){
+      }elseif($mode === MPD_CMD_READ_LIST_SINGLE && ($first_key === $k || in_array($k, $list_starts))){
         $b[] = $v;
       }
 
