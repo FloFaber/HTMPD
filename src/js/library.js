@@ -58,7 +58,7 @@ function library_refresh(){
           url: window.WEBROOT + "/api/queue.php",
           data: { "action": "add_id", "uri": uri, "play": true },
           success: function(r){
-
+            player_refresh();
           }, error: function(r){
             notification(NOTYPE_ERR, r);
           }

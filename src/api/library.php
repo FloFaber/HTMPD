@@ -55,7 +55,7 @@ if($method === "get"){
     }
 
     $finfo = new finfo(FILEINFO_MIME_TYPE);
-    $mimeType = $finfo->buffer($rawImage);
+    $mimeType = $finfo->buffer($thumbnail);
     header("Content-type: $mimeType");
     header("Cache-Control: max-age=604800");
 

@@ -32,6 +32,64 @@ if($method === "get"){
     }
     echo (new Response(200))->add("playlists", $playlists);
     return true;
+  }elseif($action === "show"){
+
+    if(($name = getrp("name", $method, null)) === null || empty($name)){
+      echo new Response(400); return false;
+    }
+
+    if(($songs = $mphpd->playlist($name)->get_songs(true)) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+
+    echo (new Response())->add("songs", $songs);
+    return true;
+
+  }
+
+}elseif($method === "post"){
+
+  if($action === "load" || $action === "replace"){
+
+    if(($name = getrp("name", $method, null)) === null){
+      echo new Response(400); return false;
+    }
+
+    if(($playlist = $mphpd->playlist($name)) === null){
+      echo new Response(400); return false;
+    }
+
+    if($action === "replace"){
+      $mphpd->queue()->clear();
+    }
+
+    if($playlist->load() === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+
+    echo new Response();
+    return true;
+
+  }elseif($action === "delete"){
+
+    if(($name = getrp("name", $method, null)) === null){
+      echo new Response(400); return false;
+    }
+
+    if(($playlist = $mphpd->playlist($name)) === null){
+      echo new Response(400); return false;
+    }
+
+    if($playlist->delete() === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+
+    echo new Response();
+    return true;
+
   }
 
 }

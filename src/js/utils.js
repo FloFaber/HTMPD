@@ -95,3 +95,7 @@ function hash_parse(hash = window.location.hash){
 
 function darkness_on(){ darkness(true); }
 function darkness_off(){ darkness(false); }
+
+function text_input_has_focus(){
+  return $("input[type='text'],textarea").is(":focus");
+}

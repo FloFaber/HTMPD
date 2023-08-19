@@ -28,8 +28,12 @@ $("input#volume").on("input", function(){
 // Keyboard Shortcuts
 $(document).on("keypress", function(e){
   let k = e.key;
-  console.log(k)
-  if(k === " "){ player_pause(); }
+
+  if(text_input_has_focus()){
+    return false;
+  }
+
+  if(k === " "){ player_pause(); e.preventDefault(); }
   if(k === "a"){ player_previous(); }
   if(k === "d"){ player_next(); }
   if(k === "-"){

@@ -19,6 +19,7 @@ div#player-thumbnail img{
 }
 
 div#player-controls, div#player-time{
+  flex-shrink: 0;
   display: flex;
   flex-flow: column;
   justify-content: center;
@@ -31,9 +32,9 @@ div#player-song-data{
 }
 
 div#player-song-artist{
-    color: grey;
-    font-size: 11px;
-    margin-top: 3px;
+  color: grey;
+  font-size: 11px;
+  margin-top: 3px;
 }
 
 div#player-song{
@@ -53,6 +54,7 @@ span#player-song-unplayed{
 }
 
 div#player-modes{
+  flex-shrink: 0;
   margin: 0 40px;
 }
 div#player-modes > div{

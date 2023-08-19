@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "67f6cabbb28fbbacc81d48dc6ab7dc4a",
+    "content-hash": "f89cecab7d14091c68be4e4b1fd6af56",
     "packages": [
         {
             "name": "flofaber/mphpd",
-            "version": "v1.0.2",
+            "version": "v1.1.0-rc.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FloFaber/MphpD.git",
-                "reference": "153b3e8a253618f49195b2cf559967f0964e48aa"
+                "reference": "5ae49f999aff51e7e9863bfebb151ae7fe902e6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FloFaber/MphpD/zipball/153b3e8a253618f49195b2cf559967f0964e48aa",
-                "reference": "153b3e8a253618f49195b2cf559967f0964e48aa",
+                "url": "https://api.github.com/repos/FloFaber/MphpD/zipball/5ae49f999aff51e7e9863bfebb151ae7fe902e6b",
+                "reference": "5ae49f999aff51e7e9863bfebb151ae7fe902e6b",
                 "shasum": ""
             },
             "require": {
@@ -48,20 +48,22 @@
             "description": "A PHP library for the Music Player Daemon",
             "support": {
                 "issues": "https://github.com/FloFaber/MphpD/issues",
-                "source": "https://github.com/FloFaber/MphpD/tree/v1.0.2"
+                "source": "https://github.com/FloFaber/MphpD/tree/v1.1.0-rc.2"
             },
-            "time": "2023-07-24T13:46:30+00:00"
+            "time": "2023-08-19T18:46:21+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "flofaber/mphpd": 5
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }

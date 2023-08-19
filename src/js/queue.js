@@ -108,6 +108,19 @@ function queue_refresh(){
   });
 }
 
+$("button#queue-shuffle").on("click", function(){
+  $.post({
+    url: window.WEBROOT + "/api/queue.php",
+    data: { "action": "shuffle" },
+    success: function(r){
+      notification(NOTYPE_SUCC, "Queue shuffled.");
+      queue_refresh();
+    }, error: function(r){
+      notification(NOTYPE_ERR, r);
+    }
+  })
+});
+
 $("button#queue-clear").on("click", function(){
   $.post({
     url: window.WEBROOT + "/api/queue.php",
