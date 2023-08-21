@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f89cecab7d14091c68be4e4b1fd6af56",
+    "content-hash": "660eb5cf23a89271d6081ea09e673ffe",
     "packages": [
         {
             "name": "flofaber/mphpd",
-            "version": "v1.1.0-rc.2",
+            "version": "v1.1.0-rc.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FloFaber/MphpD.git",
-                "reference": "5ae49f999aff51e7e9863bfebb151ae7fe902e6b"
+                "reference": "6ee362abd02d99b372633ddb3b6bd547c37d4589"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FloFaber/MphpD/zipball/5ae49f999aff51e7e9863bfebb151ae7fe902e6b",
-                "reference": "5ae49f999aff51e7e9863bfebb151ae7fe902e6b",
+                "url": "https://api.github.com/repos/FloFaber/MphpD/zipball/6ee362abd02d99b372633ddb3b6bd547c37d4589",
+                "reference": "6ee362abd02d99b372633ddb3b6bd547c37d4589",
                 "shasum": ""
             },
             "require": {
@@ -48,9 +48,9 @@
             "description": "A PHP library for the Music Player Daemon",
             "support": {
                 "issues": "https://github.com/FloFaber/MphpD/issues",
-                "source": "https://github.com/FloFaber/MphpD/tree/v1.1.0-rc.2"
+                "source": "https://github.com/FloFaber/MphpD/tree/v1.1.0-rc.3"
             },
-            "time": "2023-08-19T18:46:21+00:00"
+            "time": "2023-08-19T20:10:21+00:00"
         }
     ],
     "packages-dev": [],
