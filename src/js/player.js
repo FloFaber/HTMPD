@@ -110,7 +110,11 @@ function player_volume(vol){
 }
 
 function player_pause(state = ""){
-  player_action({ "action": "pause", "state": state });
+  if(window.player_data && window.player_data.status && window.player_data.status.state === "stop") {
+    player_action({"action": "play", "pos": 0});
+  }else{
+    player_action({ "action": "pause", "state": state });
+  }
 }
 
 function player_next(){

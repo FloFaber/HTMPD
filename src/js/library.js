@@ -32,6 +32,7 @@ function library_refresh(){
           <div class="library-item library-item-dir">
             <span class="library-item-actions">
               <button class="library-item-add inline green" title="add to queue" data-uri="${f.name}">+</button>
+              <button class="library-item-replace inline yellow" title="Clear queue and load file/dir" data-uri="${f.name}">~</button>
             </span>
             <a class="library-item-name" href="#path:${f.name}">${name}/</a>
           </div>
@@ -45,6 +46,7 @@ function library_refresh(){
           <div class="library-item library-item-file">
             <span class="library-item-actions">
               <button class="library-item-add inline green" title="add to queue" data-uri="${f.name}">+</button>
+              <button class="library-item-replace inline yellow" title="Clear queue and load file/dir" data-uri="${f.name}">~</button>
             </span>
             <span class="library-item-name" data-uri="${f.name}">${name}</span>
           </div>
@@ -69,6 +71,12 @@ function library_refresh(){
         let uri = $(this).data("uri");
         library_add(uri);
       });
+
+      $("button.library-item-replace").on("click", function(){
+        let uri = $(this).data("uri");
+        library_replace(uri);
+      });
+
     },
     error: function(r){
       notification(NOTYPE_ERR, r);
@@ -82,6 +90,19 @@ function library_add(uri){
     data: { "action": "add", uri: uri },
     success: function(r){
       notification(NOTYPE_SUCC, "loaded \"" + uri + "\".");
+    }, error: function(r){
+      notification(NOTYPE_ERR, r);
+    }
+  })
+}
+
+function library_replace(uri){
+  $.post({
+    url: window.WEBROOT + "/api/queue.php",
+    data: { "action": "replace", uri: uri },
+    success: function(r){
+      notification(NOTYPE_SUCC, "loaded \"" + uri + "\".");
+      player_refresh();
     }, error: function(r){
       notification(NOTYPE_ERR, r);
     }

@@ -127,6 +127,7 @@ $("button#queue-clear").on("click", function(){
     data: { "action": "clear" },
     success: function(r){
       notification(NOTYPE_SUCC, "Queue cleared.");
+      player_refresh();
       queue_refresh();
     }, error: function(r){
       notification(NOTYPE_ERR, r);

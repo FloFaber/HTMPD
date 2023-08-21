@@ -40,10 +40,14 @@ if($method === "get"){
 
 }elseif($method === "post"){
 
-  if($action === "add"){
+  if($action === "add" || $action === "replace"){
 
     if(($uri = getrp("uri", "post", null)) === null){
       echo new Response(400); return false;
+    }
+
+    if($action === "replace"){
+      $mphpd->queue()->clear();
     }
 
     if($mphpd->queue()->add($uri) === false){

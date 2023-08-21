@@ -13,3 +13,6 @@ div.library-item a{
   text-decoration: none;
 }
 
+span.library-item-actions{
+  display: inline-flex;
+}

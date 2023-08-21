@@ -8,13 +8,13 @@ function playlists_refresh(){
       for(let i = 0; i < r.playlists.length; i++){
         let p = r.playlists[i];
         s += `
-          <div class="playlist">
-            <span class="playlist-actions">
+          <div class="playlist-item">
+            <span class="playlist-item-actions">
               <button class="playlist-add inline green" title="Load Playlist" data-playlist="${p}">+</button>
               <button class="playlist-replace inline yellow" title="Clear queue and load playlist" data-playlist="${p}">~</button>
               <button class="playlist-delete inline red" title="Delete Playlist" data-playlist="${p}">-</button>
             </span>
-            <span class="playlist-name"><a href="#list:${p}">${p}</a></span>
+            <span class="playlist-item-name"><a class="playlist-item-name" href="#list:${p}">${p}</a></span>
           </div>
         `;
       }
@@ -50,7 +50,10 @@ function playlist_show(name){
         let so = r.songs[i];
         s += `
           <div class="playlist-item">
-            <span class="playlist-item-name" title="${so.file}" data-url="${so.file}">${so.file.split("/").pop()}</span>
+            <span class="playlist-item-actions">
+              <button class="playlist-add inline green" title="Load song into queue" data-uri="${so.file}">+</button>
+            </span>
+            <span class="playlist-item-name" title="${so.file}" data-uri="${so.file}">${so.file.split("/").pop()}</span>
           </div>
         `;
       }
@@ -61,6 +64,30 @@ function playlist_show(name){
 
       $("div#playlists").html("");
       $("div#playlist-items").html(s);
+
+      $("button.playlist-add").on("click", function(){
+        $.post({
+          url: window.WEBROOT + "/api/queue.php",
+          data: { "action": "add", "uri": $(this).data("uri") },
+          success: function(r){
+            notification(NOTYPE_SUCC, "Song loaded into Queue.");
+          },error: function(r){
+            notification(NOTYPE_ERR, r);
+          }
+        })
+      });
+
+      $("span.playlist-item-name").on("click", function(){
+        $.post({
+          url: window.WEBROOT + "/api/queue.php",
+          data: { "action": "add_id", "uri": $(this).data("uri"), "play": 1 },
+          success: function(r){
+            player_refresh();
+          },error: function(r){
+            notification(NOTYPE_ERR, r);
+          }
+        })
+      });
 
 
 
@@ -97,15 +124,17 @@ function playlist_replace(name){
 }
 
 function playlist_delete(name){
-  $.post({
-    url: window.WEBROOT + "/api/playlist.php",
-    data: { "action": "delete", "name": name },
-    success: function(r){
-      notification(NOTYPE_SUCC, "Playlist deleted.");
-    }, error: function(r){
-      notification(NOTYPE_ERR, r);
-    }
-  });
+  if(confirm("Delete playlist '"+name+"'?")){
+    $.post({
+      url: window.WEBROOT + "/api/playlist.php",
+      data: { "action": "delete", "name": name },
+      success: function(r){
+        notification(NOTYPE_SUCC, "Playlist deleted.");
+      }, error: function(r){
+        notification(NOTYPE_ERR, r);
+      }
+    });
+  }
 }
 
 

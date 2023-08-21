@@ -54,10 +54,11 @@ if($method === "get"){
       echo new Response(200, "ERR_OK"); return true;
     }
 
+
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mimeType = $finfo->buffer($thumbnail);
     header("Content-type: $mimeType");
-    header("Cache-Control: max-age=604800");
+    header("Cache-Control: public, max-age=604800");
 
     echo $thumbnail;
 
