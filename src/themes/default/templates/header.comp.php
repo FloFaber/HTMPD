@@ -12,6 +12,7 @@ Hi there :)
   <?php foreach($data["csss"] ?? [] as $css){ ?>
     <link rel="stylesheet" href="<?= WEBROOT ?? "" ?>/themes/<?= THEME ?? "default" ?>/<?= $css ?? "" ?>"/>
   <?php } ?>
+  <link rel="icon" href="<?= WEBROOT ?? "" ?>/favicon.png" type="image/png"/>
   <script type="text/javascript">window.WEBROOT = "<?= WEBROOT ?? "" ?>";</script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/jquery-3.6.4.min.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/utils.js"></script>
