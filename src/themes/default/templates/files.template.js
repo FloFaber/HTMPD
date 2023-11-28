@@ -24,8 +24,8 @@ window.templates.library_path_item = `
 window.templates.file_directory = `
   <tr class="library-item">
     <td class="library-item-actions">
-      <button class="inline green" data-uri="{{name}}" data-replace="false" onclick="window.library.add('{{name}}',false,window.queue.refresh);">+</button>
-      <button class="inline yellow" data-uri="{{name}}" data-replace="true" onclick="window.library.add('{{name}}',true,window.queue.refresh);">~</button>
+      <button class="inline green" data-uri="{{name}}" data-replace="false" onclick="library_add('{{name}}',false,true);">+</button>
+      <button class="inline yellow" data-uri="{{name}}" data-replace="true" onclick="library_add('{{name}}',true,true);">~</button>
     </td>
     <td class="library-item-name"><a href="#view=files&path={{name}}">{{display_name}}/</a></td>
   </tr>
