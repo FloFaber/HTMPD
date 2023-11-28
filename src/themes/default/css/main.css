@@ -83,12 +83,27 @@ div#subtitle a{
 
 div#sidebar div#subtitle{ margin-bottom: 35px; color: grey; font-size:10px;}
 
-div#content{
-  padding: 20px;
-  overflow-y: auto;
-  height: 100%;
+div#split-view{
+  display: flex;
+  height: calc(100% - 60px);
 }
 
+div#split-view >*{
+  width: 50%;
+  padding: 20px;
+  overflow-y: auto;
+}
+div#split-right{
+  border-left: 1px solid var(--light-grey);
+}
+
+td{
+  padding: 0;
+}
+
+td.library-item-actions{
+  display: flex;
+}
 
 a{
   color: var(--primary);

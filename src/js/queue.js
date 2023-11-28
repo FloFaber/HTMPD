@@ -57,7 +57,7 @@ function queue_refresh(){
 
       for(let i = 0; i < r.queue.length; i++){
         let q = r.queue[i];
-        console.log(q);
+
         s += `<div class="queue-item ` + (window.player_data !== null && window.player_data.status.songid === q.id ? "active" : "") + `"
                    id="queue-item-${ q.id }" data-id="${ q.id }">
           <span class="queue-item-actions">

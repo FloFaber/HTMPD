@@ -2,15 +2,14 @@ div#library,div#library-path{
   margin-bottom: 15px;
 }
 
-div.library-item span{
+td.library-item-name a{
   cursor: pointer;
+  text-decoration: none;
 }
-div.library-item .library-item-name:hover{
+
+td.library-item-name a:hover{
   color: var(--white);
   background-color: var(--primary);
-}
-div.library-item a{
-  text-decoration: none;
 }
 
 span.library-item-actions{

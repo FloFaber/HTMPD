@@ -1,6 +1,58 @@
 $("div#darkness").click(function(){ darkness(false); });
 
-$("div.sidebar-item a[href='" + window.location.pathname + "']").parent().addClass("active");
+
+function onHashChange(e){
+  let hash = window.location.hash.slice(1);
+  console.log(window.location.hash);
+
+  let url = hash.split("&").reduce((previous, current)=> { const [key, value] = current.split("="); previous[key] = value; return previous },{})
+
+
+  $("div.sidebar-item").removeClass("active");
+  $("div.sidebar-item a[href='#view=" + url.view + "']").parent().addClass("active");
+
+  if(url.view === "files"){
+
+    let paths = [{
+      "path": "",
+      "name": "C:"
+    }]
+
+    let ps = (url.path ? url.path.split("/") : []);
+    let pf = "";
+    if(url.path){
+      console.log(ps);
+      for(let i = 0; i < ps.length; i++){
+        let pp = decodeURI(ps[i]);
+        pf += (i === 0 ? "": "/") + pp;
+        paths.push({
+          "path": pf,
+          "name": pp
+        });
+      }
+    }
+
+
+    let template = new Template("files",{paths: paths});
+
+    new FileBrowser(url.path || "", function(data){
+      data.paths = paths;
+      template.setData(data);
+      $("div#split-left").html(template.render());
+    });
+
+    $("div#split-left").html(template.render());
+  }else if(url.view === "shortcuts"){
+    $("div#split-left").html((new Template("shortcuts")).render());
+  }else{
+    $("div#split-left").html("404 - Page not found");
+  }
+
+}
+
+onHashChange();
+
+window.onhashchange = onHashChange;
 
 function form_submit(e){
   console.log(e);
