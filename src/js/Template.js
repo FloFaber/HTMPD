@@ -3,8 +3,6 @@ class Template{
   constructor(id, data = {}){
     this.id = id;
     this.data = data;
-
-    this.content = window.templates[this.id].replace(/\n(\s*)/g, "");
   }
 
   setData(data){
@@ -12,6 +10,8 @@ class Template{
   }
 
   render(){
+
+    this.content = window.templates[this.id].replace(/\n(\s*)/g, "");
 
     if(!this.content){ console.log("EMPTY CONTENT for #"+this.id+"!"); return ""; }
 
