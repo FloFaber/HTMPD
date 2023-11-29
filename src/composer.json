@@ -1,6 +1,6 @@
 {
     "require": {
-        "flofaber/mphpd": "v1.1.0-rc.3",
+        "flofaber/mphpd": "^1.2",
         "ext-json": "*",
       "ext-fileinfo": "*"
     }

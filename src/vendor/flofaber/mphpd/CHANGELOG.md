@@ -1,5 +1,32 @@
 # Changelog
 
+## v1.2.0
+
+### Improvements
+* Added new `DB::get_picture` function.
+
+
+## v1.1.1
+
+### Fixes
+
+* Fixed return type of `Queue::get`. Issue [#18](https://github.com/FloFaber/MphpD/issues/18).
+
+
+## v1.1.0
+
+### Fixes
+
+* Fixed `MPD_CMD_READ_LIST_SINGLE` for real this time.
+* `DB::read_picture` does not throw a warning anymore if the requested file did not contain a picture. In that case an empty string is returned (as before).
+* `DB::count` and `DB::list` now return correct values when `$group` is set. This is probably a breaking change but it was broken before.
+
+
+### Improvements
+* Added `$case_sensitive`-parameter to `DB::count`. MPD command `searchcount` is therefore supported as well.
+* Added new parse-mode `MPD_CMD_READ_GROUP` for grouped responses.
+
+
 ## v1.1.0-rc.3
 
 ### Fixes
