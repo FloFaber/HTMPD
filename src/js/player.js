@@ -127,7 +127,7 @@ function player_previous(){
 
 function player_play_id(id){
   set_content_cursor("progress");
-  player_action({ "action": "playid", "id": id }, null, function(){
+  player_action({ "action": "playid", "id": id }, function(){
     set_content_cursor();
   });
 }
@@ -143,6 +143,10 @@ function player_refresh(){
       window.player_data = r;
       let s = r.status;
       let cs = r.current_song;
+
+      if(cs){
+        $(".queue-item[data-id='"+cs.id+"']").addClass("active");
+      }
 
       if($("img#thumbnail").data("file") !== cs.file){
 
@@ -188,8 +192,8 @@ function player_refresh(){
       $("button#player-pp").text(states[s.state]);
 
       // update active song in queue
-      $("div.queue-item").removeClass("active");
-      $("div.queue-item#queue-item-"+r.current_song.id).addClass("active");
+      $(".queue-item").removeClass("active");
+      $(".queue-item[data-id='"+r.current_song.id+"']").addClass("active");
 
       // update mode buttons
       $("div#player-modes").find("button").removeClass("active");

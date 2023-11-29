@@ -7,6 +7,7 @@ class Template{
 
   setData(data){
     this.data = data;
+    console.log(data);
   }
 
   render(){
@@ -15,30 +16,42 @@ class Template{
 
     if(!this.content){ console.log("EMPTY CONTENT for #"+this.id+"!"); return ""; }
 
-    Object.keys(this.data).forEach(key => {
-      if(typeof this.data[key] === "object" && Array.isArray(this.data[key])){
+    // for-loops
+    let matches = [...this.content.matchAll(/\{\{for ([a-zA-Z_]*)->([a-zA-Z_]*)}}(.*?)\{\{endfor}}/g)];
+    for(let i = 0; i < matches.length; i++){
+      let m = matches[i];
+      let match_full = m[0]; // Full Match
+      let match_object = m[1]; // name of the object-item in this.data
+      let match_item = m[2];
+      let match_content = m[3];
 
-        let re = new RegExp("{{"+key+"@.*}}", "g");
-        let matches = this.content.match(re);
-
-        if(matches){
-          for(let i = 0; i < matches.length; i++){
-            let match = matches[i];
-            let match_sliced = match.slice(2).slice(0,-2);
-            let f = match_sliced.split("@");
-            if(f.length !== 2){ continue; }
-
-            let s = "";
-            for(let j = 0; j < this.data[key].length; j++){
-              s += (new Template(f[1], this.data[key][j])).render();
-            }
-            this.content = this.content.replace(match, s);
-
-          }
-        }
-      }else{
-        this.content = this.content.replaceAll("{{"+key+"}}", this.data[key]);
+      if(!this.data[match_object]){
+        console.log("data["+match_object+"] is empty")
+        continue;
       }
+
+      let s = "";
+      for(let j = 0; j < this.data[match_object].length; j++){
+        let item = this.data[match_object][j];
+        let s_tmp = match_content;
+
+        let matches = [...this.content.matchAll(/\{\{([a-zA-Z_]*)\.([a-zA-Z_]*)}}/g)];
+        for(let k = 0; k < matches.length; k++){
+          let match = matches[k];
+          s_tmp = s_tmp.replaceAll("{{"+match[1]+"."+match[2]+"}}", this.data[match_object][j][match[2]] || "");
+        }
+
+
+        s += s_tmp;
+      }
+
+      this.content = this.content.replace(match_full, s);
+
+    }
+
+
+    Object.keys(this.data).forEach(key => {
+      this.content = this.content.replaceAll("{{"+key+"}}", this.data[key]);
     });
 
     return this.content;

@@ -10,7 +10,20 @@ window.templates.queue = `
   </div>
 
   <table id="queue-items">
-    {{queue_items@queue_item}}
+    <thead>
+      <th class="track">#</th>
+      <th class="title">Title</th>
+      <th class="album">Album</th>
+      <th class="artist">Artist</th>
+    </thead>
+    {{for queue_items->queue_item}}
+    <tr class="queue-item" data-id="{{queue_item.id}}" onclick="player_play_id({{queue_item.id}})">
+      <td class="track">{{queue_item.track}}</td>
+      <td class="title">{{queue_item.title}}</td>
+      <td class="album">{{queue_item.album}}</td>
+      <td class="artist">{{queue_item.artist}}</td>
+    </tr>
+    {{endfor}}
   </table>
 
 `;

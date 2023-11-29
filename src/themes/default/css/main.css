@@ -89,20 +89,22 @@ div#split-view{
 }
 
 div#split-view >*{
-  width: 50%;
   padding: 20px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
-div#split-right{
+
+div#split-left{
+  width: 25%;
   border-left: 1px solid var(--light-grey);
 }
 
-td{
-  padding: 0;
-}
-
-td.library-item-actions{
+div#split-right{
+  border-left: 1px solid var(--light-grey);
   display: flex;
+  flex-flow: column;
+  flex-grow: 1;
+  width: 75%;
 }
 
 a{
@@ -210,6 +212,60 @@ div.darkness-item{
   padding: 30px;
   background-color: var(--white);
   border: 1px solid var(--primary);
+}
+
+th.track{
+  text-align: center;
+}
+
+th{
+  text-align: left;
+}
+
+table{
+  border-spacing: 0;
+}
+
+td{
+  padding: 0 3px;
+  white-space: nowrap;
+}
+
+td.library-item-actions{
+  display: flex;
+}
+
+td.track{
+  font-weight: bold;
+  text-align: right;
+}
+
+td.title{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+td.album{
+  white-space: nowrap;
+}
+
+td.artist{
+  white-space: nowrap;
+}
+
+tr.queue-item.active{
+  color: white;
+  background-color: var(--primary);
+}
+
+tr.queue-item{
+  cursor: pointer;
+}
+
+tr.queue-item:hover{
+  color: white;
+  background-color: var(--primary);
 }
 
 div#queue{
