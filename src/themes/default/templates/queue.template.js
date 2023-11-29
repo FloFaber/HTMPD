@@ -1,12 +1,11 @@
 window.templates.queue = `
-
   <h2>Queue</h2>
 
   <div id="action-buttons">
-    <button id="queue-clear">clear</button>
-    <button id="queue-shuffle">shuffle</button>
-    <button id="queue-save">save...</button>
-    <button id="queue-add">add...</button>
+    <button id="queue-clear" onclick="window.queue.clear()">clear</button>
+    <button id="queue-shuffle" onclick="window.queue.shuffle()">shuffle</button>
+    <button id="queue-save" onclick="window.queue.save()">save...</button>
+    <button id="queue-add" onclick="window.queue.add()">add...</button>
   </div>
 
   <table id="queue-items">
@@ -17,7 +16,7 @@ window.templates.queue = `
       <th class="artist">Artist</th>
     </thead>
     {{for queue_items->queue_item}}
-    <tr class="queue-item" data-id="{{queue_item.id}}" onclick="player_play_id({{queue_item.id}})">
+    <tr class="queue-item" data-id="{{queue_item.id}}" onclick="window.player.play_id({{queue_item.id}})">
       <td class="track">{{queue_item.track}}</td>
       <td class="title">{{queue_item.title}}</td>
       <td class="album">{{queue_item.album}}</td>
@@ -25,11 +24,4 @@ window.templates.queue = `
     </tr>
     {{endfor}}
   </table>
-
-`;
-
-window.templates.queue_item = `
-  <tr>
-    <td>{{file}}</td>
-  </tr>
 `;

@@ -5,7 +5,7 @@ window.templates.player = `
 <div id="player-controls">
   <div id="player-controls-buttons">
     <button id="player-previous">⏮</button>
-    <button id="player-pp">PP</button>
+    <button id="player-pp" onclick="window.player.play_pause()">PP</button>
     <button id="player-next">⏭</button>
   </div>
   <div id="player-volume">
@@ -13,7 +13,8 @@ window.templates.player = `
   </div>
 </div>
 <div id="player-song-data">
-  <div id="player-song" title="click to seek">N/A</div>
+  <div id="player-song" title="click to seek"></div>
+  <div id="player-song-artist"></div>
   <div id="player-song-artist"></div>
 </div>
 
@@ -23,9 +24,9 @@ window.templates.player = `
     <button id="player-seek-forward">+10s</button>
   </div>
   <div id="player-time-status">
-    <span id="player-time-elapsed">00:00</span>
+    <span id="player-time-elapsed"></span>
     <span>/</span>
-    <span id="player-time-duration">00:00</span>
+    <span id="player-time-duration"></span>
     <span>(</span><span id="player-time-percent">0%</span><span>)</span>
   </div>
 </div>

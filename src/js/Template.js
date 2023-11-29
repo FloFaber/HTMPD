@@ -51,7 +51,13 @@ class Template{
 
 
     Object.keys(this.data).forEach(key => {
-      this.content = this.content.replaceAll("{{"+key+"}}", this.data[key]);
+      if(typeof this.data[key] === "object"){
+        Object.keys(this.data[key]).forEach(key2 => {
+          this.content = this.content.replaceAll("{{"+key+"."+key2+"}}", this.data[key][key2]);
+        });
+      }else{
+        this.content = this.content.replaceAll("{{"+key+"}}", this.data[key]);
+      }
     });
 
     return this.content;
