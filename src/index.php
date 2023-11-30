@@ -39,6 +39,7 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/templates/") as 
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Library.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Queue.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Player.js"></script>
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Settings.js"></script>
 
 </head>
 <body>

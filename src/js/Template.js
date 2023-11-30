@@ -10,6 +10,10 @@ class Template{
     console.log(data);
   }
 
+  getData(){
+    return this.data;
+  }
+
   render(){
 
     this.content = window.templates[this.id].replace(/\n(\s*)/g, "");
@@ -49,11 +53,18 @@ class Template{
 
     }
 
-
+    // this needs recursion
     Object.keys(this.data).forEach(key => {
       if(typeof this.data[key] === "object"){
         Object.keys(this.data[key]).forEach(key2 => {
-          this.content = this.content.replaceAll("{{"+key+"."+key2+"}}", this.data[key][key2]);
+
+          if(typeof this.data[key2] === "object"){
+            Object.keys(this.data[key2]).forEach(key3 => {
+              this.content = this.content.replaceAll("{{"+key+"."+key2+"."+key3+"}}", this.data[key][key2][key3]);
+            });
+          }else{
+            this.content = this.content.replaceAll("{{"+key+"."+key2+"}}", this.data[key][key2]);
+          }
         });
       }else{
         this.content = this.content.replaceAll("{{"+key+"}}", this.data[key]);

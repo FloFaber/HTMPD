@@ -15,6 +15,7 @@
 
 html,body{
   height: 100vh;
+  overflow: hidden;
 }
 
 body{
@@ -33,6 +34,7 @@ div#body{
 
 div#sidebar{
   max-width: 200px;
+  min-width: 150px;
   width: 100%;
   border-right: 1px solid var(--light-grey);
   padding: 0 20px;
@@ -83,6 +85,10 @@ div#subtitle a{
 
 div#sidebar div#subtitle{ margin-bottom: 35px; color: grey; font-size:10px;}
 
+h2{
+  margin-top: 0;
+}
+
 div#split-view{
   display: flex;
   height: calc(100% - 60px);
@@ -95,8 +101,7 @@ div#split-view >*{
 }
 
 div#split-left{
-  width: 25%;
-  border-left: 1px solid var(--light-grey);
+  width: 35%;
 }
 
 div#split-right{
@@ -104,7 +109,7 @@ div#split-right{
   display: flex;
   flex-flow: column;
   flex-grow: 1;
-  width: 75%;
+  width: 65%;
 }
 
 a{
@@ -145,7 +150,7 @@ button:after{
 
 button.inline{
   font-weight: normal;
-  padding: 0 2px;
+  padding: 0;
   color: grey;
 }
 button.inline:before{
@@ -167,6 +172,10 @@ button.inline.yellow:hover:before,button.inline.yellow:hover:after{ color: var(-
 
 div#action-buttons{
   margin-bottom: 10px;
+}
+
+td.library-item-actions{
+  padding: 0;
 }
 
 table#shortcuts th{
@@ -224,6 +233,8 @@ th{
 
 table{
   border-spacing: 0;
+  width: 1px;
+  display: block;
 }
 
 td{
@@ -244,14 +255,18 @@ td.title{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: block;
+  width: 450px;
 }
 
-td.album{
+td.album,th.album{
   white-space: nowrap;
+  padding: 0 10px;
 }
 
-td.artist{
+td.artist,th.artist{
   white-space: nowrap;
+  padding: 0 10px;
 }
 
 tr.queue-item.active{

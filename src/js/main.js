@@ -1,5 +1,7 @@
-$("div#darkness").click(function(){ darkness(false); });
+$("div#darkness").on("click",function(){ darkness(false); });
 
+let color = localStorage.getItem("color") || "#ff0066";
+$("body").get(0).style.setProperty("--primary", color);
 
 function onHashChange(e){
   let hash = window.location.hash.slice(1);
@@ -44,6 +46,28 @@ function onHashChange(e){
     $("div#split-left").html(template.render());
   }else if(url.view === "shortcuts"){
     $("div#split-left").html((new Template("shortcuts")).render());
+  }else if(url.view === "settings") {
+
+    let template = new Template("settings");
+    $("div#split-left").html(template.render());
+
+    $.get({
+      url: window.WEBROOT + "/api/output.php",
+      success: (r) => {
+        for(let i = 0; i < r.outputs.length; i++){
+          r.outputs[i].outputid = r.outputs[i].outputid.toString();
+          r.outputs[i].enabled_active = (r.outputs[i]["outputenabled"] === 1 ? "active" : "");
+          r.outputs[i].disabled_active = (r.outputs[i]["outputenabled"] === 0 ? "active" : "");
+        }
+        template.setData({
+          outputs: r.outputs,
+          color: color
+        });
+        $("div#split-left").html(template.render());
+      }
+    })
+
+    $("div#split-left").html("lul");
   }else{
     $("div#split-left").html("404 - Page not found");
   }
