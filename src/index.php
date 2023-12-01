@@ -23,6 +23,7 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/css/") as $css){
   <script type="text/javascript">
     window.WEBROOT = "<?= WEBROOT ?? "" ?>";
     window.templates = {};
+    window.views = {};
   </script>
 <?php
 foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/templates/") as $js){
@@ -37,6 +38,7 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/templates/") as 
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Template.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/FileBrowser.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Library.js"></script>
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Playlist.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Queue.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Player.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Settings.js"></script>
@@ -70,6 +72,7 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/templates/") as 
     window.library = new Library();
     window.queue = new Queue();
     window.player = new Player();
+    window.playlist = new Playlist();
   </script>
 
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/main.js"></script>

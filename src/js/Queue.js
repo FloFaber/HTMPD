@@ -21,8 +21,10 @@ class Queue{
       url: window.WEBROOT + "/api/queue.php",
       success: (r) => {
         for(let i = 0; i < r.queue.length; i++){
-          if(!r.queue[i].title){
+          if(!r.queue[i].title && !r.queue[i].file.startsWith("http://") && !r.queue[i].file.startsWith("https://")){
             r.queue[i].title = r.queue[i].file.split("/").pop();
+          }else{
+            r.queue[i].title = r.queue[i].file;
           }
         }
 
@@ -45,7 +47,7 @@ class Queue{
   }
 
   setActiveSong(id){
-    console.log("SETTING ACTIVE SONG: "+id)
+    $(".queue-item").removeClass("active");
     $(".queue-item[data-id='"+id+"']").addClass("active");
   }
 
@@ -66,12 +68,26 @@ class Queue{
     });
   }
 
+  add(uri){
+    this.action({"action": "add", uri: uri });
+  }
+
+  replace(uri){
+    this.action({"action": "replace", uri: uri });
+  }
+
   shuffle(){
     this.action({ "action": "shuffle" });
   }
 
   clear(){
     this.action({ "action": "clear" });
+  }
+
+  delete_id(id, event){
+    event.preventDefault();
+    event.stopPropagation();
+    this.action({ "action": "delete_id", "id": id });
   }
 
 }

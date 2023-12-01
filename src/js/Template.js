@@ -7,7 +7,6 @@ class Template{
 
   setData(data){
     this.data = data;
-    console.log(data);
   }
 
   getData(){
@@ -29,7 +28,7 @@ class Template{
       let match_item = m[2];
       let match_content = m[3];
 
-      if(!this.data[match_object]){
+      if(!this.data[match_object] && this.data[match_object] !== []){
         console.log("data["+match_object+"] is empty")
         continue;
       }
@@ -39,11 +38,22 @@ class Template{
         let item = this.data[match_object][j];
         let s_tmp = match_content;
 
-        let matches = [...this.content.matchAll(/\{\{([a-zA-Z_]*)\.([a-zA-Z_]*)}}/g)];
+        let matches;
+
+        // object->item
+        matches = [...this.content.matchAll(/\{\{([a-zA-Z_]*)\.([a-zA-Z_]*)}}/g)];
         for(let k = 0; k < matches.length; k++){
           let match = matches[k];
           s_tmp = s_tmp.replaceAll("{{"+match[1]+"."+match[2]+"}}", this.data[match_object][j][match[2]] || "");
         }
+
+        // array
+        matches = [...this.content.matchAll(/\{\{([a-zA-Z_]*)}}/g)];
+        for(let k = 0; k < matches.length; k++){
+          let match = matches[k];
+          s_tmp = s_tmp.replaceAll("{{"+match[1]+"}}", this.data[match_object][j] || "");
+        }
+
 
 
         s += s_tmp;

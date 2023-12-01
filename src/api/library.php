@@ -32,6 +32,27 @@ if($method === "get"){
     }
     echo (new Response(200))->add("library", $library);
     return true;
+
+  }elseif($action === "search") {
+
+    $path = urldecode(getrp("path", "get", null) ?? "");
+    $keyword = urldecode(getrp("keyword", "get", null) ?? "");
+
+    $filter = new \FloFaber\MphpD\Filter("file", "contains", $keyword);
+
+    if($path){
+      $filter = $filter->and("file", "=~", "^$path");
+    }
+
+
+    if(($files = $mphpd->db()->search($filter)) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"] . " / " . (string)$filter);
+      return false;
+    }
+
+    echo (new Response(200))->add("files", $files);
+    return true;
+
   }elseif($action === "thumbnail"){
 
     if(($file = getrp("file", "get", null)) === null){
@@ -42,12 +63,12 @@ if($method === "get"){
     $check_only = getrp("check_only", "get", false);
 
     if(($thumbnail = $mphpd->db()->read_picture($file)) === false){
-      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"] ?? "Failed to load picture");
       return false;
     }
 
     if(!$thumbnail){
-      echo new Response(404); return false;
+      $thumbnail = file_get_contents(__DIR__ . "/../broken.gif");
     }
 
     if($check_only){

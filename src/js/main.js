@@ -1,7 +1,11 @@
 $("div#darkness").on("click",function(){ darkness(false); });
 
-let color = localStorage.getItem("color") || "#ff0066";
-$("body").get(0).style.setProperty("--primary", color);
+if(!localStorage.getItem("color")){
+  localStorage.setItem("color", "#ff0066");
+}
+
+
+$("body").get(0).style.setProperty("--primary", localStorage.getItem("color"));
 
 function onHashChange(e){
   let hash = window.location.hash.slice(1);
@@ -9,65 +13,75 @@ function onHashChange(e){
 
   let url = hash.split("&").reduce((previous, current)=> { const [key, value] = current.split("="); previous[key] = value; return previous },{})
 
-
   $("div.sidebar-item").removeClass("active");
   $("div.sidebar-item a[href='#view=" + url.view + "']").parent().addClass("active");
 
   if(url.view === "files"){
 
-    let paths = [{
-      "path": "",
-      "name": "C:"
-    }]
-
-    let ps = (url.path ? url.path.split("/") : []);
-    let pf = "";
-    if(url.path){
-      console.log(ps);
-      for(let i = 0; i < ps.length; i++){
-        let pp = decodeURI(ps[i]);
-        pf += (i === 0 ? "": "/") + pp;
-        paths.push({
-          "path": pf,
-          "name": pp
-        });
-      }
-    }
+    let paths = splitPathForFilebrowser();
 
 
-    let template = new Template("files",{paths: paths});
+    window.views.files = new Template("files",{paths: paths});
 
-    new FileBrowser(url.path || "", function(data){
+    window.filebrowser = new FileBrowser(url.path || "", function(data){
       data.paths = paths;
-      template.setData(data);
-      $("div#split-left").html(template.render());
+      window.views.files.setData(data);
+      $("div#split-left").html(window.views.files.render());
     });
 
-    $("div#split-left").html(template.render());
+
+
+    $("div#split-left").html(window.views.files.render());
   }else if(url.view === "shortcuts"){
-    $("div#split-left").html((new Template("shortcuts")).render());
+    window.views.shortcuts = new Template("shortcuts")
+    $("div#split-left").html(window.views.shortcuts.render());
   }else if(url.view === "settings") {
 
-    let template = new Template("settings");
-    $("div#split-left").html(template.render());
+    window.settings = new Settings();
+    $("div#split-left").html(window.settings.template.render());
 
-    $.get({
-      url: window.WEBROOT + "/api/output.php",
-      success: (r) => {
-        for(let i = 0; i < r.outputs.length; i++){
-          r.outputs[i].outputid = r.outputs[i].outputid.toString();
-          r.outputs[i].enabled_active = (r.outputs[i]["outputenabled"] === 1 ? "active" : "");
-          r.outputs[i].disabled_active = (r.outputs[i]["outputenabled"] === 0 ? "active" : "");
+
+
+  }else if(url.view === "playlists"){
+
+    console.log(url)
+
+    if(!url.playlist){
+
+      window.views.playlists = new Template("playlists");
+      $("div#split-left").html(window.views.playlists.render());
+
+      $.get({
+        url: window.WEBROOT + "/api/playlist.php",
+        success: (r) => {
+          console.log(r);
+          window.views.playlists.setData({
+            playlists: r.playlists,
+          });
+          $("div#split-left").html(window.views.playlists.render());
         }
-        template.setData({
-          outputs: r.outputs,
-          color: color
-        });
-        $("div#split-left").html(template.render());
-      }
-    })
+      });
 
-    $("div#split-left").html("lul");
+    }else{
+
+      let name = url.playlist;
+      window.views.playlist = new Template("playlist");
+      $("div#split-left").html(window.views.playlist.render());
+
+      $.get({
+        url: window.WEBROOT + "/api/playlist.php",
+        data: { action: "show", name: name },
+        success: (r) => {
+          window.views.playlist.setData({
+            name: name,
+            songs: r.songs
+          });
+          $("div#split-left").html(window.views.playlist.render());
+        }
+      });
+
+    }
+
   }else{
     $("div#split-left").html("404 - Page not found");
   }

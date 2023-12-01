@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "flofaber/mphpd",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FloFaber/MphpD.git",
-                "reference": "cf0b1765ebd4c5e6ae07b11cdb56a5404cbd61dc"
+                "reference": "25ac069dd45f6345633103bdcebaa999813cf4e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FloFaber/MphpD/zipball/cf0b1765ebd4c5e6ae07b11cdb56a5404cbd61dc",
-                "reference": "cf0b1765ebd4c5e6ae07b11cdb56a5404cbd61dc",
+                "url": "https://api.github.com/repos/FloFaber/MphpD/zipball/25ac069dd45f6345633103bdcebaa999813cf4e0",
+                "reference": "25ac069dd45f6345633103bdcebaa999813cf4e0",
                 "shasum": ""
             },
             "require": {
@@ -48,9 +48,9 @@
             "description": "A PHP library for the Music Player Daemon",
             "support": {
                 "issues": "https://github.com/FloFaber/MphpD/issues",
-                "source": "https://github.com/FloFaber/MphpD/tree/v1.2.0"
+                "source": "https://github.com/FloFaber/MphpD/tree/v1.2.1"
             },
-            "time": "2023-11-22T18:35:34+00:00"
+            "time": "2023-12-01T12:43:14+00:00"
         }
     ],
     "packages-dev": [],

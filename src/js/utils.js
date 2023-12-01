@@ -99,3 +99,28 @@ function darkness_off(){ darkness(false); }
 function text_input_has_focus(){
   return $("input[type='text'],textarea").is(":focus");
 }
+
+function splitPathForFilebrowser(){
+
+  let url = window.location.hash.slice(1).split("&").reduce((previous, current)=> { const [key, value] = current.split("="); previous[key] = value; return previous },{})
+
+  let paths = [{
+    "path": "",
+    "name": "C:"
+  }]
+
+  let ps = (url.path ? url.path.split("/") : []);
+  let pf = "";
+  if(url.path){
+    console.log(ps);
+    for(let i = 0; i < ps.length; i++){
+      let pp = decodeURI(ps[i]);
+      pf += (i === 0 ? "": "/") + pp;
+      paths.push({
+        "path": pf,
+        "name": pp
+      });
+    }
+  }
+  return paths;
+}

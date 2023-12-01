@@ -1,6 +1,8 @@
 window.templates.player = `
 <div id="player-thumbnail">
-  <img alt="thumbnail" id="thumbnail" src="{{image.src}}"/>
+  <a href="{{image.src}}">
+    <img alt="thumbnail" id="thumbnail" src="{{image.src}}"/>
+  </a>
 </div>
 <div id="player-controls">
   <div id="player-controls-buttons">
@@ -9,11 +11,13 @@ window.templates.player = `
     <button id="player-next" onclick="window.player.next()">⏭</button>
   </div>
   <div id="player-volume">
-    <input id="volume" type="range" min="0" max="100" step="5" value="{{status.volume}}"/>
+    <input id="volume" type="range" min="0" max="100" step="5" value="{{status.volume}}"
+      oninput="window.player.volume(this.value)"
+      onwheel="window.player.volumeWheel(event, this);"/>
   </div>
 </div>
 <div id="player-song-data">
-  <div id="player-song" title="click to seek">
+  <div id="player-song" title="click to seek" onclick="window.player.seekTo(event, this)">
     <span id='player-song-played'>{{current_song.title_played}}</span>
     <span id='player-song-unplayed'>{{current_song.title_unplayed}}</span>
   </div>
@@ -35,12 +39,12 @@ window.templates.player = `
 </div>
 <div id="player-modes">
   <div>
-    <button class="player-mode {{status.single_active}}" id="player-mode-single" title="Single" onclick="window.player.setMode('single')">↫</button>
-    <button class="player-mode {{status.repeat_active}}" id="player-mode-repeat" title="Repeat" onclick="window.player.setMode('repeat')">↺</button>
+    <button class="player-mode {{status.single_active}}" id="player-mode-single" title="Single" onclick="window.player.setMode('single', !{{status.single}})">↫</button>
+    <button class="player-mode {{status.repeat_active}}" id="player-mode-repeat" title="Repeat" onclick="window.player.setMode('repeat', !{{status.repeat}})">↺</button>
   </div>
   <div>
-    <button class="player-mode {{status.random_active}}" id="player-mode-random" title="Random" onclick="window.player.setMode('random')">⇌</button>
-    <button class="player-mode {{status.consume_active}}" id="player-mode-consume" title="Consume" onclick="window.player.setMode('consume')">⇏</button>
+    <button class="player-mode {{status.random_active}}" id="player-mode-random" title="Random" onclick="window.player.setMode('random', !{{status.random}})">⇌</button>
+    <button class="player-mode {{status.consume_active}}" id="player-mode-consume" title="Consume" onclick="window.player.setMode('consume', !{{status.consume}})">⇏</button>
   </div>
 </div>
 `;

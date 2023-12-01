@@ -21,6 +21,28 @@ class Player{
     this.last_elapsed = 0;
     this.last_duration = 0;
 
+    // Keyboard Shortcuts
+    $(document).on("keypress", (e) => {
+      let k = e.key;
+
+      console.log(text_input_has_focus());
+      if(text_input_has_focus()){
+        return;
+      }
+
+      if(k === " "){ this.play_pause(); e.preventDefault(); }
+      if(k === "a"){ this.prev(); }
+      if(k === "d"){ this.next(); }
+      if(k === "q"){ this.seek("-10"); }
+      if(k === "e"){ this.seek("+10"); }
+      if(k === "-"){
+        $("input#volume").val(parseInt($("input#volume").val()) - 5).trigger("input");
+      }
+      if(k === "+"){
+        $("input#volume").val(parseInt($("input#volume").val()) + 5).trigger("input");
+      }
+    });
+
   }
 
   refresh(){
@@ -59,6 +81,10 @@ class Player{
         r.current_song.title_played = song_split.title_played;
         r.current_song.title_unplayed = song_split.title_unplayed;
 
+
+        r.current_song.artist = r.current_song.artist || "N/A";
+        r.current_song.album = r.current_song.artist || "N/A";
+
         console.log(song_split)
 
         this.status = r.status;
@@ -81,25 +107,6 @@ class Player{
           current_song: r.current_song,
           status: r.status
         }
-
-
-        // Volume change by click and mousewheel
-        $("input#volume").on("input", () => {
-          let vol = $("input#volume").val();
-          this.volume(vol);
-        }).on("wheel", function(e){
-
-          if(e.originalEvent.deltaY < 0){ // up
-            $(this).val(parseInt($(this).val()) + parseInt($(this).attr("step")));
-          }else{ // down
-            $(this).val(parseInt($(this).val()) - parseInt($(this).attr("step")));
-          }
-          $(this).trigger("input");
-
-          e.preventDefault();
-          e.stopPropagation();
-          return false;
-        });
 
       }
     })
@@ -167,7 +174,7 @@ class Player{
 
   splitSongByProgress(current_song, percent_played){
 
-    let song = current_song.file;
+    let song = current_song.file.split("/").pop();
     if(current_song.title){
       song = current_song.title;
     }
@@ -217,6 +224,17 @@ class Player{
     });
   }
 
+  seekTo(event, element){
+    if(typeof this.status.duration === "undefined"){ return; }
+
+    let w = $(element).width();
+    let offset_x = $(element).offset().left;
+    let x = event.pageX - offset_x;
+    let seek_to = Math.round(map(x, 0, w, 0, this.status.duration) * 100)/100;
+
+    this.seek(seek_to);
+  }
+
   play_id(id){
     this.action({ "action": "playid", "id": id });
   }
@@ -233,8 +251,41 @@ class Player{
     }
   }
 
+  next(){
+    this.action({ "action": "next" });
+  }
+
+  prev(){
+    this.action({ "action": "previous" });
+  }
+
+  seek(time){
+    this.action({ "action": "seek_cur", time: time });
+  }
+
+  setMode(mode, state){
+    state = state === true ? 1 : 0;
+    this.action({ "action": mode, state: state });
+  }
+
   volume(){
     this.action({ "action": "volume", "volume": $("input#volume").val() });
+  }
+
+  // Volume change by click and mousewheel
+  volumeWheel(event, elem){
+
+    if(event.deltaY < 0){ // up
+      $(elem).val(parseInt($(elem).val()) + parseInt($(elem).attr("step")));
+    }else{ // down
+      $(elem).val(parseInt($(elem).val()) - parseInt($(elem).attr("step")));
+    }
+    $(elem).trigger("input");
+
+    event.preventDefault();
+    event.stopPropagation();
+    return false;
+
   }
 
 }

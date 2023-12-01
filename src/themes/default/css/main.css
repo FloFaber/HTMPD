@@ -131,7 +131,7 @@ button{
 
 button:hover,button.active{
   background-color: var(--primary);
-  color: var(--white);
+  color: var(--white)!important;
 }
 
 button:before{
@@ -151,7 +151,7 @@ button:after{
 button.inline{
   font-weight: normal;
   padding: 0;
-  color: grey;
+  color: grey!important;
 }
 button.inline:before{
   margin-right: 0;
@@ -169,6 +169,7 @@ button.inline:hover:before,button.inline:hover:after{ color: var(--primary); }
 button.inline.red:hover:before,button.inline.red:hover:after{ color: var(--red); }
 button.inline.green:hover:before,button.inline.green:hover:after{ color: var(--green); }
 button.inline.yellow:hover:before,button.inline.yellow:hover:after{ color: var(--yellow); }
+button.inline.white:hover:before,button.inline.white:hover:after{ color: white; }
 
 div#action-buttons{
   margin-bottom: 10px;
