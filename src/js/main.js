@@ -9,14 +9,23 @@ $("body").get(0).style.setProperty("--primary", localStorage.getItem("color"));
 
 function onHashChange(e){
   let hash = window.location.hash.slice(1);
-  console.log(window.location.hash);
-
   let url = hash.split("&").reduce((previous, current)=> { const [key, value] = current.split("="); previous[key] = value; return previous },{})
 
-  $("div.sidebar-item").removeClass("active");
-  $("div.sidebar-item a[href='#view=" + url.view + "']").parent().addClass("active");
+  console.log(url);
 
-  if(url.view === "files"){
+  $("div.sidebar-item").removeClass("active");
+  $("div.sidebar-item a[href='#" + (url.view ? "view="+url.view : "") + "']").parent().addClass("active");
+
+  if(url.view === "library" || url.view === "" || typeof url.view === "undefined") {
+
+    if(url.artist){
+
+    }else{
+      let library = new Library();
+      library.refresh();
+    }
+
+  }else if(url.view === "files"){
 
     let paths = splitPathForFilebrowser();
 

@@ -33,6 +33,15 @@ if($method === "get"){
     echo (new Response(200))->add("library", $library);
     return true;
 
+  }elseif($action === "get"){
+
+    $artists = $mphpd->db()->list("artist");
+
+    $r = new Response(200);
+    $r->add("artists", $artists);
+    echo $r;
+    return true;
+
   }elseif($action === "search") {
 
     $path = urldecode(getrp("path", "get", null) ?? "");

@@ -236,6 +236,11 @@ table{
   border-spacing: 0;
   width: 1px;
   display: block;
+  padding-bottom: 50px;
+}
+
+tr{
+  line-height: 15px;
 }
 
 td{

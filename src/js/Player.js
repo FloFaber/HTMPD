@@ -265,7 +265,10 @@ class Player{
 
   setMode(mode, state){
     state = state === true ? 1 : 0;
-    this.action({ "action": mode, state: state });
+    this.action({ "action": mode, state: state }, () => {
+      notification(NOTYPE_SUCC, mode + "-mode " + (state ? "enabled" : "disabled"));
+      this.refresh();
+    });
   }
 
   volume(){

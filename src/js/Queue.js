@@ -21,10 +21,12 @@ class Queue{
       url: window.WEBROOT + "/api/queue.php",
       success: (r) => {
         for(let i = 0; i < r.queue.length; i++){
-          if(!r.queue[i].title && !r.queue[i].file.startsWith("http://") && !r.queue[i].file.startsWith("https://")){
-            r.queue[i].title = r.queue[i].file.split("/").pop();
-          }else{
-            r.queue[i].title = r.queue[i].file;
+          if(!r.queue[i].title){
+            if(!r.queue[i].file.startsWith("http://") && !r.queue[i].file.startsWith("https://")){
+              r.queue[i].title = r.queue[i].file.split("/").pop();
+            }else{
+              r.queue[i].title = r.queue[i].file;
+            }
           }
         }
 
@@ -70,6 +72,10 @@ class Queue{
 
   add(uri){
     this.action({"action": "add", uri: uri });
+  }
+
+  add_id(uri, play = false){
+    this.action({ "action": "add_id", "uri": uri, "play": play });
   }
 
   replace(uri){

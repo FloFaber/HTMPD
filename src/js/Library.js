@@ -1,5 +1,32 @@
 class Library{
 
+  constructor() {
+
+    this.template = new Template("library");
+
+  }
+
+  render(){
+    $("div#split-left").html(this.template.render());
+  }
+
+  refresh(){
+
+    $.get({
+      url: window.WEBROOT + "/api/library.php",
+      data: { "action": "get" },
+      success: (r) => {
+        this.template.setData({
+          artists: r.artists
+        });
+        this.render();
+        console.log(r);
+      }
+    })
+  }
+
+
+
 }
 
 $("button#db-update").on("click", function (){

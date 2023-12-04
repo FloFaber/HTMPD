@@ -34,7 +34,9 @@ window.templates.files = `
         <button class="inline green" data-uri="{{file.name}}" data-replace="false" onclick="window.queue.add('{{file.name}}',false);">+</button>
         <button class="inline yellow" data-uri="{{file.name}}" data-replace="true" onclick="window.queue.add('{{file.name}}',true);">~</button>
       </td>
-      <td class="library-item-name"><span>{{file.display_name}}</span></td>
+      <td class="library-item-name">
+        <span onclick="window.queue.add_id('{{file.name}}', true)">{{file.display_name}}</span>
+      </td>
     </tr>
     {{endfor}}
     
