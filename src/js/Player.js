@@ -72,20 +72,17 @@ class Player{
           r.current_song = {
             "title_played": "[ STOPPED ]",
             "title_unplayed": "",
-            "artist": "",
-            "album": ""
+            "artist": "N/A",
+            "album": "N/A"
           }
         }
 
-        let song_split = this.splitSongByProgress(r.current_song, (Math.round(r.status.elapsed / (r.status.duration/100))) || 0);
-        r.current_song.title_played = song_split.title_played;
-        r.current_song.title_unplayed = song_split.title_unplayed;
+        if(r.current_song.file){
+          let song_split = this.splitSongByProgress(r.current_song, (Math.round(r.status.elapsed / (r.status.duration/100))) || 0);
+          r.current_song.title_played = song_split.title_played;
+          r.current_song.title_unplayed = song_split.title_unplayed;
+        }
 
-
-        r.current_song.artist = r.current_song.artist || "N/A";
-        r.current_song.album = r.current_song.artist || "N/A";
-
-        console.log(song_split)
 
         this.status = r.status;
         this.current_song = r.current_song;
@@ -113,7 +110,7 @@ class Player{
   }
 
   increase_time(){
-    if(this.status.state === "play"){
+    if(this.status && this.status.state === "play"){
       this.update_time(this.last_duration, this.last_elapsed+1);
     }
   }
@@ -173,6 +170,8 @@ class Player{
 
 
   splitSongByProgress(current_song, percent_played){
+
+    if(!current_song.file){ return; }
 
     let song = current_song.file.split("/").pop();
     if(current_song.title){

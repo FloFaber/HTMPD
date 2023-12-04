@@ -16,13 +16,24 @@ function onHashChange(e){
   $("div.sidebar-item").removeClass("active");
   $("div.sidebar-item a[href='#" + (url.view ? "view="+url.view : "") + "']").parent().addClass("active");
 
-  if(url.view === "library" || url.view === "" || typeof url.view === "undefined") {
+  if(url.view === "artists" || url.view === "" || typeof url.view === "undefined") {
 
     if(url.artist){
-
+      let artist = new Artist(decodeURI(url.artist ?? ""));
+      artist.refresh();
     }else{
-      let library = new Library();
-      library.refresh();
+      let artists = new Artists();
+      artists.refresh();
+    }
+
+  }else if(url.view === "albums"){
+
+    if(url.album){
+      let album = new Album(decodeURI(url.album ?? ""), decodeURI(url.artist ?? ""));
+      album.refresh();
+    }else{
+      let albums = new Albums();
+      albums.refresh();
     }
 
   }else if(url.view === "files"){

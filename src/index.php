@@ -42,7 +42,10 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/templates/") as 
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Queue.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Player.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Settings.js"></script>
-
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Artist.js"></script>
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Artists.js"></script>
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Album.js"></script>
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Albums.js"></script>
 </head>
 <body>
   <div id="notifications"></div>
@@ -50,7 +53,9 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/templates/") as 
     <h1 id="title"><span id="title-part1">HT</span><span id="title-part2">MPD</span></h1>
     <div id="subtitle">by <a href="https://www.flofaber.com">Flo Faber</a></div>
 
-    <div class="sidebar-item"><a href="#">Library</a></div>
+    <div class="sidebar-item"><a href="#view=artists">Artists</a></div>
+    <div class="sidebar-item"><a href="#view=albums">Albums</a></div>
+
     <div class="sidebar-item"><a href="#view=files">Files</a></div>
     <div class="sidebar-item"><a href="#view=playlists">Playlists</a></div>
     <div class="sidebar-item"><a href="#view=settings">Settings</a></div>

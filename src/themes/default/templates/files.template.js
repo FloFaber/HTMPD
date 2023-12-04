@@ -1,7 +1,7 @@
 window.templates.files = `
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px">
     <h2 style="margin:0">Files</h2>
-    <button id="db-update">Update DB</button>
+    <button id="db-update" onclick="window.library.update_db()">Update DB</button>
   </div>
 
   <div>

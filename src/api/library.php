@@ -33,13 +33,51 @@ if($method === "get"){
     echo (new Response(200))->add("library", $library);
     return true;
 
-  }elseif($action === "get"){
+  }elseif($action === "artist"){
 
-    $artists = $mphpd->db()->list("artist");
+    $artist = getrp("artist", "get", null);
 
-    $r = new Response(200);
-    $r->add("artists", $artists);
-    echo $r;
+    if(!$artist){
+      $artists = $mphpd->db()->list("artist");
+      echo (new Response(200))->add("artists", $artists);
+      return true;
+    }
+
+    if(($albums = $mphpd->db()->list("album", new \FloFaber\MphpD\Filter("artist", "==", $artist))) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+
+    echo (new Response(200))->add("albums", $albums);
+    return true;
+
+  }elseif($action === "album"){
+
+    $artist = getrp("artist", "get", null);
+    $album = getrp("album", "get", null);
+
+    if($album){
+
+      $filter = new \FloFaber\MphpD\Filter("album", "==", $album);
+      if($artist){
+        $filter = $filter->and("artist", "==", $artist);
+      }
+
+      if(($songs = $mphpd->db()->search($filter)) === false){
+        echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+        return false;
+      }
+
+      echo (new Response(200))->add("songs", $songs);
+      return true;
+    }
+
+
+    if(($albums = $mphpd->db()->list("album")) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+    echo (new Response(200))->add("albums", $albums);
     return true;
 
   }elseif($action === "search") {
