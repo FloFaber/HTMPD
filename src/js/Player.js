@@ -75,12 +75,15 @@ class Player{
             "artist": "N/A",
             "album": "N/A"
           }
-        }
-
-        if(r.current_song.file){
+        }else{
           let song_split = this.splitSongByProgress(r.current_song, (Math.round(r.status.elapsed / (r.status.duration/100))) || 0);
           r.current_song.title_played = song_split.title_played;
           r.current_song.title_unplayed = song_split.title_unplayed;
+          r.current_song.artist = r.current_song.artist || "N/A";
+          r.current_song.album = r.current_song.album || "N/A";
+          if(r.current_song.file.startsWith("http://") || r.current_song.file.startsWith("https://")){
+            r.current_song.artist = r.current_song.name || "";
+          }
         }
 
 
@@ -265,7 +268,7 @@ class Player{
   setMode(mode, state){
     state = state === true ? 1 : 0;
     this.action({ "action": mode, state: state }, () => {
-      notification(NOTYPE_SUCC, mode + "-mode " + (state ? "enabled" : "disabled"));
+      notification(state ? NOTYPE_SUCC : NOTYPE_WARN, mode + "-mode " + (state ? "enabled" : "disabled"));
       this.refresh();
     });
   }

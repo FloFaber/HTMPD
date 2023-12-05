@@ -39,4 +39,14 @@ class Library{
     })
   }
 
+  search_add(filters, replace = false){
+    $.post({
+      url: window.WEBROOT + "/api/queue.php",
+      data: { action: "search_add", filters: filters, replace: replace },
+      success: (r) => {
+        window.queue.refresh();
+      }
+    })
+  }
+
 }

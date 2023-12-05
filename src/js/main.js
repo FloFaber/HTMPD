@@ -14,9 +14,9 @@ function onHashChange(e){
   console.log(url);
 
   $("div.sidebar-item").removeClass("active");
-  $("div.sidebar-item a[href='#" + (url.view ? "view="+url.view : "") + "']").parent().addClass("active");
+  $("div.sidebar-item a[href='#" + (url.view ? "view="+url.view : "view=files") + "']").parent().addClass("active");
 
-  if(url.view === "artists" || url.view === "" || typeof url.view === "undefined") {
+  if(url.view === "artists") {
 
     if(url.artist){
       let artist = new Artist(decodeURI(url.artist ?? ""));
@@ -36,7 +36,7 @@ function onHashChange(e){
       albums.refresh();
     }
 
-  }else if(url.view === "files"){
+  }else if(url.view === "files" || url.view === "" || typeof url.view === "undefined"){
 
     let paths = splitPathForFilebrowser();
 

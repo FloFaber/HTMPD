@@ -59,6 +59,7 @@ class Queue{
       data: data,
       success: (r) => {
         this.refresh();
+        window.player.refresh();
         if(typeof onsuccess === "function"){ onsuccess(r); }
       },
       error: function(r){

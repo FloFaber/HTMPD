@@ -1,3 +1,4 @@
+const NOTYPE_WARN = 2;
 const NOTYPE_ERR = 1;
 const NOTYPE_SUCC = 0;
 
@@ -20,6 +21,7 @@ function notification(type, msg = ""){
   let classname = "notification";
   if(type === NOTYPE_ERR){ classname += " error"; }
   if(type === NOTYPE_SUCC){ classname += " success"; }
+  if(type === NOTYPE_WARN){ classname += " warning"; }
 
   if(typeof msg === "object"){
     let json = msg.responseJSON;

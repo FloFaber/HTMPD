@@ -19,6 +19,7 @@ class Settings{
         console.log(localStorage.getItem("colors") || [])
         this.template.setData({
           outputs: r.outputs,
+          crossfade: window.player.status.xfade || 0,
           color: localStorage.getItem("color") || "#ff0066",
           colors: JSON.parse(localStorage.getItem("colors")) || []
         });
@@ -26,6 +27,24 @@ class Settings{
       }
     });
 
+  }
+
+  crossfade(event, value){
+    if(event === null && value === null){
+      event = {
+        key: "Enter"
+      };
+      value = $("input#crossfade").val();
+    }
+    if(event.key === "Enter"){
+      $.post({
+        url: window.WEBROOT + "/api/player.php",
+        data: { action: "crossfade", "crossfade": value},
+        success: function(r){
+          notification(NOTYPE_SUCC, "Crossfade changed to "+value+" seconds.");
+        }
+      })
+    }
   }
 
 

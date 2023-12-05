@@ -31,7 +31,9 @@ div#player-song-data{
     flex-grow: 1;
 }
 
-div#player-song-artist,div#player-song-album{
+div#player-song-artist,div#player-song-artist a,
+div#player-song-album,div#player-song-album a{
+  text-decoration: none;
   color: grey;
   font-size: 11px;
   margin-top: 3px;

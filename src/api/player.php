@@ -126,6 +126,17 @@ if($method === "get"){
     echo new Response();
     return true;
 
+  }elseif($action === "crossfade"){
+
+    $crossfade = getrp("crossfade", "post", 0);
+    if($mphpd->player()->crossfade($crossfade) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+
+    echo new Response();
+    return true;
+
   }elseif($action === "seek_cur"){
 
     if(($time = getrp("time", "post", null)) === null){

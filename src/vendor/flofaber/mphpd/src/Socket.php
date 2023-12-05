@@ -551,7 +551,7 @@ class Socket
         $b[] = $v;
       }
 
-      
+
 
     }
 

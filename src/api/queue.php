@@ -73,6 +73,32 @@ if($method === "get"){
 
     echo new Response(200, "ERR_OK", "", [ "id" => $id ]); return true;
 
+  }elseif($action === "search_add"){
+
+    $replace = getrp("replace", "post", false) === "true";
+    $filters = getrp("filters", "post", []);
+
+    if($replace === true){
+      $mphpd->queue()->clear();
+    }
+
+    $filter = null;
+    foreach($filters as $f){
+      if($filter === null){
+        $filter = new \FloFaber\MphpD\Filter($f["tag"], $f["operator"], $f["value"]);
+      }else{
+        $filter = $filter->and($f["tag"], $f["operator"], $f["value"]);
+      }
+    }
+
+    if($mphpd->queue()->add_search($filter) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+
+    echo (new Response(200))->add("asdf", $replace);
+    return true;
+
   }elseif($action === "clear"){
     if($mphpd->queue()->clear() === false){
       echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]); return false;

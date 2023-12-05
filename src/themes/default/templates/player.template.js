@@ -21,8 +21,8 @@ window.templates.player = `
     <span id='player-song-played'>{{current_song.title_played}}</span>
     <span id='player-song-unplayed'>{{current_song.title_unplayed}}</span>
   </div>
-  <div id="player-song-artist">{{current_song.artist}}</div>
-  <div id="player-song-album">{{current_song.album}}</div>
+  <div id="player-song-artist"><a href="#view=artists&artist={{current_song.artist}}">{{current_song.artist}}</a></div>
+  <div id="player-song-album"><a href="#view=albums&album={{current_song.album}}">{{current_song.album}}</a></div>
 </div>
 
 <div id="player-time">

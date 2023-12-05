@@ -21,9 +21,13 @@ class Artist{
             artist: this.name
           }
         }
+        for(let i = 0; i < r.songs.length; i++){
+          r.songs[i].display_name = r.songs[i].title || r.songs[i].file.split("/").pop()
+        }
         this.template.setData({
           "artist": this.name,
-          "albums": r.albums
+          "albums": r.albums,
+          "songs": r.songs
         });
         this.render();
       }
