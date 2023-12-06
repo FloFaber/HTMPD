@@ -1,7 +1,6 @@
 class Queue{
 
   constructor() {
-    this.template = new Template("queue");
 
     // pre-render
     this.render();
@@ -13,7 +12,7 @@ class Queue{
   }
 
   render(){
-    $("div#split-right").html(this.template.render());
+    $("div#split-right").html(window.templates.queue(this.data));
   }
 
   refresh(callback = function(e){}){
@@ -30,7 +29,7 @@ class Queue{
           }
         }
 
-        this.template.setData({queue_items: r.queue});
+        this.data = {queue_items: r.queue};
         this.render();
 
         console.log(window.player_data)

@@ -3,8 +3,9 @@ class Player{
   constructor() {
     this.status = null;
     this.current_song = null;
-    this.template = new Template("player");
-    this.template.setData({ image: { "src": "" } })
+
+    this.data = { image: { "src":"" }}
+
     this.render();
     this.refresh();
 
@@ -91,15 +92,15 @@ class Player{
         this.current_song = r.current_song;
         window.queue.setActiveSong(r.current_song.id);
 
-        this.template.setData({
+        this.data = {
           status: r.status,
           time: time,
           current_song: r.current_song,
           playbutton: (r.status.state === "play" ? "⏸" : "▶"),
           image: {
-            src: this.current_song.file ? window.WEBROOT + "/api/library.php?action=thumbnail&file=" + this.current_song.file : "",
+            src: this.current_song.haspicture ? window.WEBROOT + "/api/library.php?action=thumbnail&file=" + this.current_song.file : "",
           }
-        });
+        };
 
         this.render();
 
@@ -121,7 +122,7 @@ class Player{
 
   update_time(duration, elapsed){
 
-    let data = this.template.getData();
+    let data = this.data;
 
     console.log(duration)
     if(typeof duration === "undefined"){ duration = 0; }
@@ -161,14 +162,14 @@ class Player{
     data.current_song.title_played = song_split.title_played;
     data.current_song.title_unplayed = song_split.title_unplayed;
 
-    this.template.setData(data);
+    this.data = data;
     this.render();
 
   }
 
 
   render(){
-    $("div#player").html(this.template.render());
+    $("div#player").html(window.templates.player(this.data));
   }
 
 
@@ -189,15 +190,15 @@ class Player{
 
     if(percent_played > -1){
       for(let i = 0; i < chars; i++){
-        data.title_played += htmlspecialchars(song[i]);
+        data.title_played += song[i];
       }
 
       for(let i = chars; i < song.length; i++){
-        data.title_unplayed += htmlspecialchars(song[i]);
+        data.title_unplayed += song[i];
       }
 
     }else{
-      data.title_played = htmlspecialchars(song);
+      data.title_played = song;
     }
 
     return data;

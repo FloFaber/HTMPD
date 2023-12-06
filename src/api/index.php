@@ -38,6 +38,14 @@ if($method === "get"){
       return false;
     }
 
+    $current_song["haspicture"] = false;
+    if(isset($current_song["file"])){
+      $picture = $mphpd->db()->get_picture($current_song["file"], false);
+      if($picture !== false && $picture["size"] > 0){
+        $current_song["haspicture"] = true;
+      }
+    }
+
 
     echo (new Response())->add("status", $status)->add("current_song", $current_song);
     return true;

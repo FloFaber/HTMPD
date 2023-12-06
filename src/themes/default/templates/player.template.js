@@ -1,9 +1,11 @@
-window.templates.player = `
+window.templates.player = Handlebars.compile(`
+{{#if current_song.haspicture}}
 <div id="player-thumbnail">
-  <a href="{{image.src}}">
-    <img alt="thumbnail" id="thumbnail" src="{{image.src}}"/>
+  <a href="{{{image.src}}}">
+    <img alt="thumbnail" id="thumbnail" src="{{{image.src}}}"/>
   </a>
 </div>
+{{/if}}
 <div id="player-controls">
   <div id="player-controls-buttons">
     <button id="player-previous" onclick="window.player.prev()">⏮</button>
@@ -47,4 +49,4 @@ window.templates.player = `
     <button class="player-mode {{status.consume_active}}" id="player-mode-consume" title="Consume" onclick="window.player.setMode('consume', !{{status.consume}})">⇏</button>
   </div>
 </div>
-`;
+`.replace(/\n(\s*)/g, ""));

@@ -25,6 +25,8 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/css/") as $css){
     window.templates = {};
     window.views = {};
   </script>
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/handlebars.min-v4.7.8.js"></script>
+
 <?php
 foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/templates/") as $js){
   if(!str_ends_with($js, ".js")){ continue; }
@@ -34,6 +36,7 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/templates/") as 
 }
 ?>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/jquery-3.6.4.min.js"></script>
+
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/utils.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Template.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/FileBrowser.js"></script>

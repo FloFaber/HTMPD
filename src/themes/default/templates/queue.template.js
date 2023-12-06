@@ -1,4 +1,4 @@
-window.templates.queue = `
+window.templates.queue = Handlebars.compile(`
   <h2>Queue</h2>
 
   <div id="action-buttons">
@@ -16,8 +16,8 @@ window.templates.queue = `
       <th class="album">Album</th>
       <th class="artist">Artist</th>
     </thead>
-    {{for queue_items->queue_item}}
-    <tr draggable="true" ondragstart="dragstart()" ondragover="dragover()" class="queue-item" data-id="{{queue_item.id}}" onclick="window.player.play_id({{queue_item.id}})">
+    {{#each queue_items as |queue_item|}}
+    <tr class="queue-item" data-id="{{queue_item.id}}" onclick="window.player.play_id({{queue_item.id}})">
       <td>
         <button class="inline white" onclick="window.queue.delete_id({{queue_item.id}}, event)" title="Remove from Queue">-</button>
       </td>
@@ -26,6 +26,6 @@ window.templates.queue = `
       <td class="album">{{queue_item.album}}</td>
       <td class="artist">{{queue_item.artist}}</td>
     </tr>
-    {{endfor}}
+    {{/each}}
   </table>
-`;
+`.replace(/\n(\s*)/g, ""));
