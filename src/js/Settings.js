@@ -1,8 +1,7 @@
 class Settings{
 
   constructor() {
-    this.template = new Template("settings");
-    $("div#split-left").html(this.template.render());
+    $("div#split-left").html(window.templates.settings());
     this.refresh();
   }
 
@@ -16,14 +15,14 @@ class Settings{
           r.outputs[i].enabled_active = (r.outputs[i]["outputenabled"] === 1 ? "active" : "");
           r.outputs[i].disabled_active = (r.outputs[i]["outputenabled"] === 0 ? "active" : "");
         }
-        console.log(localStorage.getItem("colors") || [])
-        this.template.setData({
+        console.log(localStorage.getItem("colors") || []);
+
+        $("div#split-left").html(window.templates.settings({
           outputs: r.outputs,
           crossfade: window.player.status.xfade || 0,
           color: localStorage.getItem("color") || "#ff0066",
           colors: JSON.parse(localStorage.getItem("colors")) || []
-        });
-        $("div#split-left").html(this.template.render());
+        }));
       }
     });
 

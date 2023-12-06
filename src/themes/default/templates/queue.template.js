@@ -5,9 +5,10 @@ window.templates.queue = Handlebars.compile(`
     <button id="queue-clear" onclick="window.queue.clear()">clear</button>
     <button id="queue-shuffle" onclick="window.queue.shuffle()">shuffle</button>
     <button id="queue-save" onclick="window.queue.save()">save...</button>
-    <button id="queue-add" onclick="window.queue.add()">add...</button>
+    <button id="queue-add" onclick="window.queue.add(prompt('URI?'))">add...</button>
   </div>
 
+  {{#if queue_items}}
   <table id="queue-items">
     <thead>
       <th></th>
@@ -28,4 +29,7 @@ window.templates.queue = Handlebars.compile(`
     </tr>
     {{/each}}
   </table>
+  {{else}}
+  <p>The Queue is empty.</p>
+  {{/if}}
 `.replace(/\n(\s*)/g, ""));

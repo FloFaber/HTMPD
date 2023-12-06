@@ -1,7 +1,8 @@
-window.templates.artists = `
+window.templates.artists = Handlebars.compile(`
   <h2>Artists</h2>
+  {{#if artists}}
   <table>
-    {{for artists->artist}}
+    {{#each artists as |artist|}}
     <tr>
       <td>
         <button class="inline green" title="Load" onclick="window.library.search_add([
@@ -21,6 +22,9 @@ window.templates.artists = `
         <a href="#view=artists&artist={{artist}}">{{artist}}</a>  
       </td>
     </tr>
-    {{endfor}}
+    {{/each}}
   </table>
-`;
+  {{else}}
+  <p>No artists.</p>
+  {{/if}}
+`.replace(/\n(\s*)/g, ""));

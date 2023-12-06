@@ -1,13 +1,11 @@
 class Library{
 
   constructor() {
-
-    this.template = new Template("library");
-
+    this.data = {};
   }
 
   render(){
-    $("div#split-left").html(this.template.render());
+    $("div#split-left").html(window.templates.library(this.data));
   }
 
   refresh(){
@@ -16,11 +14,10 @@ class Library{
       url: window.WEBROOT + "/api/library.php",
       data: { "action": "get" },
       success: (r) => {
-        this.template.setData({
+        this.data = {
           artists: r.artists
-        });
+        };
         this.render();
-        console.log(r);
       }
     })
   }
@@ -43,7 +40,7 @@ class Library{
     $.post({
       url: window.WEBROOT + "/api/queue.php",
       data: { action: "search_add", filters: filters, replace: replace },
-      success: (r) => {
+      complete: (r) => {
         window.queue.refresh();
       }
     })

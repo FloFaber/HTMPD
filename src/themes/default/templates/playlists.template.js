@@ -1,8 +1,9 @@
-window.templates.playlists = `
+window.templates.playlists = Handlebars.compile(`
   <h2>Playlists</h2>
   
+  {{#if playlists}}
   <table id="playlists">
-  {{for playlists->playlist}}
+  {{#each playlists as |playlist|}}
     <tr>
       <td>
         <button class="inline green" title="Load" onclick="window.playlist.load('{{playlist}}')">+</button>
@@ -13,6 +14,9 @@ window.templates.playlists = `
         <a href="#view=playlists&playlist={{playlist}}">{{playlist}}</a>
       </td>
     </tr>
-  {{endfor}}
+  {{/each}}
   </table>
-`;
+  {{else}}
+  <p>No playlists.</p>
+  {{/if}}
+`.replace(/\n(\s*)/g, ""));

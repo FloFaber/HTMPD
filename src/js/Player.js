@@ -63,7 +63,7 @@ class Player{
           duration: r.status.duration || 0,
           elapsed_readable: sec2minsec(r.status.elapsed || 0),
           duration_readable: sec2minsec(r.status.duration || 0),
-          elapsed_percent: ((Math.round(r.status.elapsed / (r.status.duration/100))) || 0) + "%"
+          elapsed_percent: r.status.duration ? ((Math.round(r.status.elapsed / (r.status.duration/100))) || 0) + "%" : "LIVE"
         };
 
         this.last_elapsed = r.status.elapsed || 0;
@@ -77,7 +77,7 @@ class Player{
             "album": "N/A"
           }
         }else{
-          let song_split = this.splitSongByProgress(r.current_song, (Math.round(r.status.elapsed / (r.status.duration/100))) || 0);
+          let song_split = this.splitSongByProgress(r.current_song, (Math.round(r.status.elapsed / (r.status.duration/100))) || 100);
           r.current_song.title_played = song_split.title_played;
           r.current_song.title_unplayed = song_split.title_unplayed;
           r.current_song.artist = r.current_song.artist || "N/A";
@@ -109,6 +109,13 @@ class Player{
           status: r.status
         }
 
+      }, error: (r) => {
+        this.data= {
+          current_song: {
+            "title_played": "N/A"
+          }
+        }
+        this.render();
       }
     })
   }

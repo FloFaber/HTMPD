@@ -1,17 +1,19 @@
-window.templates.settings = `
+window.templates.settings = Handlebars.compile(`
 
   <h2>Settings</h2>
   
   <h3 style="margin-top: 40px;">Audio Outputs</h3>
   
   <div id="outputs">
-  {{for outputs->output}}
+  {{#each outputs as |output|}}
     <div class="output">
       <button class="{{output.enabled_active}}" onclick="window.settings.output_set({{output.outputid}}, 1)">On</button>
       <button class="{{output.disabled_active}}" onclick="window.settings.output_set({{output.outputid}}, 0)">Off</button>
       <span style="margin-left: 10px">{{output.outputname}}</span>
     </div>
-  {{endfor}}
+  {{else}}
+    <p>No configured outputs.</p>
+  {{/each}}
   </div>
   
   <h3 style="margin-top: 40px;">Crossfade</h3>
@@ -30,11 +32,13 @@ window.templates.settings = `
   </div>
   
   <h4>Saved colors</h4>
-  {{for colors->color}}
+  {{#each colors as |color|}}
   <div>
     <button class="inline red" title="delete color" onclick="window.settings.color_delete('{{color}}')">-</button>
     <button style="color: {{color}}" onclick="window.settings.color_set('{{color}}',true)">{{color}}</button>
   </div>
-  {{endfor}}
+  {{else}}
+  <p>No saved colors.</p>
+  {{/each}}
 
-`
+`.replace(/\n(\s*)/g, ""));

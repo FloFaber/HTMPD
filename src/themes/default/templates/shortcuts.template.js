@@ -1,4 +1,4 @@
-window.templates.shortcuts = `
+window.templates.shortcuts = Handlebars.compile(`
 <h2>Keyboard Shortcuts</h2>
 <table id='shortcuts'>
   <tr>
@@ -18,4 +18,4 @@ window.templates.shortcuts = `
     <td>increase / decrease volume</td>
   </tr>
 </table>
-`;
+`.replace(/\n(\s*)/g, ""));

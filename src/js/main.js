@@ -1,8 +1,22 @@
 $("div#darkness").on("click",function(){ darkness(false); });
 
+
+
 if(!localStorage.getItem("color")){
   localStorage.setItem("color", "#ff0066");
 }
+
+
+
+$.ajaxSetup({
+  error: function(r){
+    notification(NOTYPE_ERR, r);
+  }
+});
+
+/*$(document).on( "ajaxError", function(event, jqxhr, settings, thrownError){
+  notification(NOTYPE_ERR, jqxhr);
+});*/
 
 
 $("body").get(0).style.setProperty("--primary", localStorage.getItem("color"));
@@ -19,84 +33,124 @@ function onHashChange(e){
   if(url.view === "artists") {
 
     if(url.artist){
-      let artist = new Artist(decodeURI(url.artist ?? ""));
-      artist.refresh();
+      let artist = decodeURI(url.artist ?? "");
+
+      $.get({
+        url: window.WEBROOT + "/api/library.php",
+        data: { "action": "artist", "artist": artist },
+        success: (r) => {
+          for(let i = 0; i < r.albums.length; i++){
+            r.albums[i] = {
+              name: r.albums[i],
+              artist: artist
+            }
+          }
+          for(let i = 0; i < r.songs.length; i++){
+            r.songs[i].display_name = r.songs[i].title || r.songs[i].file.split("/").pop()
+          }
+
+          $("div#split-left").html(window.templates.artist({
+            "artist": this.name,
+            "albums": r.albums,
+            "songs": r.songs
+          }));
+
+        }
+      })
+
     }else{
-      let artists = new Artists();
-      artists.refresh();
+      $.get({
+        url: window.WEBROOT + "/api/library.php",
+        data: { "action": "artist" },
+        success: (r) => {
+          $("div#split-left").html(window.templates.artists({
+            "artists": r.artists,
+          }));
+        }
+      })
+      $("div#split-left").html(window.templates.artists());
     }
 
   }else if(url.view === "albums"){
 
     if(url.album){
-      let album = new Album(decodeURI(url.album ?? ""), decodeURI(url.artist ?? ""));
-      album.refresh();
+      let album = decodeURI(url.album ?? "");
+
+      $.get({
+        url: window.WEBROOT + "/api/library.php",
+        data: { "action": "album", "album": album },
+        success: (r) => {
+          for(let i = 0; i < r.songs.length; i++){
+            r.songs[i].track = r.songs[i].track || "";
+            r.songs[i].display_name = r.songs[i].title || r.songs[i].file.split("/").pop();
+          }
+          $("div#split-left").html(window.templates.album({
+            "album": album,
+            "songs": r.songs
+          }));
+
+        }
+      })
+
+      $("div#split-left").html(window.templates.album());
+
     }else{
-      let albums = new Albums();
-      albums.refresh();
+      $.get({
+        url: window.WEBROOT + "/api/library.php",
+        data: { "action": "album"},
+        success: (r) => {
+          console.log(r)
+          $("div#split-left").html(window.templates.albums(r));
+        }
+      });
+
+      $("div#split-left").html(window.templates.albums());
     }
 
   }else if(url.view === "files" || url.view === "" || typeof url.view === "undefined"){
 
     let paths = splitPathForFilebrowser();
 
-
-    window.views.files = new Template("files",{paths: paths});
-
     window.filebrowser = new FileBrowser(url.path || "", function(data){
       data.paths = paths;
-      window.views.files.setData(data);
-      $("div#split-left").html(window.views.files.render());
+      $("div#split-left").html(window.templates.files(data));
     });
+    $("div#split-left").html(window.templates.files());
 
-
-
-    $("div#split-left").html(window.views.files.render());
   }else if(url.view === "shortcuts"){
-    window.views.shortcuts = new Template("shortcuts")
-    $("div#split-left").html(window.views.shortcuts.render());
+    $("div#split-left").html(window.templates.shortcuts());
   }else if(url.view === "settings") {
 
     window.settings = new Settings();
-    $("div#split-left").html(window.settings.template.render());
-
-
 
   }else if(url.view === "playlists"){
 
-    console.log(url)
-
     if(!url.playlist){
 
-      window.views.playlists = new Template("playlists");
-      $("div#split-left").html(window.views.playlists.render());
+      $("div#split-left").html(window.templates.playlists());
 
       $.get({
         url: window.WEBROOT + "/api/playlist.php",
         success: (r) => {
-          console.log(r);
-          window.views.playlists.setData({
+          $("div#split-left").html(window.templates.playlists({
             playlists: r.playlists,
-          });
-          $("div#split-left").html(window.views.playlists.render());
+          }));
         }
       });
 
     }else{
 
       let name = url.playlist;
-      window.views.playlist = new Template("playlist");
-      $("div#split-left").html(window.views.playlist.render());
+      $("div#split-left").html(window.templates.playlist());
 
       $.get({
         url: window.WEBROOT + "/api/playlist.php",
         data: { action: "show", name: name },
         success: (r) => {
-          window.views.playlist.setData({
+          $("div#split-left").html(window.templates.playlist({
             name: name,
             songs: r.songs
-          });
-          $("div#split-left").html(window.views.playlist.render());
+          }));
         }
       });
 
