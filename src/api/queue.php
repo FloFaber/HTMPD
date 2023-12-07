@@ -125,6 +125,21 @@ if($method === "get"){
 
     echo new Response(); return true;
 
+  }elseif($action === "move"){
+
+    if(($from = getrp("from", "post", null)) === null){
+      echo new Response(400); return false;
+    }
+    if(($to = getrp("to", "post", null)) === null){
+      echo new Response(400); return false;
+    }
+
+    if($mphpd->queue()->move($from, $to) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]); return false;
+    }
+
+    echo new Response(); return true;
+
   }
 
 }

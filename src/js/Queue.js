@@ -13,6 +13,31 @@ class Queue{
 
   render(){
     $("div#split-right").html(window.templates.queue(this.data));
+
+    let pos_old;
+    let pos_new;
+
+    $("table#queue-items").sortable({
+      cursor: 'row-resize',
+      placeholder: 'ui-state-highlight',
+      opacity: '0.55',
+      items: 'tr',
+      start: function(event, item){
+        pos_old = $(item.item).data("pos");
+      }, stop: (event, item) => {
+        pos_new = $(item.item).index();
+
+        $.post({
+          url: window.WEBROOT + "/api/queue.php",
+          data: { "action": "move", "from": pos_old, "to": pos_new },
+          success: (r) => {
+            this.refresh();
+          }
+        })
+
+      }
+    }).disableSelection();
+
   }
 
   refresh(callback = function(e){}){
@@ -20,11 +45,14 @@ class Queue{
       url: window.WEBROOT + "/api/queue.php",
       success: (r) => {
         for(let i = 0; i < r.queue.length; i++){
+
+          if(r.queue[i].file.startsWith("http://") || r.queue[i].file.startsWith("https://")){
+            r.queue[i].title = r.queue[i].name || r.queue[i].title || r.queue[i].file;
+          }
+
           if(!r.queue[i].title){
             if(!r.queue[i].file.startsWith("http://") && !r.queue[i].file.startsWith("https://")){
               r.queue[i].title = r.queue[i].file.split("/").pop();
-            }else{
-              r.queue[i].title = r.queue[i].file;
             }
           }
         }

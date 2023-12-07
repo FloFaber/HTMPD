@@ -90,6 +90,24 @@ if($method === "get"){
     echo new Response();
     return true;
 
+  }elseif($action === "create"){
+
+    if(($name = getrp("name", $method, null)) === null){
+      echo new Response(400); return false;
+    }
+
+    if(($playlist = $mphpd->playlist($name)) === null){
+      echo new Response(400); return false;
+    }
+
+    if($playlist->save() === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+
+    echo new Response();
+    return true;
+
   }
 
 }

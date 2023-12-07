@@ -18,7 +18,7 @@ window.templates.queue = Handlebars.compile(`
       <th class="artist">Artist</th>
     </thead>
     {{#each queue_items as |queue_item|}}
-    <tr class="queue-item" data-id="{{queue_item.id}}" onclick="window.player.play_id({{queue_item.id}})">
+    <tr class="queue-item" data-id="{{queue_item.id}}" onclick="window.player.play_id({{queue_item.id}})" data-pos="{{queue_item.pos}}">
       <td>
         <button class="inline white" onclick="window.queue.delete_id({{queue_item.id}}, event)" title="Remove from Queue">-</button>
       </td>
@@ -30,6 +30,6 @@ window.templates.queue = Handlebars.compile(`
     {{/each}}
   </table>
   {{else}}
-  <p>The Queue is empty.</p>
+  <p>The Queue is empty. Go to <a href="#view=files">Files</a>, <a href="#view=artists">Artists</a> or <a href="#view=albums">Albums</a> to add songs.</p>
   {{/if}}
 `.replace(/\n(\s*)/g, ""));

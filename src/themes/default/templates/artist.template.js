@@ -34,11 +34,11 @@ window.templates.artist = Handlebars.compile(`
     {{#each songs as |song|}}
     <tr>
       <td>
-        <button class="inline green" title="Load">+</button>
-        <button class="inline green" title="Clear queue and Load">~</button>
+        <button class="inline green" title="Load" onclick="window.queue.add('{{song.file}}')">+</button>
+        <button class="inline green" title="Clear queue and Load" onclick="window.queue.replace('{{song.file}}')">~</button>
       </td>
       <td class="library-item-name">
-        <span title="{{song.file}}">{{song.display_name}}</span>
+        <span title="{{song.file}}" onclick="window.queue.add_id('{{song.file}}', true)">{{song.display_name}}</span>
       </td>
     </tr>
     {{/each}}

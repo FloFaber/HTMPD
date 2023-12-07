@@ -1,12 +1,8 @@
 $("div#darkness").on("click",function(){ darkness(false); });
 
-
-
 if(!localStorage.getItem("color")){
   localStorage.setItem("color", "#ff0066");
 }
-
-
 
 $.ajaxSetup({
   error: function(r){
@@ -14,18 +10,10 @@ $.ajaxSetup({
   }
 });
 
-/*$(document).on( "ajaxError", function(event, jqxhr, settings, thrownError){
-  notification(NOTYPE_ERR, jqxhr);
-});*/
-
-
 $("body").get(0).style.setProperty("--primary", localStorage.getItem("color"));
 
 function onHashChange(e){
-  let hash = window.location.hash.slice(1);
-  let url = hash.split("&").reduce((previous, current)=> { const [key, value] = current.split("="); previous[key] = value; return previous },{})
-
-  console.log(url);
+  let url = get_url();
 
   $("div.sidebar-item").removeClass("active");
   $("div.sidebar-item a[href='#" + (url.view ? "view="+url.view : "view=files") + "']").parent().addClass("active");
@@ -129,14 +117,7 @@ function onHashChange(e){
 
       $("div#split-left").html(window.templates.playlists());
 
-      $.get({
-        url: window.WEBROOT + "/api/playlist.php",
-        success: (r) => {
-          $("div#split-left").html(window.templates.playlists({
-            playlists: r.playlists,
-          }));
-        }
-      });
+      window.playlist.refresh();
 
     }else{
 

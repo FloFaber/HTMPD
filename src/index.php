@@ -22,6 +22,7 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/css/") as $css){
 
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/handlebars.min-v4.7.8.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/jquery-3.6.4.min.js"></script>
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/jquery-ui.min.js"></script>
   <script type="text/javascript">
     window.WEBROOT = "<?= WEBROOT ?? "" ?>";
     window.templates = {};
@@ -79,6 +80,7 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/templates/") as 
   <script type="text/javascript">
     window.library = new Library();
     window.queue = new Queue();
+    window.playlist = new Playlist();
     window.player = new Player();
   </script>
 

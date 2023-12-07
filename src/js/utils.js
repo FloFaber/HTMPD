@@ -95,6 +95,14 @@ function hash_parse(hash = window.location.hash){
   return r;
 }
 
+function get_url(hash = window.location.hash){
+  return hash.slice(1).split("&").reduce((previous, current)=> {
+    const [key, value] = current.split("=");
+    previous[key] = decodeURI(value);
+    return previous
+  },{});
+}
+
 function darkness_on(){ darkness(true); }
 function darkness_off(){ darkness(false); }
 
