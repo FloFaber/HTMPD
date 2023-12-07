@@ -39,7 +39,8 @@ if($method === "get"){
     }
 
     $current_song["haspicture"] = false;
-    if(isset($current_song["file"])){
+    // dont request image from http(s) streams
+    if(isset($current_song["file"]) && !str_starts_with($current_song["file"], "http://") && !str_starts_with($current_song["file"], "https://")){
       $picture = $mphpd->db()->get_picture($current_song["file"], false);
       if($picture !== false && $picture["size"] > 0){
         $current_song["haspicture"] = true;
