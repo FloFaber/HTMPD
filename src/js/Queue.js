@@ -71,6 +71,7 @@ class Queue{
   }
 
   add(uri){
+    if(!uri){ return; }
     this.action({"action": "add", uri: uri });
   }
 

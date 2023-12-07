@@ -22,9 +22,7 @@ class FileBrowser{
 
     let url = window.location.hash.slice(1).split("&").reduce((previous, current)=> { const [key, value] = current.split("="); previous[key] = value; return previous },{})
     let paths = splitPathForFilebrowser();
-    let path = decodeURI(url.path);
-
-    console.log(path)
+    let path = decodeURI(url.path || "");
 
     $.get({
       url: window.WEBROOT + "/api/library.php",
@@ -36,13 +34,11 @@ class FileBrowser{
           r.files[i].display_name = r.files[i].file.slice(path.length > 0 ? path.length+1 : 0);
         }
 
-        window.views.files.setData({
+        $("div#split-left").html(window.templates.files({
           paths: paths,
           files: r.files,
           directories: []
-        });
-
-        $("div#split-left").html(window.views.files.render());
+        }));
 
       }
     })

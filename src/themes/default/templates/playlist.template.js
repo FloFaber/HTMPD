@@ -1,7 +1,8 @@
-window.templates.playlist = `
+window.templates.playlist = Handlebars.compile(`
   <h2>Playlist: {{name}}</h2>
+  {{#if songs}}
   <table id="playlist">
-    {{for songs->song}}
+    {{#each songs as |song|}}
     <tr>
       <td>
         <button class="inline green" title="Load" onclick="window.queue.add('{{song.file}}')">+</button>
@@ -13,6 +14,9 @@ window.templates.playlist = `
       </td>
     </tr>
       
-    {{endfor}}
+    {{/each}}
   </table>
-`
+  {{else}}
+  <p>The playlist is empty.</p>
+  {{/if}}
+`.replace(/\n(\s*)/g, ""));

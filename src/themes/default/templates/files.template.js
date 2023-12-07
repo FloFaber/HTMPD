@@ -1,4 +1,4 @@
-window.templates.files = `
+window.templates.files = Handlebars.compile(`
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px">
     <h2 style="margin:0">Files</h2>
     <button id="db-update" onclick="window.library.update_db()">Update DB</button>
@@ -6,9 +6,9 @@ window.templates.files = `
 
   <div>
     <div id='library-path'>
-      {{for paths->path}}
+      {{#each paths as |path|}}
       <span class='library-path-item'><a href='#view=files&path={{path.path}}'>{{path.name}}</a>/</span>
-      {{endfor}}
+      {{/each}}
     </div>
     <div style="margin-bottom: 15px;">
       <input type="text" id="search" placeholder="Search" onkeydown="window.filebrowser.search(this.value, event)">
@@ -16,9 +16,15 @@ window.templates.files = `
     </div>  
   </div>
   
+  {{#unless files}}
+    {{#unless directories}}
+      <p>No files.</p>
+    {{/unless}}
+  {{/unless}}
+  
   <table id='library'>
     <tbody>
-    {{for directories->dir}}
+    {{#each directories as |dir|}}
     <tr class="library-item">
       <td class="library-item-actions">
         <button class="inline green" data-uri="{{dir.name}}" data-replace="false" onclick="window.queue.add('{{dir.name}}',false);">+</button>
@@ -26,9 +32,9 @@ window.templates.files = `
       </td>
       <td class="library-item-name"><a href="#view=files&path={{dir.name}}">{{dir.display_name}}/</a></td>
     </tr>
-    {{endfor}}
+    {{/each}}
     
-    {{for files->file}}
+    {{#each files as |file|}}
     <tr class="library-item">
       <td class="library-item-actions">
         <button class="inline green" data-uri="{{file.name}}" data-replace="false" onclick="window.queue.add('{{file.name}}',false);">+</button>
@@ -38,34 +44,8 @@ window.templates.files = `
         <span onclick="window.queue.add_id('{{file.name}}', true)">{{file.display_name}}</span>
       </td>
     </tr>
-    {{endfor}}
+    {{/each}}
     
     </tbody>
   </table>
-`;
-
-window.templates.library_path_item = `
-  <span class='library-path-item'><a href='#view=files&path={{path}}'>{{name}}</a>/</span>
-`;
-
-
-
-window.templates.file_directory = `
-  <tr class="library-item">
-    <td class="library-item-actions">
-      <button class="inline green" data-uri="{{name}}" data-replace="false" onclick="window.queue.add('{{name}}',false);">+</button>
-      <button class="inline yellow" data-uri="{{name}}" data-replace="true" onclick="window.queue.add('{{name}}',true);">~</button>
-    </td>
-    <td class="library-item-name"><a href="#view=files&path={{name}}">{{display_name}}/</a></td>
-  </tr>
-`;
-
-window.templates.file_song = `
-  <tr class="library-item">
-    <td class="library-item-actions">
-      <button class="inline green" data-uri="{{name}}" data-replace="false" onclick="window.queue.add('{{name}}',false);">+</button>
-      <button class="inline yellow" data-uri="{{name}}" data-replace="true" onclick="window.queue.add('{{name}}',true);">~</button>
-    </td>
-    <td class="library-item-name"><span>{{display_name}}</span></td>
-  </tr>
-`;
+`.replace(/\n(\s*)/g, ""));

@@ -9,11 +9,11 @@ window.templates.player = Handlebars.compile(`
 <div id="player-controls">
   <div id="player-controls-buttons">
     <button id="player-previous" onclick="window.player.prev()">⏮</button>
-    <button id="player-pp" onclick="window.player.play_pause()">{{playbutton}}</button>
+    <button id="player-pp" onclick="window.player.play_pause()">{{fallback playbutton "▶"}}</button>
     <button id="player-next" onclick="window.player.next()">⏭</button>
   </div>
   <div id="player-volume">
-    <input id="volume" type="range" min="0" max="100" step="5" value="{{status.volume}}"
+    <input id="volume" type="range" min="0" max="100" step="5" value="{{fallback status.volume '0'}}"
       oninput="window.player.volume(this.value)"
       onwheel="window.player.volumeWheel(event, this);"/>
   </div>
@@ -23,8 +23,8 @@ window.templates.player = Handlebars.compile(`
     <span id='player-song-played'>{{current_song.title_played}}</span>
     <span id='player-song-unplayed'>{{current_song.title_unplayed}}</span>
   </div>
-  <div id="player-song-artist"><a href="#view=artists&artist={{current_song.artist}}">{{current_song.artist}}</a></div>
-  <div id="player-song-album"><a href="#view=albums&album={{current_song.album}}">{{current_song.album}}</a></div>
+  <div id="player-song-artist"><a href="#view=artists&artist={{current_song.artist}}">{{fallback current_song.artist "N/A"}}</a></div>
+  <div id="player-song-album"><a href="#view=albums&album={{current_song.album}}">{{fallback current_song.album "N/A"}}</a></div>
 </div>
 
 <div id="player-time">
@@ -33,10 +33,10 @@ window.templates.player = Handlebars.compile(`
     <button id="player-seek-forward" onclick="window.player.seek('+10')">+10s</button>
   </div>
   <div id="player-time-status">
-    <span id="player-time-elapsed" data-elapsed="{{time.elapsed}}">{{time.elapsed_readable}}</span>
+    <span id="player-time-elapsed" data-elapsed="{{time.elapsed}}">{{fallback time.elapsed_readable "00:00"}}</span>
     <span style="padding: 0 5px;">/</span>
-    <span id="player-time-duration" data-duration="{{time.elapsed}}">{{time.duration_readable}}</span>
-    <span style="margin-left: 10px">(</span><span id="player-time-percent">{{time.elapsed_percent}}</span><span>)</span>
+    <span id="player-time-duration" data-duration="{{time.elapsed}}">{{fallback time.duration_readable "00:00"}}</span>
+    <span style="margin-left: 10px">(</span><span id="player-time-percent">{{fallback time.elapsed_percent "0%"}}</span><span>)</span>
   </div>
 </div>
 <div id="player-modes">

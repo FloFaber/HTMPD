@@ -20,13 +20,19 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/css/") as $css){
 ?>
   <link rel="icon" href="<?= WEBROOT ?? "" ?>/favicon.png" type="image/png"/>
 
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/handlebars.min-v4.7.8.js"></script>
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/jquery-3.6.4.min.js"></script>
   <script type="text/javascript">
     window.WEBROOT = "<?= WEBROOT ?? "" ?>";
     window.templates = {};
     window.views = {};
-  </script>
-  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/handlebars.min-v4.7.8.js"></script>
 
+    Handlebars.registerHelper('fallback', function (value, fallback) {
+      return new Handlebars.SafeString(value || fallback);
+    });
+  </script>
+
+  <!-- Templates Start -->
 <?php
 foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/templates/") as $js){
   if(!str_ends_with($js, ".js")){ continue; }
@@ -35,20 +41,15 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/templates/") as 
 <?php
 }
 ?>
-  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/jquery-3.6.4.min.js"></script>
+  <!-- Templates End -->
 
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/utils.js"></script>
-  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Template.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/FileBrowser.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Library.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Playlist.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Queue.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Player.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Settings.js"></script>
-  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Artist.js"></script>
-  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Artists.js"></script>
-  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Album.js"></script>
-  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Albums.js"></script>
 </head>
 <body>
   <div id="notifications"></div>
@@ -79,7 +80,6 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/templates/") as 
     window.library = new Library();
     window.queue = new Queue();
     window.player = new Player();
-    window.playlist = new Playlist();
   </script>
 
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/main.js"></script>
