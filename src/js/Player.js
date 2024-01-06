@@ -24,6 +24,9 @@ class Player{
 
     // Keyboard Shortcuts
     $(document).on("keypress", (e) => {
+
+      $("button").blur(); // Fix #3
+
       let k = e.key;
 
       console.log(text_input_has_focus());
