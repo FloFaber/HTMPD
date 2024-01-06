@@ -22,6 +22,7 @@ class Queue{
       placeholder: 'ui-state-highlight',
       opacity: '0.55',
       items: 'tr',
+      helper:'clone', // fix for #2
       start: function(event, item){
         pos_old = $(item.item).data("pos");
       }, stop: (event, item) => {
@@ -33,7 +34,7 @@ class Queue{
           success: (r) => {
             this.refresh();
           }
-        })
+        });
 
       }
     }).disableSelection();
