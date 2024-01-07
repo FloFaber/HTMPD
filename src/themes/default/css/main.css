@@ -165,6 +165,15 @@ button.inline:hover{
   background-color: unset;
 }
 
+textarea{
+  font-family: inherit;
+  font-size: inherit;
+  display: block;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 100px;
+}
+
 button.inline:hover:before,button.inline:hover:after{ color: var(--primary); }
 button.inline.red:hover:before,button.inline.red:hover:after{ color: var(--red); }
 button.inline.green:hover:before,button.inline.green:hover:after{ color: var(--green); }

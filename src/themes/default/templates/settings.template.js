@@ -40,5 +40,12 @@ window.templates.settings = Handlebars.compile(`
   {{else}}
   <p>No saved colors.</p>
   {{/each}}
+  
+  <h3>Custom CSS</h3>
+  <span>Enabled</span><input type="checkbox" id="custom-css-enabled" {{custom_css_enabled}}/>
+  <textarea id="custom-css" placeholder="Write your custom CSS here">
+    {{custom_css}}
+  </textarea>
+  <button onclick="window.settings.custom_css_save()">Save</button>
 
 `.replace(/\n(\s*)/g, ""));

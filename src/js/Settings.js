@@ -3,6 +3,7 @@ class Settings{
   constructor() {
     $("div#split-left").html(window.templates.settings());
     this.refresh();
+    this.custom_css_apply();
   }
 
   refresh(){
@@ -21,7 +22,9 @@ class Settings{
           outputs: r.outputs,
           crossfade: window.player.status.xfade || 0,
           color: localStorage.getItem("color") || "#ff0066",
-          colors: JSON.parse(localStorage.getItem("colors")) || []
+          colors: JSON.parse(localStorage.getItem("colors")) || [],
+          custom_css: localStorage.getItem("custom_css") || "",
+          custom_css_enabled: localStorage.getItem("custom_css_enabled") === "1" ? "checked" : "",
         }));
       }
     });
@@ -43,6 +46,28 @@ class Settings{
           notification(NOTYPE_SUCC, "Crossfade changed to "+value+" seconds.");
         }
       })
+    }
+  }
+
+  custom_css_save(){
+    let css = $("textarea#custom-css").val();
+    let enabled = $("input#custom-css-enabled").prop("checked");
+    console.log(enabled)
+
+    localStorage.setItem("custom_css_enabled", enabled ? "1" : "0");
+    localStorage.setItem("custom_css", css);
+    this.custom_css_apply();
+  }
+
+  custom_css_apply(){
+    $("style#custom-css").remove();
+    let css = localStorage.getItem("custom_css") || "";
+    if(localStorage.getItem("custom_css_enabled") === "1"){
+      $("head").append($("<style/>",{
+        type: "text/css",
+        text: css,
+        id: "custom-css"
+      }));
     }
   }
 
