@@ -2,6 +2,19 @@ $("div#darkness").on("click",function(){ darkness(false); });
 
 if(!localStorage.getItem("color")){
   localStorage.setItem("color", "#ff0066");
+  // default colors
+  if(!localStorage.getItem("colors")){
+    let colors = [
+      "#ff0066", // default pink
+      "#4c944d", // green
+      //"#7800f0",
+      "#8c49d0", // purple
+      "#c52b2f", // red
+      "#444444", // grey
+    ];
+    localStorage.setItem("colors", JSON.stringify(colors));
+  }
+
 }
 
 $.ajaxSetup({
