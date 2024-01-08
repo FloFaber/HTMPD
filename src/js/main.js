@@ -17,6 +17,8 @@ if(!localStorage.getItem("color")){
 
 }
 
+(new Settings()).custom_css_apply();
+
 $.ajaxSetup({
   error: function(r){
     notification(NOTYPE_ERR, r);
