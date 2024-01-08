@@ -75,4 +75,5 @@ div#player-modes > div{
 input#volume{
   width: 120px;
   margin: 0;
+  accent-color: var(--primary);
 }
