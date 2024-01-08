@@ -90,7 +90,7 @@ if($method === "get"){
     }
 
 
-    if(($albums = $mphpd->db()->list("album", null, "artist")) === false){
+    if(($albums = $mphpd->db()->list("album", null, "AlbumArtist")) === false){
       echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
       return false;
     }
