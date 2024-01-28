@@ -4,7 +4,7 @@ window.templates.queue = Handlebars.compile(`
   <div id="action-buttons">
     <button id="queue-clear" onclick="window.queue.clear()">clear</button>
     <button id="queue-shuffle" onclick="window.queue.shuffle()">shuffle</button>
-    <button id="queue-save" onclick="window.queue.save()">save...</button>
+    <button id="queue-save" onclick="window.queue.save_dialog()">save...</button>
     <button id="queue-add" onclick="window.queue.add(prompt('URI?'))">add...</button>
   </div>
 

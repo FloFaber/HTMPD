@@ -1,7 +1,5 @@
 window.templates.artist = Handlebars.compile(`
-  <h2>Artist: {{artist}}</h2>
-  
-  <h2>Albums</h2>
+  <h2>{{artist}}'s Albums</h2>
   {{#if albums}}
   <table>
     {{#each albums as |album|}}
@@ -10,12 +8,12 @@ window.templates.artist = Handlebars.compile(`
         <button class="inline green" title="Load" onclick="window.library.search_add([{
           tag: 'album',
           operator: '==',
-          value: '{{album}}'
+          value: '{{album.name}}'
         }], false)">+</button>
         <button class="inline yellow" title="Clear queue and Load" onclick="window.library.search_add([{
           tag: 'album',
           operator: '==',
-          value: '{{album}}'
+          value: '{{album.name}}'
         }], true)">~</button>
       </td>
       <td class="library-item-name">

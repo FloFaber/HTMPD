@@ -53,7 +53,7 @@ function onHashChange(e){
           }
 
           $("div#split-left").html(window.templates.artist({
-            "artist": this.name,
+            "artist": artist,
             "albums": r.albums,
             "songs": r.songs
           }));

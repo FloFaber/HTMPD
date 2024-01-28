@@ -333,3 +333,9 @@ span.queue-item-actions{
 
 .cursor-pointer, .cursor-pointer *{ cursor: pointer!important; }
 .cursor-progress, .cursor-progress *{ cursor: progress!important; }
+
+div.popup{
+  padding: 25px;
+  border: 2px solid var(--primary);
+  background-color: var(--white)
+}

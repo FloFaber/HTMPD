@@ -76,6 +76,37 @@ class Queue{
     });
   }
 
+  // save the current queue
+  save_dialog(){
+    $.get({
+      url: window.WEBROOT + "/api/playlist.php",
+      success: (r) => {
+        this.popup = new Popup(window.templates.popup_playlist_selection({
+          playlists: r.playlists,
+        }));
+      }
+    })
+
+  }
+
+  save(){
+    let playlist = $("select#playlist").val();
+    console.log(playlist);
+
+    $.post({
+      url: window.WEBROOT + "/api/playlist.php",
+      data: { "action": "save", "name": playlist },
+      success: (r) => {
+        notification(NOTYPE_SUCC, "Queue saved to playlist \""+playlist+"\"");
+      }, error: (r) => {
+        notification(NOTYPE_ERR, r);
+      },
+      complete: () => {
+        this.popup.remove();
+      }
+    });
+  }
+
   setActiveSong(id){
     $(".queue-item").removeClass("active");
     $(".queue-item[data-id='"+id+"']").addClass("active");
