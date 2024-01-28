@@ -38,7 +38,7 @@ if($method === "get"){
     $artist = getrp("artist", "get", null);
 
     if(!$artist){
-      if(($artists = $mphpd->db()->list("artist")) === false){
+      if(($artists = $mphpd->db()->list("AlbumArtist")) === false){
         echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
         return false;
       }
