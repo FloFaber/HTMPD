@@ -120,12 +120,22 @@ function onHashChange(e){
     });
     $("div#split-left").html(window.templates.files());
 
-  }else if(url.view === "shortcuts"){
+  }else if(url.view === "search"){
+
+    $("div#split-left").html(window.templates.search());
+    $.get({
+      url: window.WEBROOT + "/api/index.php",
+      data: { "action": "tagtypes" },
+      success: (r) => {
+        window.tagtypes = r.tagtypes;
+        $("div#split-left").html(window.templates.search(r));
+      }
+    })
+
+  } else if(url.view === "shortcuts"){
     $("div#split-left").html(window.templates.shortcuts());
   }else if(url.view === "settings") {
-
-    window.settings = new Settings();
-
+    window.settings = new Settings(true);
   }else if(url.view === "playlists"){
 
     if(!url.playlist){

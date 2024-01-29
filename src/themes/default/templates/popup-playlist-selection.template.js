@@ -1,6 +1,6 @@
 window.templates.popup_playlist_selection = Handlebars.compile(`
   <div class="popup" onclick="event.stopPropagation();">
-    <h2>Select Playlist:</h2>
+    <h2>Select Playlist</h2>
     <button onclick="window.playlist.create(
       (r, name) => {
         $('select#playlist').val(name).change();

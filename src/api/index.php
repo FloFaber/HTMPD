@@ -51,6 +51,14 @@ if($method === "get"){
     echo (new Response())->add("status", $status)->add("current_song", $current_song);
     return true;
 
+  }elseif($action === "tagtypes"){
+    if(($tagtypes = $mphpd->tagtypes()) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+
+    echo (new Response())->add("tagtypes", $tagtypes);
+    return true;
   }
 }
 

@@ -1,8 +1,11 @@
 class Settings{
 
-  constructor() {
+  constructor(refresh = false) {
     $("div#split-left").html(window.templates.settings());
-    this.refresh();
+    if(refresh){
+      this.refresh();
+    }
+
     this.custom_css_apply();
   }
 

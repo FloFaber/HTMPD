@@ -32,6 +32,10 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/css/") as $css){
     Handlebars.registerHelper('fallback', function (value, fallback) {
       return new Handlebars.SafeString(value || fallback);
     });
+
+    Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+      return (arg1 === arg2) ? options.fn(this) : options.inverse(this);
+    });
   </script>
 
   <!-- Templates Start -->
@@ -60,6 +64,7 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME ?? "default") . "/templates/") as 
     <div id="subtitle">by <a href="https://www.flofaber.com">Flo Faber</a></div>
 
     <div class="sidebar-item"><a href="#view=files">Files</a></div>
+    <div class="sidebar-item"><a href="#view=search">Search</a></div>
     <div class="sidebar-item"><a href="#view=artists">Artists</a></div>
     <div class="sidebar-item"><a href="#view=albums">Albums</a></div>
     <div class="sidebar-item"><a href="#view=playlists">Playlists</a></div>

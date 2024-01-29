@@ -339,3 +339,7 @@ div.popup{
   border: 2px solid var(--primary);
   background-color: var(--white)
 }
+
+div.search-item{
+  margin-bottom: 15px;
+}

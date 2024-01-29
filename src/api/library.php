@@ -117,6 +117,48 @@ if($method === "get"){
     echo (new Response(200))->add("files", $files);
     return true;
 
+  }elseif($action === "tagsearch"){
+
+    $filters = getrp("filters", "get", null);
+    if($filters === null || gettype($filters) !== "array"){
+      echo (new Response(401))->add("type", gettype($filters));
+      return false;
+    }
+
+    for($i = 0; $i < count($filters); $i++){
+      $f = $filters[$i];
+
+      if($f["operator"] === "startswith"){
+        $f["operator"] = "=~";
+        $f["value"] = "^".$f["value"];
+      }elseif($f["operator"] === "endswith"){
+        $f["operator"] = "=~";
+        $f["value"] = $f["value"]."\$";
+      }elseif($f["operator"] === "contains"){
+        $f["operator"] = "=~";
+      }elseif($f["operator"] === "equals"){
+        $f["operator"] = "==";
+      }elseif($f["operator"] === "notequals"){
+        $f["operator"] = "!=";
+      }else{
+        continue; // skip invalid
+      }
+
+      if($i === 0){
+        $filter = new \FloFaber\MphpD\Filter($f["tag"], $f["operator"], $f["value"]);
+      }else{
+        $filter->and($f["tag"], $f["operator"], $f["value"]);
+      }
+    }
+
+    if(($files = $mphpd->db()->search($filter)) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"] . " / " . (string)$filter);
+      return false;
+    }
+
+    echo (new Response(200))->add("files", $files);
+    return true;
+
   }elseif($action === "thumbnail"){
 
     if(($file = getrp("file", "get", null)) === null){
