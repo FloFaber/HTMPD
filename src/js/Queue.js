@@ -2,12 +2,14 @@ class Queue{
 
   constructor() {
 
+    this.render.bind(this);
+    this.refresh.bind(this);
+
     // pre-render
     this.render();
-
     this.refresh();
 
-    this.refresh.bind(this);
+    this.data = {};
 
   }
 
@@ -41,7 +43,8 @@ class Queue{
 
   }
 
-  refresh(callback = function(e){}){
+  refresh(callback = null){
+
     $.get({
       url: window.WEBROOT + "/api/queue.php",
       success: (r) => {
@@ -61,23 +64,22 @@ class Queue{
         this.data = {queue_items: r.queue};
         this.render();
 
-        console.log(window.player_data)
-        if(window.player_data && window.player_data.current_song){
-          this.setActiveSong(window.player_data.current_song.id);
-        }
+        window.player.refresh((r) => {
+          if(r && r.current_song){
+            this.setActiveSong(r.current_song.id);
+          }
+        });
 
         if(typeof callback === "function"){
           callback(r.queue);
         }
-      },
-      error: function(r){
-        notification(NOTYPE_ERR, r);
       }
     });
   }
 
   // save the current queue
   save_dialog(){
+    if(this.popup){ this.popup.remove(); }
     $.get({
       url: window.WEBROOT + "/api/playlist.php",
       success: (r) => {
@@ -85,8 +87,7 @@ class Queue{
           playlists: r.playlists,
         }));
       }
-    })
-
+    });
   }
 
   save(){
@@ -98,8 +99,6 @@ class Queue{
       data: { "action": "save", "name": playlist },
       success: (r) => {
         notification(NOTYPE_SUCC, "Queue saved to playlist \""+playlist+"\"");
-      }, error: (r) => {
-        notification(NOTYPE_ERR, r);
       },
       complete: () => {
         this.popup.remove();
@@ -120,9 +119,6 @@ class Queue{
         this.refresh();
         window.player.refresh();
         if(typeof onsuccess === "function"){ onsuccess(r); }
-      },
-      error: function(r){
-        notification(NOTYPE_ERR, r);
       },
       complete: (r) => {
         if(typeof ondone === "function"){ ondone(r); }

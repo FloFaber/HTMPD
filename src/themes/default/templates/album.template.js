@@ -1,5 +1,5 @@
 window.templates.album = Handlebars.compile(`
-  <h2>Album: {{album}}</h2>
+  <h2>{{album}}</h2>
   <table>
     <thead>
       <th></th>

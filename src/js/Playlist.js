@@ -1,6 +1,9 @@
 class Playlist{
 
   refresh(){
+    if(get_url()["view"] !== "playlists"){
+      return;
+    }
     $.get({
       url: window.WEBROOT + "/api/playlist.php",
       success: (r) => {
@@ -11,7 +14,7 @@ class Playlist{
     });
   }
 
-  create(){
+  create(callback = () => {}){
     let name = prompt("Name for new playlist:");
     if(!name){ return; }
     $.post({
@@ -19,6 +22,7 @@ class Playlist{
       data: { "action": "create", "name": name },
       success: (r) => {
         this.refresh();
+        callback(r, name);
       }
     })
   }

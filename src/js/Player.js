@@ -49,7 +49,7 @@ class Player{
 
   }
 
-  refresh(){
+  refresh(onsuccess = null){
     $.get({
       url: window.WEBROOT + "/api/index.php",
       data: { action: "status" },
@@ -112,6 +112,10 @@ class Player{
           status: r.status
         }
 
+        if(typeof onsuccess === "function"){
+          onsuccess(window.player_data);
+        }
+
       }, error: (r) => {
         this.data= {
           current_song: {
@@ -146,7 +150,7 @@ class Player{
     data.current_song.title_unplayed = "";
 
     // if the song has finished playing -> refresh player and queue
-    if(elapsed >= duration && duration !== 0){
+    if(elapsed > duration && duration !== 0){
       this.refresh();
       window.queue.refresh();
     }
@@ -265,11 +269,11 @@ class Player{
   }
 
   next(){
-    this.action({ "action": "next" });
+    this.action({ "action": "next" }, () => window.queue.refresh());
   }
 
   prev(){
-    this.action({ "action": "previous" });
+    this.action({ "action": "previous" }, () => window.queue.refresh());
   }
 
   seek(time){
