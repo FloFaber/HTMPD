@@ -7,12 +7,13 @@ function random_int(min, max) { // min and max included
 }
 
 function htmlspecialchars(unsafe){
+  if(!unsafe){ return unsafe; }
   return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll("\"", "&quot;")
+    .replaceAll("'", "\\'");
 }
 
 function notification(type, msg = ""){
@@ -94,6 +95,45 @@ function hash_parse(hash = window.location.hash){
   }
   return r;
 }
+
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+
+function splitSongByProgress(current_song, percent_played){
+
+  if(!current_song.file){ return; }
+
+  let song = current_song.file.split("/").pop();
+  if(current_song.title){
+    song = current_song.title;
+  }
+
+  let data = {
+    title_played: "",
+    title_unplayed: ""
+  };
+  let chars = Math.round((song.length * percent_played) / 100);
+
+  if(percent_played > -1){
+    for(let i = 0; i < chars; i++){
+      data.title_played += song[i];
+    }
+
+    for(let i = chars; i < song.length; i++){
+      data.title_unplayed += song[i];
+    }
+
+  }else{
+    data.title_played = song;
+  }
+
+  return data;
+
+}
+
+
 
 function get_url(hash = window.location.hash){
   return hash.slice(1).split("&").reduce((previous, current)=> {

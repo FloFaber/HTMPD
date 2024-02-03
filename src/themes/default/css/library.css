@@ -1,6 +1,9 @@
 div#library,div#library-path{
   margin-bottom: 15px;
 }
+div#library-path{
+  display: flex;
+}
 
 td.library-item-name a, td.library-item-name span{
   cursor: pointer;

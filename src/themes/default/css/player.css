@@ -7,11 +7,16 @@ div#player{
 }
 
 div#player-thumbnail{
+  display: none;
   overflow: hidden;
   align-items: center;
   justify-content: center;
   margin-right: 10px;
   height: 50px;
+}
+
+div#player-controls-buttons{
+  display: flex;
 }
 
 div#player-thumbnail img{

@@ -2,48 +2,28 @@ class Queue{
 
   constructor() {
 
-    this.render.bind(this);
-    this.refresh.bind(this);
-
-    // pre-render
-    this.render();
-    this.refresh();
+    this.update.bind(this);
 
     this.data = {};
 
-  }
-
-  render(){
-    $("div#split-right").html(window.templates.queue(this.data));
-
-    let pos_old;
-    let pos_new;
-
-    $("table#queue-items").sortable({
-      cursor: 'row-resize',
-      placeholder: 'ui-state-highlight',
-      opacity: '0.55',
-      items: 'tr',
-      helper:'clone', // fix for #2
-      start: function(event, item){
-        pos_old = $(item.item).data("pos");
-      }, stop: (event, item) => {
-        pos_new = $(item.item).index();
-
-        $.post({
-          url: window.WEBROOT + "/api/queue.php",
-          data: { "action": "move", "from": pos_old, "to": pos_new },
-          success: (r) => {
-            this.refresh();
-          }
-        });
-
-      }
-    }).disableSelection();
+    this.events = {
+      onUpdate: [],
+      onMove: []
+    };
 
   }
 
-  refresh(callback = null){
+  on(name, cb){
+    this.events["on" + capitalizeFirstLetter(name)].push(cb);
+  }
+
+  execOns(name, data){
+    for(let i = 0; i < this.events["on" + capitalizeFirstLetter(name)].length; i++){
+      this.events["on" + capitalizeFirstLetter(name)][i](data);
+    }
+  }
+
+  update(){
 
     $.get({
       url: window.WEBROOT + "/api/queue.php",
@@ -61,18 +41,23 @@ class Queue{
           }
         }
 
-        this.data = {queue_items: r.queue};
-        this.render();
+        this.execOns("update", r.queue);
 
-        window.player.refresh((r) => {
-          if(r && r.current_song){
-            this.setActiveSong(r.current_song.id);
-          }
-        });
+        return r.queue;
 
-        if(typeof callback === "function"){
-          callback(r.queue);
-        }
+      }
+    });
+
+
+  }
+
+  move(from, to){
+    $.post({
+      url: window.WEBROOT + "/api/queue.php",
+      data: { "action": "move", "from": from, "to": to },
+      success: (r) => {
+        this.update();
+        this.execOns("move", { from: from, to: to });
       }
     });
   }
@@ -106,18 +91,14 @@ class Queue{
     });
   }
 
-  setActiveSong(id){
-    $(".queue-item").removeClass("active");
-    $(".queue-item[data-id='"+id+"']").addClass("active");
-  }
 
   action(data, onsuccess = null, ondone = null){
     $.post({
       url: window.WEBROOT + "/api/queue.php",
       data: data,
       success: (r) => {
-        this.refresh();
-        window.player.refresh();
+        this.update();
+        window.player.update();
         if(typeof onsuccess === "function"){ onsuccess(r); }
       },
       complete: (r) => {

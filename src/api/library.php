@@ -168,14 +168,9 @@ if($method === "get"){
 
     $check_only = getrp("check_only", "get", false);
 
-    if(($thumbnail = $mphpd->db()->read_picture($file)) === false){
-      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"] ?? "Failed to load picture");
-      return false;
-    }
+    // hack
+    $thumbnail = $mphpd->db()->read_picture($file) ?? file_get_contents(__DIR__ . "/../broken.gif");
 
-    if(!$thumbnail){
-      $thumbnail = file_get_contents(__DIR__ . "/../broken.gif");
-    }
 
     if($check_only){
       echo new Response(200, "ERR_OK"); return true;
