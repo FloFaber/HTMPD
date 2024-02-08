@@ -5,15 +5,15 @@
 
   <div class="sidebar-item"><a href="#view=files">Files</a></div>
   <div class="sidebar-item"><a href="#view=search">Search</a></div>
-  <div class="sidebar-item"><a href="#view=artists">Artists</a></div>
-  <div class="sidebar-item"><a href="#view=albums">Albums</a></div>
+  <div class="sidebar-item"><a href="#view=db&tagtype=albumartist">Artists</a></div>
+  <div class="sidebar-item"><a href="#view=db&tagtype=album">Albums</a></div>
   <div class="sidebar-item"><a href="#view=playlists">Playlists</a></div>
   <div class="sidebar-item"><a href="#view=settings">Settings</a></div>
   <div class="sidebar-item"><a href="#view=shortcuts">Shortcuts</a></div>
 </div>
 
 <div id="body">
-  <div id="darkness"></div>
+  <div id="darkness" onclick="{ $('div#darkness').hide(); }"></div>
   <div id="player">
 
     <div id="player-thumbnail">

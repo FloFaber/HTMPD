@@ -15,9 +15,6 @@ class Player{
       onVolumeChange: [],
     };
 
-    this.status = null;
-    this.current_song = null;
-
     this.data = { image: { "src":"" }}
 
     this.on.bind(this);
@@ -56,14 +53,6 @@ class Player{
       data: { action: "status" },
       success: (r) => {
 
-        let time = {
-          elapsed: r.status.elapsed || 0,
-          duration: r.status.duration || 0,
-          elapsed_readable: sec2minsec(r.status.elapsed || 0),
-          duration_readable: sec2minsec(r.status.duration || 0),
-          elapsed_percent: r.status.duration ? ((Math.round(r.status.elapsed / (r.status.duration/100))) || 0) + "%" : "LIVE"
-        };
-
         this.last_elapsed = r.status.elapsed || 0;
         this.last_duration = r.status.duration || 0;
 
@@ -85,33 +74,23 @@ class Player{
           }
         }
 
-
-        this.status = r.status;
-        this.current_song = r.current_song;
-
         this.data = {
           status: r.status,
-          time: time,
           current_song: r.current_song,
-          playbutton: (r.status.state === "play" ? "⏸" : "▶"),
           image: {
-            src: this.current_song.haspicture ? window.WEBROOT + "/api/library.php?action=thumbnail&file=" + this.current_song.file : "",
+            src: r.current_song.haspicture ? window.WEBROOT + "/api/library.php?action=thumbnail&file=" + r.current_song.file : "",
           }
         };
 
-        window.player_data = {
-          current_song: r.current_song,
-          status: r.status
-        }
-
-        this.execOns("update", window.player_data);
+        //this.updateTime(this.data.current_song.duration, this.data.current_song.elapsed);
+        this.execOns("update", this.data);
 
       }
     })
   }
 
   increase_time(){
-    if(this.status && this.status.state === "play"){
+    if(this.data.status && (this.data.status.state === "play" || this.data.status.state === "pause")){
       this.updateTime(this.last_duration, this.last_elapsed+1);
     }
   }
@@ -156,12 +135,12 @@ class Player{
   }
 
   seekTo(event, element){
-    if(typeof this.status.duration === "undefined"){ return; }
+    if(typeof this.data.status.duration === "undefined"){ return; }
 
     let w = $(element).width();
     let offset_x = $(element).offset().left;
     let x = event.pageX - offset_x;
-    let seek_to = Math.round(map(x, 0, w, 0, this.status.duration) * 100)/100;
+    let seek_to = Math.round(map(x, 0, w, 0, this.data.status.duration) * 100)/100;
 
     this.seek(seek_to);
   }
@@ -179,7 +158,7 @@ class Player{
   }
 
   play_pause(){
-    if(this.status.state === "play"){
+    if(this.data.status.state === "play"){
       this.pause(true);
     }else{
       this.pause(false);

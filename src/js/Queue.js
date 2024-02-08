@@ -8,7 +8,9 @@ class Queue{
 
     this.events = {
       onUpdate: [],
-      onMove: []
+      onMove: [],
+      onSave: [],
+      onSaveAs: []
     };
 
   }
@@ -62,35 +64,25 @@ class Queue{
     });
   }
 
-  // save the current queue
-  save_dialog(){
-    if(this.popup){ this.popup.remove(); }
+  saveAs(){
     $.get({
       url: window.WEBROOT + "/api/playlist.php",
       success: (r) => {
-        this.popup = new Popup(window.templates.popup_playlist_selection({
-          playlists: r.playlists,
-        }));
+        this.execOns("saveAs", r);
       }
     });
   }
 
-  save(){
-    let playlist = $("select#playlist").val();
-    console.log(playlist);
-
+  // save current queue as playlist
+  save(playlist){
     $.post({
       url: window.WEBROOT + "/api/playlist.php",
       data: { "action": "save", "name": playlist },
       success: (r) => {
-        notification(NOTYPE_SUCC, "Queue saved to playlist \""+playlist+"\"");
-      },
-      complete: () => {
-        this.popup.remove();
+        this.execOns("save", playlist);
       }
     });
   }
-
 
   action(data, onsuccess = null, ondone = null){
     $.post({
@@ -128,9 +120,7 @@ class Queue{
     this.action({ "action": "clear" });
   }
 
-  delete_id(id, event){
-    event.preventDefault();
-    event.stopPropagation();
+  delete_id(id){
     this.action({ "action": "delete_id", "id": id });
   }
 

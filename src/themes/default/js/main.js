@@ -1,6 +1,7 @@
 window.addEventListener("hashchange", function(e){
   load();
 });
+color_set(localStorage.getItem("color") || "#ff0066");
 load();
 
 $("div#split-right").load(window.WEBROOT + "/themes/" + window.THEME + "/html/queue.html", function(){
@@ -56,13 +57,22 @@ function load(){
   }
 
   $("div.sidebar-item").removeClass("active");
-  $("div.sidebar-item > a[href='#view=" + hash.view + "']").parent().addClass("active");
+  $("div.sidebar-item > a[href='" + window.location.hash + "']").parent().addClass("active");
+
+  if(hash.view === "db" && hash.tagtype){
+    $("div.sidebar-item > a[href='#view=" + hash.view + "&tagtype=" + hash.tagtype + "']").parent().addClass("active");
+  }
+
+
+  // apply custom css
+  custom_css_apply();
 
   $("div#split-left").load(window.WEBROOT + "/themes/" + window.THEME + "/html/" + hash.view + ".html", (r, status, xhr) => {
     if(status === "error"){
       $("div#split-left").text("Error loading " + hash.view + ".html: " + xhr.status + " " + xhr.statusText);
       return;
     }
+
 
     if(hash.view === "files"){
 
@@ -104,11 +114,98 @@ Album: ${htmlspecialchars(file.album)}">
           `);
         }
 
+
+      });
+
+    }else if(hash.view === "settings"){
+
+      window.settings = new Settings();
+      window.settings.on("update", r => {
+        console.log(r)
+        if (r.outputs.length) {
+          $("div#outputs").html("");
+          r.outputs.forEach((output, i) => {
+            $("div#outputs").append(`
+            <div class="output">
+              <button class="${output.outputenabled ? 'active' : ''}" onclick="window.settings.output_set(${output.outputid}, 1)">On</button>
+              <button class="${output.outputenabled ? '' : ' active'}" onclick="window.settings.output_set(${output.outputid}, 0)">Off</button>
+              <span style="margin-left: 10px">${output.outputname}</span>
+            </div>
+          `);
+          })
+        } else {
+          $("div#outputs").hide();
+          $("p#no-outputs").show();
+        }
+
+        $("input#crossfade-val").val(window.player.data.status.xfade || 0);
+
+        $("input#accent").val(localStorage.getItem("color") || "#ff0066");
+
+        let colors = JSON.parse(localStorage.getItem("colors")) || [];
+        if(colors.length){
+          $("div#colors").html("");
+          (colors).forEach((color, i) => {
+            $("div#colors").append(`
+            <div>
+              <button class="inline red" title="delete color" onClick="color_delete('${color}')">-</button>
+              <button style="color: ${color}" onClick="color_set('${color}',true)">${color}</button>
+            </div>
+          `);
+          });
+        }else{
+          $("div#colors").hide();
+          $("p#no-colors").show();
+        }
+
+
+
+        $("input#custom-css-enabled").prop("checked", localStorage.getItem("custom_css_enabled") === "1");
+        $("textarea#custom-css").text(localStorage.getItem("custom_css") || "");
+
+
+      });
+
+      window.settings.on("outputSet", output => {
+        window.settings.update();
+      });
+      window.settings.on("crossfadeChange", val => {
+        notification(NOTYPE_SUCC, "Crossfade changed to " + val + " seconds.");
+      });
+
+
+    }else if(hash.view === "db"){
+
+      console.log(hash.value)
+      window.db.byTagType(hash.tagtype, hash.value || null, false, (r) => {
+
+        if(hash.value){
+          $("h2#db-heading").text(decodeURIComponent(hash.value));
+        }else{
+          $("h2#db-heading").text(hash.tagtype + "s");
+        }
+
+        r[hash.tagtype.toLowerCase() + "s"].forEach((item, i) => {
+          console.log(item)
+          if(typeof item === "string"){
+            $("div#db-items").append(`
+              <div><a href="#view=db&tagtype=${htmlspecialchars(hash.tagtype)}&value=${encodeURIComponent(item)}">${htmlspecialchars(item)}</a></div>
+            `);
+          }else{
+            $("div#db-items").append(`
+              <div>${htmlspecialchars(item.title)}</div>
+            `);
+          }
+
+        });
+        console.log(r);
       });
 
     }
 
   });
+
+
 
   window.player.on("update", r => {
     console.log(r);
@@ -123,8 +220,8 @@ Album: ${htmlspecialchars(file.album)}">
     $("span#player-song-played").text(r.current_song.title_played);
     $("span#player-song-unplayed").text(r.current_song.title_unplayed);
 
-    $("div#player-song-artist").html(`<a href="#view=artists&artist=${r.current_song.artist}">${r.current_song.artist}</a>`);
-    $("div#player-song-album").html(`<a href="#view=album&album=${r.current_song.album}">${r.current_song.album}</a>`);
+    $("div#player-song-artist").html(`<a href="#view=db&tagtype=albumartist&value=${encodeURI(r.current_song.artist)}">${r.current_song.artist}</a>`);
+    $("div#player-song-album").html(`<a href="#view=db&tagtype=album&value=${encodeURI(r.current_song.album)}">${r.current_song.album}</a>`);
 
     $("button.player-mode").removeClass("active");
     $("button.player-mode#player-mode-single").addClass(r.status.single ? "active" : "");
@@ -196,6 +293,28 @@ Album: ${htmlspecialchars(file.album)}">
   window.player.on("next", r => window.queue.update());
   window.player.on("previous", r => window.queue.update());
 
+
+  window.queue.on("saveAs", r => {
+    $("div#darkness").load(window.WEBROOT + "/themes/" + window.THEME + "/html/playlist-selection.html", () => {
+      if(r.playlists.length){
+        r.playlists.forEach((playlist, i) => {
+          $("select#playlist").append(`
+          <option value="${playlist}">${playlist}</option>
+        `);
+        })
+      }else{
+        $("form#playlist-selection").hide();
+        $("p#no-playlists").show();
+      }
+
+    }).css("display", "flex");
+  });
+
+  window.queue.on("save", playlist => {
+    notification(NOTYPE_SUCC, "Queue saved to playlist \""+playlist+"\"");
+    $('div#darkness').hide();
+  });
+
   window.queue.on("update", r => {
 
     if(!r.length){
@@ -214,7 +333,11 @@ Album: ${htmlspecialchars(file.album)}">
       $("table#queue-items").append(`
         <tr class="queue-item" data-id="${q.id}" onclick="window.player.play_id(${q.id})" data-pos="${q.pos}">
           <td>
-            <button class="inline white" onclick="window.queue.delete_id(${q.id}, event)" title="Remove from Queue">-</button>
+            <button class="inline white" onclick="{
+              event.preventDefault();
+              event.stopPropagation();
+              window.queue.delete_id(${q.id});
+            }" title="Remove from Queue">-</button>
           </td>
           <td class="track">${q.track || ""}</td>
           <td class="title">${q.title || ""}</td>
@@ -249,4 +372,48 @@ Album: ${htmlspecialchars(file.album)}">
 
 
 
+}
+
+
+function custom_css_apply(){
+  $("style#custom-css").remove();
+  let css = localStorage.getItem("custom_css") || "";
+  if(localStorage.getItem("custom_css_enabled") === "1"){
+    $("head").append($("<style/>",{
+      type: "text/css",
+      text: css,
+      id: "custom-css"
+    }));
+  }
+}
+
+function color_set(color, update_input = false){
+  localStorage.setItem("color", color);
+  $("body").get(0).style.setProperty("--primary", color);
+  if(update_input){
+    $("input#accent").val(color);
+  }
+}
+
+// save the current color
+function color_save(){
+  let colors = JSON.parse(localStorage.getItem("colors")) || [];
+  let current = localStorage.getItem("color");
+  if(!colors.includes(current)){
+    colors.push(current);
+    localStorage.setItem("colors", JSON.stringify(colors));
+  }
+  window.settings.update();
+}
+
+function color_delete(color){
+  let colors = JSON.parse(localStorage.getItem("colors"));
+  let colors_new = []; // this is BS
+  for(let i = 0; i < colors.length; i++){
+    if(colors[i] !== color){
+      colors_new.push(colors[i]);
+    }
+  }
+  localStorage.setItem("colors", JSON.stringify(colors_new));
+  window.settings.update();
 }

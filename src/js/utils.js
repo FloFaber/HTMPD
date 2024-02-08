@@ -13,7 +13,7 @@ function htmlspecialchars(unsafe){
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll("\"", "&quot;")
-    .replaceAll("'", "\\'");
+    .replaceAll("'", "&#039;");
 }
 
 function notification(type, msg = ""){

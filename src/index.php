@@ -37,7 +37,7 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME) . "/css/") as $css){
 
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/utils.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/FileBrowser.js"></script>
-  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Library.js"></script>
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/DB.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Playlist.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Queue.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Player.js"></script>
@@ -56,6 +56,7 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME) . "/css/") as $css){
     /*window.library = new Library();
 
     window.playlist = new Playlist();*/
+    window.db = new DB();
     window.queue = new Queue();
     window.player = new Player();
     window.filebrowser = new FileBrowser();

@@ -1,0 +1,16 @@
+<div class="popup" onclick="event.stopPropagation();">
+  <h2>Select Playlist</h2>
+  <button onclick="window.playlist.create(
+      (r, name) => {
+        $('select#playlist').val(name).change();
+      }
+    ); window.queue.saveAs();">create playlist</button>
+
+  <form id="playlist-selection" onsubmit="window.queue.save($('select#playlist').val()); event.stopPropagation(); event.preventDefault(); return false;">
+    <select id="playlist" style="width: 100%;"></select>
+    <div style="margin-top: 15px">
+      <button type="submit">save</button>
+    </div>
+  </form>
+  <p id="no-playlists" style="display: none;">No playlists...</p>
+</div>

@@ -33,6 +33,32 @@ if($method === "get"){
     echo (new Response(200))->add("library", $library);
     return true;
 
+  }elseif($action === "bytagtype"){
+
+    $tagtype = getrp("tagtype", "get", null);
+    $value = getrp("value", "get", null);
+    $group = getrp("group", "get", null);
+
+    $filter = null;
+    if(!$value){
+      if(($result = $mphpd->db()->list($tagtype, $filter)) === false){
+        echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+        return false;
+      }
+      usort($result, "strnatcasecmp");
+    }else{
+      $filter = new \FloFaber\MphpD\Filter($tagtype, "==", $value);
+      if(($result = $mphpd->db()->search($filter)) === false){
+        echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+        return false;
+      }
+    }
+
+
+
+    echo (new Response(200))->add(strtolower($tagtype)."s", $result);
+    return true;
+
   }elseif($action === "artist"){
 
     $artist = getrp("artist", "get", null);
