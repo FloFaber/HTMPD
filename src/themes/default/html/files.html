@@ -1,6 +1,12 @@
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px">
   <h2 style="margin:0">Files</h2>
-  <button id="db-update" onclick="window.library.update_db()">Update DB</button>
+  <button id="db-update" onclick="{
+    window.db.update({
+      success: (r) => {
+        notification(NOTYPE_SUCC, 'Updating DB with Job #' + r.job);
+      }
+    });
+  }">Update DB</button>
 </div>
 
 <div>
@@ -15,4 +21,4 @@
   <tbody></tbody>
 </table>
 
-<p id="files-empty">No files.</p>
+<p id="no-files" style="display: none;">No files.</p>

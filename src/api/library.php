@@ -59,6 +59,23 @@ if($method === "get"){
     echo (new Response(200))->add(strtolower($tagtype)."s", $result);
     return true;
 
+  }elseif($action === "ls"){
+
+    $uri = getrp("uri", "get", "");
+    $metadata = boolval(getrp("metadata", "get", false));
+    $recursive = boolval(getrp("recursive", "get", false));
+
+    if(($result = $mphpd->db()->ls($uri, $metadata, $recursive)) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+
+    echo (new Response(200))
+      ->add("files", $result["files"] ?? [])
+      ->add("directories", $result["directories"] ?? [])
+      ->add("playlists", $result["playlists"] ?? []);
+    return true;
+
   }elseif($action === "artist"){
 
     $artist = getrp("artist", "get", null);
@@ -195,7 +212,10 @@ if($method === "get"){
     $check_only = getrp("check_only", "get", false);
 
     // hack
-    $thumbnail = $mphpd->db()->read_picture($file) ?? file_get_contents(__DIR__ . "/../broken.gif");
+    $thumbnail = $mphpd->db()->read_picture($file);
+    if(!$thumbnail){
+      $thumbnail = file_get_contents(__DIR__ . "/../broken.gif");
+    }
 
 
     if($check_only){
@@ -209,6 +229,7 @@ if($method === "get"){
     header("Cache-Control: public, max-age=604800");
 
     echo $thumbnail;
+    return true;
 
   }
 

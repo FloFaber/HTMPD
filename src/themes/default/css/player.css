@@ -32,8 +32,21 @@ div#player-controls, div#player-time{
 }
 
 div#player-song-data{
-    margin: 0 40px;
-    flex-grow: 1;
+  margin: 0 40px;
+  flex-grow: 1;
+}
+
+div#player-song-artist-album{
+  display: flex;
+}
+
+div#player-song-album{
+  margin-left: 12px;
+}
+
+div#player-song-info{
+  font-size: 10px;
+  margin-top: 4px;
 }
 
 div#player-song-artist,div#player-song-artist a,
@@ -41,7 +54,7 @@ div#player-song-album,div#player-song-album a{
   text-decoration: none;
   color: grey;
   font-size: 11px;
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
 div#player-song-artist::before{

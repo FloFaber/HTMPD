@@ -119,7 +119,7 @@ if($method === "get"){
     }
 
     $state = intval(boolval($state));
-    if($mphpd->player()->$action($state) === false){ // oh shit
+    if($mphpd->player()->$action($state) === false){ // oh, shit
       echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
       return false;
     }

@@ -35,11 +35,19 @@
       </div>
     </div>
     <div id="player-song-data">
-      <div id="player-song" title="click to seek" onclick="window.player.seekTo(event, this)">
+      <div id="player-song" title="click to seek" onclick="seekTo(event, this)">
         <span id='player-song-played'>N/A</span><span id='player-song-unplayed'></span>
       </div>
-      <div id="player-song-artist">N/A</div>
-      <div id="player-song-album">N/A</div>
+      <div id="player-song-artist-album">
+        <div id="player-song-artist">N/A</div>
+        <div id="player-song-album">N/A</div>
+      </div>
+      <div id="player-song-info">
+        <span id="player-song-format"></span>
+        <span style="padding: 5px 0;">·</span>
+        <span id="player-song-bitrate"></span>
+      </div>
+
     </div>
 
     <div id="player-time">

@@ -3,6 +3,7 @@ div#library,div#library-path{
 }
 div#library-path{
   display: flex;
+  flex-wrap: wrap;
 }
 
 td.library-item-name a, td.library-item-name span{

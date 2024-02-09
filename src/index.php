@@ -31,12 +31,10 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME) . "/css/") as $css){
 ?>
   <link rel="icon" href="<?= WEBROOT ?? "" ?>/favicon.png" type="image/png"/>
 
-  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/jquery-3.6.4.min.js"></script>
-  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/jquery-ui.min.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Popup.js"></script>
 
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/ajax.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/utils.js"></script>
-  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/FileBrowser.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/DB.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Playlist.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Queue.js"></script>
@@ -48,19 +46,6 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME) . "/css/") as $css){
     window.WEBROOT = "<?= WEBROOT ?? "" ?>";
     window.THEME = "<?= THEME ?>";
   </script>
-
-  <script type="text/javascript">
-    console.log("Page loaded");
-    /*window.library = new Library();
-
-    window.playlist = new Playlist();*/
-    window.db = new DB();
-    window.queue = new Queue();
-    window.player = new Player();
-    window.filebrowser = new FileBrowser();
-    console.log(window.player);
-  </script>
-
 <?php
 foreach(scandir(__DIR__ . "/themes/" . THEME . "/js/") as $js){
   if(!str_ends_with($js, ".head.js")){ continue; }

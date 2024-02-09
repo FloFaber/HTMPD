@@ -1,3 +1,7 @@
+window.db = new DB();
+window.queue = new Queue();
+window.player = new Player();
+
 window.addEventListener("hashchange", function(e){
   load();
 });
@@ -22,6 +26,17 @@ function volumeWheel(event, elem){
   event.preventDefault();
   event.stopPropagation();
   return false;
+}
+
+function seekTo(event, element){
+  if(typeof window.player.data.status.duration === "undefined"){ return; }
+
+  let w = $(element).width();
+  let offset_x = $(element).offset().left;
+  let x = event.pageX - offset_x;
+  let seek_to = Math.round(map(x, 0, w, 0, window.player.data.status.duration) * 100)/100;
+
+  window.player.seek(seek_to);
 }
 
 // Keyboard Shortcuts
@@ -76,45 +91,76 @@ function load(){
 
     if(hash.view === "files"){
 
-      window.filebrowser.ls(hash.path || "", (r) => {
-        for(let i = 0; i < r.paths.length; i++){
-          let path = r.paths[i];
-          $("div#library-path").append(`
+      window.db.ls({
+        uri: hash.path || "",
+        metadata: true,
+        success: (r) => {
+
+          console.log(r);
+
+          let path = hash.path || "";
+          let paths = path.split("/");
+
+          let paths_ = [
+            {
+              name: "C:",
+              path: ""
+            }
+          ]
+
+          let x = "";
+          for(let i = 0; i < paths.length; i++){
+            x += (i !== 0 ? "/" : "") + paths[i];
+            if(paths[i] === ""){ continue; }
+            paths_.push({
+              name: paths[i].split("/").pop(),
+              path: x
+            })
+          }
+
+
+          for(let i = 0; i < paths_.length; i++){
+            let path = paths_[i];
+            $("div#library-path").append(`
             <span class='library-path-item'><a href='#view=files&path=${path.path}'>${path.name}</a>/</span>          
           `);
-        }
+          }
 
-        for(let i = 0; i < r.directories.length; i++){
-          let dir = r.directories[i];
-          $("table#library").append(`
+          for(let i = 0; i < r.directories.length; i++){
+            let dir = r.directories[i];
+            $("table#library").append(`
             <tr class="library-item">
               <td class="library-item-actions">
-                <button class="inline green" data-uri="${dir.name}" data-replace="false" onClick="window.queue.add('${dir.name}',false);">+</button>
-                <button class="inline yellow" data-uri="${dir.name}" data-replace="true" onClick="window.queue.add('${dir.name}',true);">~</button>
+                <button class="inline green" data-uri="${dir.name}" data-replace="false" onClick="window.queue.add('${dir.name}');">+</button>
+                <button class="inline yellow" data-uri="${dir.name}" data-replace="true" onClick="window.queue.replace('${dir.name}');">~</button>
               </td>
-              <td class="library-item-name"><a href="#view=files&path=${dir.name}">${dir.display_name}/</a></td>
+              <td class="library-item-name"><a href="#view=files&path=${dir.name}">${dir.name.split("/").pop()}/</a></td>
             </tr>
           `);
-        }
+          }
 
-        for(let i = 0; i < r.files.length; i++){
-          let file = r.files[i];
-          $("table#library").append(`
+          for(let i = 0; i < r.files.length; i++){
+            let file = r.files[i];
+            $("table#library").append(`
             <tr class="library-item">
               <td class="library-item-actions">
-                <button class="inline green" data-uri="${htmlspecialchars(file.name)}" data-replace="false" onclick="window.queue.add('${htmlspecialchars(file.name)}',false);">+</button>
-                <button class="inline yellow" data-uri="${htmlspecialchars(file.name)}" data-replace="true" onclick="window.queue.add('${htmlspecialchars(file.name)}',true);">~</button>
+                <button class="inline green" data-uri="${htmlspecialchars(file.name)}" data-replace="false" onclick="window.queue.add('${htmlspecialchars(file.name)}');">+</button>
+                <button class="inline yellow" data-uri="${htmlspecialchars(file.name)}" data-replace="true" onclick="window.queue.replace('${htmlspecialchars(file.name)}');">~</button>
               </td>
               <td class="library-item-name" title="Title: ${file.title}
 Artist: ${htmlspecialchars(file.artist)}
 Album: ${htmlspecialchars(file.album)}">
-                <span onclick="window.queue.add_id('${htmlspecialchars(file.name)}', true)">${htmlspecialchars(file.display_name)}</span>
+                <span onclick="window.queue.add_id('${htmlspecialchars(file.name)}', true)">${htmlspecialchars(file.name.split("/").pop())}</span>
               </td>
             </tr>
           `);
+          }
+
+          if(r.files.length === 0 && r.directories.length === 0){
+            $("p#no-files").show();
+          }
+
         }
-
-
       });
 
     }else if(hash.view === "settings"){
@@ -208,7 +254,6 @@ Album: ${htmlspecialchars(file.album)}">
 
 
   window.player.on("update", r => {
-    console.log(r);
 
     let btn = "►";
     if(r.status.state === "play"){
@@ -238,6 +283,9 @@ Album: ${htmlspecialchars(file.album)}">
     }else{
       $("div#player-thumbnail").hide();
     }
+
+    $("span#player-song-format").text(r.status.audio ?? "");
+    $("span#player-song-bitrate").text(r.status.bitrate ? (r.status.bitrate + "kbps") : "");
 
     $(".queue-item").removeClass("active");
     $(".queue-item[data-id='"+r.current_song.id+"']").addClass("active");

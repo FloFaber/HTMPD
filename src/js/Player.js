@@ -48,7 +48,8 @@ class Player{
   }
 
   update(){
-    $.get({
+    window.ajax({
+      method: "GET",
       url: window.WEBROOT + "/api/index.php",
       data: { action: "status" },
       success: (r) => {
@@ -78,7 +79,7 @@ class Player{
           status: r.status,
           current_song: r.current_song,
           image: {
-            src: r.current_song.haspicture ? window.WEBROOT + "/api/library.php?action=thumbnail&file=" + r.current_song.file : "",
+            src: r.current_song.haspicture ? window.WEBROOT + "/api/library.php?action=thumbnail&file=" + encodeURIComponent(r.current_song.file) : "",
           }
         };
 
@@ -114,7 +115,7 @@ class Player{
 
 
   action(data, onsuccess = null, ondone = null){
-    $.post({
+    window.post({
       url: window.WEBROOT + "/api/player.php",
       data: data,
       success: (r) => {
@@ -132,17 +133,6 @@ class Player{
         }
       }
     });
-  }
-
-  seekTo(event, element){
-    if(typeof this.data.status.duration === "undefined"){ return; }
-
-    let w = $(element).width();
-    let offset_x = $(element).offset().left;
-    let x = event.pageX - offset_x;
-    let seek_to = Math.round(map(x, 0, w, 0, this.data.status.duration) * 100)/100;
-
-    this.seek(seek_to);
   }
 
   play_id(id){
@@ -189,9 +179,9 @@ class Player{
     });
   }
 
-  volume(){
-    this.action({ "action": "volume", "volume": $("input#volume").val() }, () => {
-      this.execOns("volumeChange", $("input#volume").val());
+  volume(volume){
+    this.action({ "action": "volume", "volume": volume }, () => {
+      this.execOns("volumeChange", volume);
     });
   }
 

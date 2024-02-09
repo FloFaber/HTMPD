@@ -2,7 +2,7 @@ class DB {
 
   byTagType(tagtype, value = null, group = false, cb = null){
 
-    $.get({
+    window.get({
       url: window.WEBROOT + "/api/library.php",
       data: {
         action: "bytagtype",
@@ -19,32 +19,45 @@ class DB {
   }
 
 
-  search(filters = [], cb = null){
-    $.get({
+  search(params){
+    window.get({
       url: window.WEBROOT + "/api/library.php",
       data: {
         action: "search",
-        filters: filters
+        filters: params.filters || []
       },
       success: (r) => {
-        if(typeof cb === "function"){ cb(r); }
+        if(typeof params.success === "function"){ params.success(r); }
       }
     });
   }
 
-  ls(uri = "", recursive = false, metadata = false, cb = null){
-    $.get({
+
+  ls(params = {}){
+    window.get({
       url: window.WEBROOT + "/api/library.php",
       data: {
         action: "ls",
-        uri: uri,
-        recursive: recursive,
-        metadata: metadata
+        uri: params.uri || "",
+        recursive: (params.recursive ? 1 : 0),
+        metadata: (params.metadata ? 1 : 0 )
       },
       success: (r) => {
-        if(typeof cb === "function"){ cb(r); }
+        if(typeof params.success === "function"){ params.success(r); }
       }
     });
+  }
+
+  update(params = {}){
+    window.post({
+      url: window.WEBROOT + "/api/library.php",
+      data: {
+        action: "update",
+      },
+      success: (r) => {
+        if(typeof params.success === "function"){ params.success(r); }
+      }
+    })
   }
 
 

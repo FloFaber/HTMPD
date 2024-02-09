@@ -27,7 +27,7 @@ class Queue{
 
   update(){
 
-    $.get({
+    window.get({
       url: window.WEBROOT + "/api/queue.php",
       success: (r) => {
         for(let i = 0; i < r.queue.length; i++){
@@ -54,7 +54,7 @@ class Queue{
   }
 
   move(from, to){
-    $.post({
+    window.post({
       url: window.WEBROOT + "/api/queue.php",
       data: { "action": "move", "from": from, "to": to },
       success: (r) => {
@@ -65,7 +65,7 @@ class Queue{
   }
 
   saveAs(){
-    $.get({
+    window.get({
       url: window.WEBROOT + "/api/playlist.php",
       success: (r) => {
         this.execOns("saveAs", r);
@@ -75,7 +75,7 @@ class Queue{
 
   // save current queue as playlist
   save(playlist){
-    $.post({
+    window.post({
       url: window.WEBROOT + "/api/playlist.php",
       data: { "action": "save", "name": playlist },
       success: (r) => {
@@ -85,7 +85,7 @@ class Queue{
   }
 
   action(data, onsuccess = null, ondone = null){
-    $.post({
+    window.post({
       url: window.WEBROOT + "/api/queue.php",
       data: data,
       success: (r) => {
@@ -99,7 +99,7 @@ class Queue{
     });
   }
 
-  add(uri){
+  add(uri, replace = false){
     if(!uri){ return; }
     this.action({"action": "add", uri: uri });
   }
