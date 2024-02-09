@@ -42,15 +42,13 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME) . "/css/") as $css){
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Queue.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Player.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Settings.js"></script>
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Navigation.js"></script>
 
   <script type="text/javascript">
     window.WEBROOT = "<?= WEBROOT ?? "" ?>";
     window.THEME = "<?= THEME ?>";
   </script>
 
-</head>
-
-<body>
   <script type="text/javascript">
     console.log("Page loaded");
     /*window.library = new Library();
@@ -62,11 +60,24 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME) . "/css/") as $css){
     window.filebrowser = new FileBrowser();
     console.log(window.player);
   </script>
+
+<?php
+foreach(scandir(__DIR__ . "/themes/" . THEME . "/js/") as $js){
+  if(!str_ends_with($js, ".head.js")){ continue; }
+?>
+  <script type="text/javascript" src="<?= (WEBROOT ?? "")."/themes/".THEME."/js/$js" ?>"></script>
+<?php
+}
+?>
+
+</head>
+
+<body>
 <?php
 include __DIR__ . "/themes/" . THEME . "/html/index.html";
 
 foreach(scandir(__DIR__ . "/themes/" . THEME . "/js/") as $js){
-  if(!str_ends_with($js, ".js")){ continue; }
+  if(!str_ends_with($js, ".body.js")){ continue; }
 ?>
   <script type="text/javascript" src="<?= (WEBROOT ?? "")."/themes/".THEME."/js/$js" ?>"></script>
 <?php

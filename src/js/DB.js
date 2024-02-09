@@ -18,4 +18,34 @@ class DB {
 
   }
 
+
+  search(filters = [], cb = null){
+    $.get({
+      url: window.WEBROOT + "/api/library.php",
+      data: {
+        action: "search",
+        filters: filters
+      },
+      success: (r) => {
+        if(typeof cb === "function"){ cb(r); }
+      }
+    });
+  }
+
+  ls(uri = "", recursive = false, metadata = false, cb = null){
+    $.get({
+      url: window.WEBROOT + "/api/library.php",
+      data: {
+        action: "ls",
+        uri: uri,
+        recursive: recursive,
+        metadata: metadata
+      },
+      success: (r) => {
+        if(typeof cb === "function"){ cb(r); }
+      }
+    });
+  }
+
+
 }
