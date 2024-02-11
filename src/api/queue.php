@@ -40,13 +40,15 @@ if($method === "get"){
 
 }elseif($method === "post"){
 
-  if($action === "add" || $action === "replace"){
+  if($action === "add"){
 
     if(($uri = getrp("uri", "post", null)) === null){
       echo new Response(400); return false;
     }
 
-    if($action === "replace"){
+    $replace = boolval(getrp("replace", "post", false));
+
+    if($replace){
       $mphpd->queue()->clear();
     }
 
@@ -73,7 +75,7 @@ if($method === "get"){
 
     echo new Response(200, "ERR_OK", "", [ "id" => $id ]); return true;
 
-  }elseif($action === "search_add"){
+  }elseif($action === "add_search"){
 
     $replace = getrp("replace", "post", false) === "true";
     $filters = getrp("filters", "post", []);

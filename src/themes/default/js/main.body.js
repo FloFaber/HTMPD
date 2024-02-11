@@ -131,38 +131,78 @@ function load(){
           for(let i = 0; i < paths_.length; i++){
             let path = paths_[i];
             $("div#library-path").append(`
-            <span class='library-path-item'><a href='#view=files&path=${path.path}'>${path.name}</a>/</span>          
-          `);
+              <span class='library-path-item'><a href='#view=files&path=${path.path}'>${path.name}</a>/</span>          
+            `);
           }
 
-          for(let i = 0; i < r.directories.length; i++){
-            let dir = r.directories[i];
-            $("table#library").append(`
-            <tr class="library-item">
-              <td class="library-item-actions">
-                <button class="inline green" data-uri="${dir.name}" data-replace="false" onClick="window.queue.add('${dir.name}');">+</button>
-                <button class="inline yellow" data-uri="${dir.name}" data-replace="true" onClick="window.queue.replace('${dir.name}');">~</button>
-              </td>
-              <td class="library-item-name"><a href="#view=files&path=${dir.name}">${dir.name.split("/").pop()}/</a></td>
-            </tr>
-          `);
+          if(r.directories.length){
+            r.directories.map((dir, i ) => {
+              dir.display_name = dir.name.split("/").pop() + "/";
+              return dir;
+            });
+
+            (new Table({
+              id: "directories",
+              parent: $("table#library"),
+              heads: [{
+                title: "",
+                attr: "display_name"
+              }],
+              itemActions: [
+                {
+                  title: "Load",
+                  text: "+",
+                  onclick: (item) => {
+                    window.queue.add(item.name, false);
+                  }
+                },{
+                  title: "Replace",
+                  text: "~",
+                  onclick: (item) => {
+                    window.queue.add(item.name, true);
+                  }
+                }
+              ],
+              onItemClick: (item) => {
+                window.location.hash = "#view=files&path="+item.name;
+              }
+            }, r.directories)).render();
           }
 
-          for(let i = 0; i < r.files.length; i++){
-            let file = r.files[i];
-            $("table#library").append(`
-            <tr class="library-item">
-              <td class="library-item-actions">
-                <button class="inline green" data-uri="${htmlspecialchars(file.name)}" data-replace="false" onclick="window.queue.add('${htmlspecialchars(file.name)}');">+</button>
-                <button class="inline yellow" data-uri="${htmlspecialchars(file.name)}" data-replace="true" onclick="window.queue.replace('${htmlspecialchars(file.name)}');">~</button>
-              </td>
-              <td class="library-item-name" title="Title: ${file.title}
-Artist: ${htmlspecialchars(file.artist)}
-Album: ${htmlspecialchars(file.album)}">
-                <span onclick="window.queue.add_id('${htmlspecialchars(file.name)}', true)">${htmlspecialchars(file.name.split("/").pop())}</span>
-              </td>
-            </tr>
-          `);
+
+          if(r.files.length){
+
+            r.files.map((file, i ) => {
+              file.display_name = file.name.split("/").pop();
+              return file;
+            });
+
+            (new Table({
+              id: "files",
+              parent: $("table#library"),
+              heads: [{
+                title: "",
+                attr: "display_name"
+              }],
+              itemActions: [
+                {
+                  title: "Load",
+                  text: "+",
+                  onclick: (item) => {
+                    window.queue.add(item.name, false);
+                  }
+                },{
+                  title: "Replace",
+                  text: "~",
+                  onclick: (item) => {
+                    window.queue.add(item.name, true);
+                  }
+                }
+              ],
+              onItemClick: (item) => {
+                window.queue.add_id(item.name, true);
+              }
+            }, r.files)).render();
           }
 
           if(r.files.length === 0 && r.directories.length === 0){
@@ -241,14 +281,29 @@ Album: ${htmlspecialchars(file.album)}">
         }
 
         r[hash.tagtype.toLowerCase() + "s"].forEach((item, i) => {
-          console.log(item)
           if(typeof item === "string"){
-            $("div#db-items").append(`
-              <div><a href="#view=db&tagtype=${htmlspecialchars(hash.tagtype)}&value=${encodeURIComponent(item)}">${htmlspecialchars(item)}</a></div>
+            $("table#db-items").append(`
+
+              <tr class="library-item">
+                <td class="library-item-actions">
+                  <button class="inline green" onClick="window.queue.addSearch([{
+                    tag: '${hash.tagtype.toLowerCase()}',
+                    operator: '==',
+                    value: '${item}'
+                  }], false);">+</button>
+                  <button class="inline yellow" onClick="window.queue.addSearch([{
+                    tag: '${hash.tagtype.toLowerCase()}',
+                    operator: '==',
+                    value: '${item}'
+                  }], true);">~</button>
+                  <div><a href="#view=db&tagtype=${htmlspecialchars(hash.tagtype)}&value=${encodeURIComponent(item)}">${htmlspecialchars(item)}</a></div>
+                </td>
+              </tr>
             `);
           }else{
-            $("div#db-items").append(`
-              <div>${htmlspecialchars(item.title)}</div>
+            console.log(item)
+            $("table#db-items").append(`
+              <tr><td>${htmlspecialchars(item.title || item.file.split("/").pop())}</td></tr>
             `);
           }
 

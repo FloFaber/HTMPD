@@ -202,6 +202,14 @@ div#notifications{
   width: 100%;
 }
 
+tr.item{
+  cursor: pointer;
+}
+tr.item:hover > td.val{
+  background-color: var(--primary);
+}
+
+
 div.notification{
   background-color: white;
   border: 2px solid black;

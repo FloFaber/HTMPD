@@ -1,11 +1,41 @@
 // we don't need jquery for this
+
+const objectToQueryString = (initialObj) => {
+  const reducer = (obj, parentPrefix = null) => (prev, key) => {
+    const val = obj[key];
+    key = encodeURIComponent(key);
+    const prefix = parentPrefix ? `${parentPrefix}[${key}]` : key;
+
+    if (val == null || typeof val === 'function') {
+      prev.push(`${prefix}=`);
+      return prev;
+    }
+
+    if(typeof val === 'boolean'){
+      prev.push(`${prefix}=${val ? 1 : 0}`);
+      return prev;
+    }
+    if (['number', 'string'].includes(typeof val)) {
+      prev.push(`${prefix}=${encodeURIComponent(val)}`);
+      return prev;
+    }
+
+    prev.push(Object.keys(val).reduce(reducer(val, prefix), []).join('&'));
+    return prev;
+  };
+
+  return Object.keys(initialObj).reduce(reducer(initialObj), []).join('&');
+};
+
+
 window.ajax = (params) => {
 
   let form = null;
   if(params.data){
-    form = Object.keys(params.data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(
+    form = objectToQueryString(params.data);
+    /*form = Object.keys(params.data).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(
       typeof params.data[key] === "boolean" ? (params.data[key] ? 1 : 0) : params.data[key]
-    )).join('&');
+    )).join('&');*/
   }
 
   let init = {

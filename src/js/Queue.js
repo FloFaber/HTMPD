@@ -82,7 +82,17 @@ class Queue extends Events {
 
   add(uri, replace = false){
     if(!uri){ return; }
-    this.action({"action": "add", uri: uri });
+    this.action({"action": "add", uri: uri, "replace": replace });
+  }
+
+  addSearch(filters, replace = false){
+
+    this.action({
+      "action": "add_search",
+      "filters": filters,
+      "replace": replace
+    });
+
   }
 
   add_id(uri, play = false){
