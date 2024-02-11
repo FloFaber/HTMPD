@@ -1,6 +1,7 @@
-class Queue{
+class Queue extends Events {
 
   constructor() {
+    super();
 
     this.update.bind(this);
 
@@ -13,16 +14,6 @@ class Queue{
       onSaveAs: []
     };
 
-  }
-
-  on(name, cb){
-    this.events["on" + capitalizeFirstLetter(name)].push(cb);
-  }
-
-  execOns(name, data){
-    for(let i = 0; i < this.events["on" + capitalizeFirstLetter(name)].length; i++){
-      this.events["on" + capitalizeFirstLetter(name)][i](data);
-    }
   }
 
   update(){

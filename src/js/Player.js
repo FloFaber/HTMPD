@@ -1,8 +1,8 @@
-class Player{
+class Player extends Events{
 
 
   constructor(update_interval = 30) {
-
+    super();
 
     this.events = {
       onUpdate: [],
@@ -35,16 +35,6 @@ class Player{
     this.last_elapsed = 0;
     this.last_duration = 0;
 
-  }
-
-  on(name, cb){
-    this.events["on" + capitalizeFirstLetter(name)].push(cb);
-  }
-
-  execOns(name, data){
-    for(let i = 0; i < this.events["on" + capitalizeFirstLetter(name)].length; i++){
-      this.events["on" + capitalizeFirstLetter(name)][i](data);
-    }
   }
 
   update(){
@@ -85,13 +75,14 @@ class Player{
 
         //this.updateTime(this.data.current_song.duration, this.data.current_song.elapsed);
         this.execOns("update", this.data);
+        this.updateTime(this.data.status.duration, this.data.status.elapsed);
 
       }
     })
   }
 
   increase_time(){
-    if(this.data.status && (this.data.status.state === "play" || this.data.status.state === "pause")){
+    if(this.data.status && (this.data.status.state === "play")){
       this.updateTime(this.last_duration, this.last_elapsed+1);
     }
   }

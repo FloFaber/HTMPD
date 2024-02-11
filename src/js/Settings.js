@@ -1,6 +1,7 @@
-class Settings{
+class Settings extends Events {
 
   constructor() {
+    super();
     this.events = {
       onUpdate: [],
       onOutputSet: [],
@@ -9,16 +10,6 @@ class Settings{
 
     this.update();
 
-  }
-
-  on(name, cb){
-    this.events["on" + capitalizeFirstLetter(name)].push(cb);
-  }
-
-  execOns(name, data){
-    for(let i = 0; i < this.events["on" + capitalizeFirstLetter(name)].length; i++){
-      this.events["on" + capitalizeFirstLetter(name)][i](data);
-    }
   }
 
   update(){

@@ -1,6 +1,7 @@
 window.db = new DB();
 window.queue = new Queue();
 window.player = new Player();
+window.playlist = new Playlist();
 
 window.addEventListener("hashchange", function(e){
   load();
@@ -418,10 +419,44 @@ Album: ${htmlspecialchars(file.album)}">
 
   });
 
-
+  window.playlist.on("save", playlist => {
+    notification(NOTYPE_SUCC, "Song saved to playlist \""+playlist+"\"");
+    $('div#darkness').hide();
+  });
 
 }
 
+function select_playlist(cb = null){
+
+  window.playlist.get((r) => {
+    $("div#darkness").load(window.WEBROOT + "/themes/" + window.THEME + "/html/playlist-selection.html", () => {
+      if(r.playlists.length){
+        r.playlists.forEach((playlist, i) => {
+          $("select#playlist").append(`
+          <option value="${playlist}">${playlist}</option>
+        `);
+        });
+
+        $("form#playlist-selection").on("submit", function(e){
+          if(typeof cb === "function"){
+            cb($('select#playlist').val());
+          }
+
+          e.stopPropagation();
+          e.preventDefault();
+          return false;
+        })
+
+      }else{
+        $("form#playlist-selection").hide();
+        $("p#no-playlists").show();
+      }
+
+    }).css("display", "flex");
+  });
+
+
+}
 
 function custom_css_apply(){
   $("style#custom-css").remove();

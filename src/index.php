@@ -31,6 +31,7 @@ foreach(scandir(__DIR__ . "/themes/" . (THEME) . "/css/") as $css){
 ?>
   <link rel="icon" href="<?= WEBROOT ?? "" ?>/favicon.png" type="image/png"/>
 
+  <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Events.js"></script>
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/Popup.js"></script>
 
   <script type="text/javascript" src="<?= WEBROOT ?? "" ?>/js/ajax.js"></script>

@@ -130,6 +130,27 @@ if($method === "get"){
     echo new Response();
     return true;
 
+  }elseif($action === "add"){
+
+    if(($name = getrp("playlist", $method, null)) === null){
+      echo new Response(400); return false;
+    }
+
+    if(($uri = getrp("uri", $method, null)) === null){
+      echo new Response(400); return false;
+    }
+
+    if(($playlist = $mphpd->playlist($name)) === null){
+      echo new Response(404); return false;
+    }
+
+    if(($result = $mphpd->playlist($name)->add($uri)) === false){
+      echo new Response(404); return false;
+    }
+
+    echo new Response(); return true;
+
+
   }
 
 }

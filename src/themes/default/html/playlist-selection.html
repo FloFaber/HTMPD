@@ -4,9 +4,9 @@
       (r, name) => {
         $('select#playlist').val(name).change();
       }
-    ); window.queue.saveAs();">create playlist</button>
+    ); select_playlist();">create playlist</button>
 
-  <form id="playlist-selection" onsubmit="window.queue.save($('select#playlist').val()); event.stopPropagation(); event.preventDefault(); return false;">
+  <form id="playlist-selection">
     <select id="playlist" style="width: 100%;"></select>
     <div style="margin-top: 15px">
       <button type="submit">save</button>
