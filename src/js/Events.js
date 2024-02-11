@@ -5,6 +5,11 @@ class Events {
   }
 
   on(name, cb){
+    for(let i = 0; i < this.events["on" + capitalizeFirstLetter(name)].length; i++){
+      if(this.events["on" + capitalizeFirstLetter(name)][i].toString() === cb.toString()){
+        return;
+      }
+    }
     this.events["on" + capitalizeFirstLetter(name)].push(cb);
   }
 

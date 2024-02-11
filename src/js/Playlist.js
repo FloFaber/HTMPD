@@ -43,7 +43,7 @@ class Playlist extends Events {
         uri: uri
       },
       success: r => {
-        this.execOns("add", r);
+        this.execOns("add", playlist, uri);
       }
     })
   }

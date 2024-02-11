@@ -1,10 +1,11 @@
 <div class="popup" onclick="event.stopPropagation();">
   <h2>Select Playlist</h2>
-  <button onclick="window.playlist.create(
-      (r, name) => {
-        $('select#playlist').val(name).change();
-      }
-    ); select_playlist();">create playlist</button>
+  <button onclick="{
+    window.playlist.on('create', r => {
+      select_playlist(null, r);
+    });
+    window.playlist.create(prompt('Name?'));}
+  ">create playlist</button>
 
   <form id="playlist-selection">
     <select id="playlist" style="width: 100%;"></select>

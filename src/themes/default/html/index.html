@@ -48,11 +48,7 @@
         <span id="player-song-bitrate"></span>
         <button class="inline" onclick="{
           select_playlist(playlist => {
-            window.playlist.on('add', (r) => {
-              
-            });
             window.playlist.add(playlist, window.player.data.current_song.file);
-
           });
         }">add to pl</button>
       </div>

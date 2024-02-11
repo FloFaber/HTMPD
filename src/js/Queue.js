@@ -11,7 +11,6 @@ class Queue extends Events {
       onUpdate: [],
       onMove: [],
       onSave: [],
-      onSaveAs: []
     };
 
   }
@@ -51,15 +50,6 @@ class Queue extends Events {
       success: (r) => {
         this.update();
         this.execOns("move", { from: from, to: to });
-      }
-    });
-  }
-
-  saveAs(){
-    window.get({
-      url: window.WEBROOT + "/api/playlist.php",
-      success: (r) => {
-        this.execOns("saveAs", r);
       }
     });
   }

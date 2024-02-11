@@ -2,11 +2,17 @@ window.db = new DB();
 window.queue = new Queue();
 window.player = new Player();
 window.playlist = new Playlist();
+window.settings = new Settings();
 
 window.addEventListener("hashchange", function(e){
   load();
 });
 color_set(localStorage.getItem("color") || "#ff0066");
+
+if(localStorage.getItem("colors") === null){
+  color_save("#4c944d");
+  color_save("#444444");
+}
 load();
 
 $("div#split-right").load(window.WEBROOT + "/themes/" + window.THEME + "/html/queue.html", function(){
@@ -73,10 +79,12 @@ function load(){
   }
 
   $("div.sidebar-item").removeClass("active");
-  $("div.sidebar-item > a[href='" + window.location.hash + "']").parent().addClass("active");
+  /*$("div.sidebar-item > a[href='" + window.location.hash + "']").parent().addClass("active");*/
 
   if(hash.view === "db" && hash.tagtype){
     $("div.sidebar-item > a[href='#view=" + hash.view + "&tagtype=" + hash.tagtype + "']").parent().addClass("active");
+  }else{
+    $("div.sidebar-item > a[href^='#view=" + hash.view + "']").parent().addClass("active");
   }
 
 
@@ -166,7 +174,6 @@ Album: ${htmlspecialchars(file.album)}">
 
     }else if(hash.view === "settings"){
 
-      window.settings = new Settings();
       window.settings.on("update", r => {
         console.log(r)
         if (r.outputs.length) {
@@ -185,7 +192,7 @@ Album: ${htmlspecialchars(file.album)}">
           $("p#no-outputs").show();
         }
 
-        $("input#crossfade-val").val(window.player.data.status.xfade || 0);
+        $("input#crossfade-val").val(window.player.data.status ? (window.player.data.status.xfade || 0) : 0 );
 
         $("input#accent").val(localStorage.getItem("color") || "#ff0066");
 
@@ -220,6 +227,7 @@ Album: ${htmlspecialchars(file.album)}">
         notification(NOTYPE_SUCC, "Crossfade changed to " + val + " seconds.");
       });
 
+      window.settings.update();
 
     }else if(hash.view === "db"){
 
@@ -343,22 +351,6 @@ Album: ${htmlspecialchars(file.album)}">
   window.player.on("previous", r => window.queue.update());
 
 
-  window.queue.on("saveAs", r => {
-    $("div#darkness").load(window.WEBROOT + "/themes/" + window.THEME + "/html/playlist-selection.html", () => {
-      if(r.playlists.length){
-        r.playlists.forEach((playlist, i) => {
-          $("select#playlist").append(`
-          <option value="${playlist}">${playlist}</option>
-        `);
-        })
-      }else{
-        $("form#playlist-selection").hide();
-        $("p#no-playlists").show();
-      }
-
-    }).css("display", "flex");
-  });
-
   window.queue.on("save", playlist => {
     notification(NOTYPE_SUCC, "Queue saved to playlist \""+playlist+"\"");
     $('div#darkness').hide();
@@ -419,33 +411,46 @@ Album: ${htmlspecialchars(file.album)}">
 
   });
 
-  window.playlist.on("save", playlist => {
+  window.playlist.on("add", playlist => {
     notification(NOTYPE_SUCC, "Song saved to playlist \""+playlist+"\"");
     $('div#darkness').hide();
   });
 
 }
 
-function select_playlist(cb = null){
+function select_playlist(cb = null, preselect = ""){
+
+  if(typeof cb === "function") {
+    window.select_playlist_cb = cb;
+  }
 
   window.playlist.get((r) => {
     $("div#darkness").load(window.WEBROOT + "/themes/" + window.THEME + "/html/playlist-selection.html", () => {
       if(r.playlists.length){
         r.playlists.forEach((playlist, i) => {
           $("select#playlist").append(`
-          <option value="${playlist}">${playlist}</option>
-        `);
+            <option value="${playlist}">${playlist}</option>
+          `);
         });
+
+        if($("select#playlist > option[value='" + preselect + "']").length){
+          $("select#playlist").val(preselect);
+        }
 
         $("form#playlist-selection").on("submit", function(e){
           if(typeof cb === "function"){
             cb($('select#playlist').val());
           }
 
+          // hack
+          if(cb === null && typeof window.select_playlist_cb === "function"){
+            window.select_playlist_cb($('select#playlist').val());
+          }
+
           e.stopPropagation();
           e.preventDefault();
           return false;
-        })
+        });
 
       }else{
         $("form#playlist-selection").hide();
@@ -479,9 +484,9 @@ function color_set(color, update_input = false){
 }
 
 // save the current color
-function color_save(){
+function color_save(color = null){
   let colors = JSON.parse(localStorage.getItem("colors")) || [];
-  let current = localStorage.getItem("color");
+  let current = color || localStorage.getItem("color");
   if(!colors.includes(current)){
     colors.push(current);
     localStorage.setItem("colors", JSON.stringify(colors));

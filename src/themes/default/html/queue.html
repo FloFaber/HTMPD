@@ -3,7 +3,11 @@
 <div id="action-buttons">
   <button id="queue-clear" onclick="window.queue.clear()">clear</button>
   <button id="queue-shuffle" onclick="window.queue.shuffle()">shuffle</button>
-  <button id="queue-save" onclick="window.queue.saveAs()">save...</button>
+  <button id="queue-save" onclick="{
+    select_playlist(playlist => {
+      window.queue.save(playlist);
+    });
+  }">save...</button>
   <button id="queue-add" onclick="window.queue.add(prompt('URI?'))">add...</button>
 </div>
 
