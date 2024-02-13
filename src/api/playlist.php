@@ -30,6 +30,7 @@ if($method === "get"){
       echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
       return false;
     }
+    sort($playlists);
     echo (new Response(200))->add("playlists", $playlists);
     return true;
   }elseif($action === "show"){
@@ -74,17 +75,16 @@ if($method === "get"){
 
   }elseif($action === "delete"){
 
-    if(($name = getrp("name", $method, null)) === null){
+    if(($names = getrp("names", $method, null)) === null){
       echo new Response(400); return false;
     }
 
-    if(($playlist = $mphpd->playlist($name)) === null){
-      echo new Response(400); return false;
-    }
-
-    if($playlist->delete() === false){
-      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
-      return false;
+    foreach($names as $name){
+      if(($playlist = $mphpd->playlist($name)) !== null){
+        if($playlist->delete() === false){
+          echo new Response(404); return false;
+        }
+      }
     }
 
     echo new Response();
@@ -96,6 +96,8 @@ if($method === "get"){
       echo new Response(400); return false;
     }
 
+    $clear = getrp("clear", $method, true);
+
     if(($playlist = $mphpd->playlist($name)) === null){
       echo new Response(400); return false;
     }
@@ -104,7 +106,11 @@ if($method === "get"){
       echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
       return false;
     }
-    $playlist->clear();
+
+    if($clear){
+      $playlist->clear();
+    }
+
 
     echo new Response();
     return true;
@@ -136,7 +142,7 @@ if($method === "get"){
       echo new Response(400); return false;
     }
 
-    if(($uri = getrp("uri", $method, null)) === null){
+    if(($uris = getrp("uris", $method, null)) === null){
       echo new Response(400); return false;
     }
 
@@ -144,12 +150,64 @@ if($method === "get"){
       echo new Response(404); return false;
     }
 
-    if(($result = $mphpd->playlist($name)->add($uri)) === false){
-      echo new Response(404); return false;
+    foreach($uris as $uri){
+      if(($result = $mphpd->playlist($name)->add($uri)) === false){
+        echo new Response(404); return false;
+      }
     }
 
     echo new Response(); return true;
 
+
+  }elseif($action === "remove"){
+    if(($name = getrp("playlist", $method, null)) === null){
+      echo new Response(400); return false;
+    }
+
+    if(($poss = getrp("poss", $method, null)) === null){
+      echo new Response(400); return false;
+    }
+
+    if(($playlist = $mphpd->playlist($name)) === null){
+      echo new Response(404); return false;
+    }
+
+    // we need to start with the highest position first
+    rsort($poss, SORT_NUMERIC);
+
+    foreach($poss as $pos){
+      if(($result = $mphpd->playlist($name)->remove_song($pos)) === false){
+        echo new Response(404); return false;
+      }
+    }
+
+
+    echo new Response(); return true;
+  }elseif($action === "move"){
+
+    if(($name = getrp("name", $method, null)) === null){
+      echo new Response(400); return false;
+    }
+
+    if(($from = getrp("from", $method, null)) === null){
+      echo new Response(400); return false;
+    }
+
+    if(($to = getrp("to", $method, null)) === null){
+      echo new Response(400); return false;
+    }
+
+    if(($playlist = $mphpd->playlist($name)) === null){
+      echo new Response(404); return false;
+    }
+
+    if($playlist->move_song($from, $to) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+
+    echo new Response();
+    return true;
 
   }
 

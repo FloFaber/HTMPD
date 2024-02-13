@@ -77,7 +77,7 @@ if($method === "get"){
 
   }elseif($action === "add_search"){
 
-    $replace = getrp("replace", "post", false) === "true";
+    $replace = boolval(getrp("replace", "post", false));
     $filters = getrp("filters", "post", []);
 
     if($replace === true){

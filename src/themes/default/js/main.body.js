@@ -363,6 +363,180 @@ function load(){
 
       });
 
+    }else if(hash.view === "playlists"){
+
+      if(!hash.playlist){
+
+        // ugly hack
+        window.playlist.on("delete", (playlist) => {
+          if(hash.view === "playlists"){ load(); } // hack
+        });
+        window.playlist.on("create", (playlist) => {
+          if(hash.view === "playlists"){ load(); } // hack
+        });
+
+        window.playlist.get((r) => {
+
+          if(!r.playlists.length){
+            $("p#no-playlists").show();
+            return;
+          }
+
+          let playlists = [];
+          r.playlists.forEach((playlist, i) => {
+            playlists.push({
+              name: playlist
+            });
+          })
+          console.log(playlists);
+
+          (new Table({
+
+            id: "playlists",
+            parent: $("div#playlists"),
+            heads: [{
+              title: "",
+              attr: "name"
+            }],
+            itemActions: [
+              {
+                title: "Load",
+                text: "+",
+                onclick: (item) => window.playlist.load(item.name, false)
+              },{
+                title: "Replace",
+                text: "~",
+                onclick: (item) => window.playlist.load(item.name, true)
+              }
+            ],
+            topActions: [
+              {
+                title: "Create new playlist",
+                text: "create",
+                onclick: () => {
+                  let name = prompt("Name?");
+                  if(name){
+                    window.playlist.create(name);
+                  }
+                }
+              },{
+                title: "Delete selected playlists",
+                text: "delete",
+                onclick: (items) => {
+                  let pls = [];
+                  items.forEach((item, i) => {
+                    pls.push(item.name);
+                  });
+                  if(pls.length && confirm(`Delete ${pls.length} playlist${(pls.length > 1 ? "s" : "")}?`)){
+                    window.playlist.delete(pls);
+                  }
+                }
+              }
+            ],
+            onItemClick: (item) => {
+              window.location.hash = "view=playlists&playlist=" + item.name;
+            }
+
+          }, playlists)).render();
+
+
+        });
+      }else{
+        let playlist = hash.playlist;
+
+        // ugly hack
+        window.playlist.on("remove", (playlist, poss) => {
+          if(playlist === hash.playlist){ load(); } // hack
+        });
+        window.playlist.on("add", (playlist, uris) => {
+          if(playlist === hash.playlist){ load(); } // hack
+        });
+
+        window.playlist.show(playlist, (r) => {
+
+          $("h2#playlist").text(playlist);
+
+          if(!r.songs.length) {
+            $("p#no-songs").show();
+            return;
+          }
+
+          for(let i = 0; i < r.songs.length; i++){
+            r.songs[i].pos = i;
+          }
+          (new Table({
+            id: "playlist",
+            parent: $("div#playlists"),
+            heads: [{
+              title: "Title",
+              attr: "title",
+              attr_fb: "file"
+            },{
+              title: "Artist",
+              attr: "artist"
+            }],
+            topActions: [
+              {
+                title: "Add URI to playlist",
+                text: "add",
+                onclick: () => {
+                  let uri = prompt("URI?");
+                  if(!uri){ return; }
+                  window.playlist.add(playlist, [uri]);
+                }
+              },{
+                title: "Remove selected items from playlist",
+                text: "remove",
+                onclick: (items) => {
+                  if(items.length && confirm("Remove " + items.length + " songs from '" + playlist + "'?")){
+                    let poss = [];
+                    items.forEach((item,i) => {
+                      poss.push(item.pos);
+                    });
+                    window.playlist.remove(playlist, poss);
+                  }
+                }
+              }
+            ],
+            itemActions: [
+              {
+                title: "Load",
+                text: "+",
+                onclick: (item) => window.queue.add(item.file, false)
+              },{
+                title: "Replace",
+                text: "~",
+                onclick: (item) => window.queue.add(item.file, true)
+              }
+            ],
+            onItemClick: (item) => window.queue.add_id(item.file, true)
+          }, r.songs)).render();
+
+          let pos_old;
+          let pos_new;
+          $("table#playlist").sortable({
+            cursor: 'row-resize',
+            placeholder: 'ui-state-highlight',
+            opacity: '0.55',
+            items: 'tr.item',
+            helper:'clone', // fix for #2
+            start: function(event, item){
+              pos_old = $(item.item).index()-1;
+            }, stop: (event, item) => {
+              pos_new = $(item.item).index()-1;
+              console.log(pos_old, pos_new);
+              window.playlist.move(playlist, pos_old, pos_new);
+            }
+          }).disableSelection();
+
+
+
+        });
+
+      }
+
+
+
     }
 
   });
