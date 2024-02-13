@@ -15,6 +15,7 @@ if(localStorage.getItem("colors") === null){
   color_save("#444444");
   color_save("#259d75");
   color_save("#2969d1");
+  color_save("#b5835a");
 }
 load();
 
