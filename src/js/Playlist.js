@@ -11,7 +11,8 @@ class Playlist extends Events {
       onLoad: [],
       onReplace: [],
       onSave: [],
-      onMove: []
+      onMove: [],
+      onRename: []
     }
   }
 
@@ -75,6 +76,20 @@ class Playlist extends Events {
       },
       success: r => {
         this.execOns("remove", playlist, poss);
+      }
+    })
+  }
+
+  rename(name_old, name_new){
+    window.post({
+      url: window.WEBROOT + "/api/playlist.php",
+      data: {
+        action: "rename",
+        name_old: name_old,
+        name_new: name_new,
+      },
+      success: r => {
+        this.execOns("rename", name_old, name_new);
       }
     })
   }

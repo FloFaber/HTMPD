@@ -183,6 +183,28 @@ if($method === "get"){
 
 
     echo new Response(); return true;
+  }elseif($action === "rename"){
+
+    if(($name_old = getrp("name_old", $method, null)) === null){
+      echo new Response(400); return false;
+    }
+
+    if(($name_new = getrp("name_new", $method, null)) === null){
+      echo new Response(400); return false;
+    }
+
+    if(($playlist = $mphpd->playlist($name_old)) === null){
+      echo new Response(404); return false;
+    }
+
+    if($playlist->rename($name_new) === false){
+      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
+      return false;
+    }
+
+    echo new Response();
+    return true;
+
   }elseif($action === "move"){
 
     if(($name = getrp("name", $method, null)) === null){

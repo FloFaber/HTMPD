@@ -117,13 +117,16 @@ if($method === "get"){
 
   }elseif($action === "delete_id"){
 
-    if(($id = getrp("id", "post", null)) === null){
+    if(($ids = getrp("ids", "post", null)) === null){
       echo new Response(400); return false;
     }
 
-    if($mphpd->queue()->delete_id($id) === false){
-      echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]); return false;
+    foreach ($ids as $id) {
+      if($mphpd->queue()->delete_id($id) === false){
+        echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]); return false;
+      }
     }
+
 
     echo new Response(); return true;
 

@@ -111,8 +111,8 @@ class Queue extends Events {
     this.action({ "action": "clear" });
   }
 
-  delete_id(id){
-    this.action({ "action": "delete_id", "id": id });
+  delete_id(ids){
+    this.action({ "action": "delete_id", "ids": ids });
   }
 
 }

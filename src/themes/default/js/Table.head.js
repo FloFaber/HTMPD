@@ -52,7 +52,7 @@ class Table {
 
     str += `<table id="${this.params.id}"><tr>`;
 
-    if(this.params.itemActions.length){
+    if(this.params.itemActions.length || this.params.topActions.length){
       str += "<th></th>";
     }
 
@@ -64,10 +64,16 @@ class Table {
 
     for(let i = 0; i < this.items.length; i++){
       let item = this.items[i];
-      str += `<tr id="${this.params.id}-${i}" class="item">`;
+      str += `<tr id="${this.params.id}-${i}" class="item "`;
+
+      Object.keys(item).forEach(key => {
+        str += "data-"+key + "='" + item[key] + "'";
+      });
+
+      str += ">";
 
       // add action buttons
-      if(this.params.itemActions.length){
+      if(this.params.itemActions.length || this.params.topActions.length){
 
         str += "<td>";
         if(this.params.topActions && this.params.topActions.length){
@@ -91,7 +97,7 @@ class Table {
     str += `</table>`;
 
     // render
-    this.params.parent.append(str);
+    this.params.parent.html(str);
 
     // bind topAction-events
     if(this.params.topActions && this.params.topActions.length){

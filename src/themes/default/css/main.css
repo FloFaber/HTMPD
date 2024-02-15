@@ -255,7 +255,6 @@ th{
 
 table{
   border-spacing: 0;
-  width: 1px;
   display: block;
   padding-bottom: 50px;
 }
@@ -296,39 +295,8 @@ td.artist,th.artist{
   padding: 0 10px;
 }
 
-tr.queue-item.active{
-  color: white;
+table tr.item.active td.val {
   background-color: var(--primary);
-}
-
-tr.queue-item{
-  cursor: pointer;
-}
-
-tr.queue-item:hover{
-  color: white;
-  background-color: var(--primary);
-}
-
-div#queue{
-
-}
-
-div.queue-item{
-  line-height: 15px;
-  display: flex;
-  align-items: center;
-}
-div.queue-item.active{
-  color: var(--primary);
-}
-
-span.queue-item-song{
-  cursor: pointer;
-}
-span.queue-item-song:hover{
-  background-color: var(--primary);
-  color: var(--white);
 }
 
 span.queue-item-artist{

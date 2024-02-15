@@ -145,7 +145,7 @@ function load(){
 
             (new Table({
               id: "directories",
-              parent: $("div#library"),
+              parent: $("div#library-directories"),
               heads: [{
                 title: "",
                 attr: "display_name"
@@ -181,7 +181,7 @@ function load(){
 
             (new Table({
               id: "files",
-              parent: $("div#library"),
+              parent: $("div#library-files"),
               heads: [{
                 title: "",
                 attr: "display_name"
@@ -375,72 +375,11 @@ function load(){
           if(hash.view === "playlists"){ load(); } // hack
         });
 
-        window.playlist.get((r) => {
-
-          if(!r.playlists.length){
-            $("p#no-playlists").show();
-            return;
-          }
-
-          let playlists = [];
-          r.playlists.forEach((playlist, i) => {
-            playlists.push({
-              name: playlist
-            });
-          })
-          console.log(playlists);
-
-          (new Table({
-
-            id: "playlists",
-            parent: $("div#playlists"),
-            heads: [{
-              title: "",
-              attr: "name"
-            }],
-            itemActions: [
-              {
-                title: "Load",
-                text: "+",
-                onclick: (item) => window.playlist.load(item.name, false)
-              },{
-                title: "Replace",
-                text: "~",
-                onclick: (item) => window.playlist.load(item.name, true)
-              }
-            ],
-            topActions: [
-              {
-                title: "Create new playlist",
-                text: "create",
-                onclick: () => {
-                  let name = prompt("Name?");
-                  if(name){
-                    window.playlist.create(name);
-                  }
-                }
-              },{
-                title: "Delete selected playlists",
-                text: "delete",
-                onclick: (items) => {
-                  let pls = [];
-                  items.forEach((item, i) => {
-                    pls.push(item.name);
-                  });
-                  if(pls.length && confirm(`Delete ${pls.length} playlist${(pls.length > 1 ? "s" : "")}?`)){
-                    window.playlist.delete(pls);
-                  }
-                }
-              }
-            ],
-            onItemClick: (item) => {
-              window.location.hash = "view=playlists&playlist=" + item.name;
-            }
-
-          }, playlists)).render();
-
-
+        window.playlist.get((r) => { show_playlists(r); });
+        window.playlist.on("rename", () => {
+          window.playlist.get(r => { show_playlists(r); });
         });
+
       }else{
         let playlist = hash.playlist;
 
@@ -478,7 +417,7 @@ function load(){
             topActions: [
               {
                 title: "Add URI to playlist",
-                text: "add",
+                text: "add uri",
                 onclick: () => {
                   let uri = prompt("URI?");
                   if(!uri){ return; }
@@ -490,7 +429,7 @@ function load(){
                 onclick: (items) => {
                   if(items.length && confirm("Remove " + items.length + " songs from '" + playlist + "'?")){
                     let poss = [];
-                    items.forEach((item,i) => {
+                    items.forEach(item => {
                       poss.push(item.pos);
                     });
                     window.playlist.remove(playlist, poss);
@@ -577,8 +516,8 @@ function load(){
     $("span#player-song-format").text(r.status.audio ?? "");
     $("span#player-song-bitrate").text(r.status.bitrate ? (r.status.bitrate + "kbps") : "");
 
-    $(".queue-item").removeClass("active");
-    $(".queue-item[data-id='"+r.current_song.id+"']").addClass("active");
+    $("table#queue-items tr.item").removeClass("active");
+    $("table#queue-items tr.item[data-id='"+r.current_song.id+"']").addClass("active");
     if(r.status.consume){
       window.queue.update();
     }
@@ -639,6 +578,8 @@ function load(){
 
   window.queue.on("update", r => {
 
+    console.log(r);
+
     if(!r.length){
       $("p#queue-empty").show();
       $("table#queue-items").hide();
@@ -648,7 +589,61 @@ function load(){
       $("table#queue-items").show();
     }
 
-    $("table#queue-items tr.queue-item").remove();
+    (new Table({
+      id: "queue-items",
+      parent: $("div#queue"),
+      heads: [{
+        title: "#",
+        attr: "track"
+      },{
+        title: "Title",
+        attr: "title"
+      },{
+        title: "Album",
+        attr: "album"
+      },{
+        title: "Artist",
+        attr: "artist"
+      }],
+      topActions: [{
+        text: "clear",
+        title: "Clear Queue",
+        onclick: () => { window.queue.clear() }
+      },{
+        text: "shuffle",
+        title: "Shuffle Queue",
+        onclick: () => { window.queue.shuffle() }
+      },{
+        text: "add uri",
+        title: "Add custom URI to Queue",
+        onclick: () => {
+          window.queue.add(prompt('URI?'));
+        }
+      },{
+        text: "save",
+        title: "Add selected items to playlist",
+        onclick: (items) => { select_playlist(playlist => {
+          let uris = [];
+          items.forEach(item => {
+            uris.push(item.file);
+          })
+          window.playlist.add(playlist, uris);
+        }); }
+      },{
+        text: "remove",
+        title: "Remove selected items from Queue",
+        onclick: (items) => {
+          let ids = [];
+          items.forEach(item => ids.push(item.id));
+          window.queue.delete_id(ids);
+        }
+      }],
+      itemActions: [],
+      onItemClick: (item) => { window.player.play_id(item.id) }
+    }, r)).render();
+
+
+    /*$("table#queue-items tr.queue-item").remove();
 
     for(let i = 0; i < r.length; i++){
       let q = r[i];
@@ -667,7 +662,7 @@ function load(){
           <td class="artist">${q.artist || ""}</td>
         </tr>
       `);
-    }
+    }*/
 
     let pos_old;
     let pos_new;
@@ -685,8 +680,8 @@ function load(){
       }
     }).disableSelection();
 
-    $(".queue-item").removeClass("active");
-    $(".queue-item[data-id='"+window.player.data.current_song.id+"']").addClass("active");
+    $("table#queue-items tr.item").removeClass("active");
+    $("table#queue-items tr.item[data-id='"+window.player.data.current_song.id+"']").addClass("active");
 
     $("div#split-right").scrollTop(localStorage.getItem("scrollTop") || 0);
 
@@ -696,6 +691,80 @@ function load(){
     notification(NOTYPE_SUCC, "Song saved to playlist \""+playlist+"\"");
     $('div#darkness').hide();
   });
+
+}
+
+function show_playlists(r){
+
+  if(!r.playlists.length){
+    $("p#no-playlists").show();
+    return;
+  }
+
+  let playlists = [];
+  r.playlists.forEach((playlist, i) => {
+    playlists.push({
+      name: playlist
+    });
+  })
+  console.log(playlists);
+
+  (new Table({
+
+    id: "playlists",
+    parent: $("div#playlists"),
+    heads: [{
+      title: "",
+      attr: "name"
+    }],
+    itemActions: [
+      {
+        title: "Load",
+        text: "+",
+        onclick: (item) => window.playlist.load(item.name, false)
+      },{
+        title: "Replace",
+        text: "~",
+        onclick: (item) => window.playlist.load(item.name, true)
+      }
+    ],
+    topActions: [
+      {
+        title: "Create new playlist",
+        text: "create",
+        onclick: () => {
+          let name = prompt("Name?");
+          if(name){
+            window.playlist.create(name);
+          }
+        }
+      },{
+        title: "Delete selected playlists",
+        text: "delete",
+        onclick: (items) => {
+          let pls = [];
+          items.forEach((item, i) => {
+            pls.push(item.name);
+          });
+          if(pls.length && confirm(`Delete ${pls.length} playlist${(pls.length > 1 ? "s" : "")}?`)){
+            window.playlist.delete(pls);
+          }
+        }
+      },{
+        title: "Rename selected playlist",
+        text: "Rename",
+        onclick: (items) => {
+          if(items.length !== 1){ return; }
+          let name = prompt("New Name:", items[0].name);
+          window.playlist.rename(items[0].name, name);
+        }
+      }
+    ],
+    onItemClick: (item) => {
+      window.location.hash = "view=playlists&playlist=" + item.name;
+    }
+
+  }, playlists)).render();
 
 }
 
