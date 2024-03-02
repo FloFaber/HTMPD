@@ -1,7 +1,6 @@
 window.db = new DB();
 window.queue = new Queue();
 window.player = new Player();
-window.playlist = new Playlist();
 window.settings = new Settings();
 
 window.addEventListener("hashchange", function(e){
@@ -21,7 +20,7 @@ load();
 
 $("div#split-right").load(window.WEBROOT + "/themes/" + window.THEME + "/html/queue.html", function(){
   console.log("Loaded quque");
-  window.queue.update();
+  update_queue();
 }).on("scroll", () => {
   localStorage.setItem("scrollTop", $("div#split-right").scrollTop());
 });
@@ -155,13 +154,13 @@ function load(){
                   title: "Load",
                   text: "+",
                   onclick: (item) => {
-                    window.queue.add(item.name, false);
+                    window.queue.add({ uri: item.name, replace: false, success: update_queue });
                   }
                 },{
                   title: "Replace",
                   text: "~",
                   onclick: (item) => {
-                    window.queue.add(item.name, true);
+                    window.queue.add({ uri: item.name, replace: true, success: update_queue });
                   }
                 }
               ],
@@ -191,18 +190,18 @@ function load(){
                   title: "Load",
                   text: "+",
                   onclick: (item) => {
-                    window.queue.add(item.name, false);
+                    window.queue.add({uri: item.name, replace: false, success: update_queue });
                   }
                 },{
                   title: "Replace",
                   text: "~",
                   onclick: (item) => {
-                    window.queue.add(item.name, true);
+                    window.queue.add({ uri: item.name, replace: true, success: update_queue });
                   }
                 }
               ],
               onItemClick: (item) => {
-                window.queue.add_id(item.name, true);
+                window.queue.add_id({ uri: item.name, play: true, success: update_queue });
               }
             }, r.files)).render();
           }
@@ -304,11 +303,15 @@ function load(){
             }];
 
             onclick_load = (item, replace) => {
-              window.queue.addSearch([{
-                tag: hash.tagtype.toLowerCase(),
-                operator: "==",
-                value: item.name
-              }], replace);
+              window.queue.addSearch({
+                filters: [{
+                  tag: hash.tagtype.toLowerCase(),
+                  operator: "==",
+                  value: item.name
+                }],
+                replace: replace,
+                success: update_queue
+              });
             }
             onclick_item = (item) => {
               window.location.hash = "#view=db&tagtype=" + hash.tagtype + "&value=" + item.name;
@@ -329,16 +332,14 @@ function load(){
             ];
 
             onclick_load = (item, replace) => {
-              window.queue.add(item.file, replace);
+              window.queue.add({ uri: item.file, replace: replace, success: update_queue });
             }
             onclick_item = (item) => {
-              window.queue.add_id(item.file, true);
+              window.queue.add_id({ uri: item.file, play: true, success: update_queue });
             }
 
           }
 
-
-          console.log(items);
 
           (new Table({
             id: "db",
@@ -367,115 +368,18 @@ function load(){
 
       if(!hash.playlist){
 
-        // ugly hack
-        window.playlist.on("delete", (playlist) => {
-          if(hash.view === "playlists"){ load(); } // hack
-        });
-        window.playlist.on("create", (playlist) => {
-          if(hash.view === "playlists"){ load(); } // hack
-        });
-
-        window.playlist.get((r) => { show_playlists(r); });
-        window.playlist.on("rename", () => {
-          window.playlist.get(r => { show_playlists(r); });
+        (new Playlist()).getAll({
+          success: show_playlists,
         });
 
       }else{
         let playlist = hash.playlist;
 
-        // ugly hack
-        window.playlist.on("remove", (playlist, poss) => {
-          if(playlist === hash.playlist){ load(); } // hack
-        });
-        window.playlist.on("add", (playlist, uris) => {
-          if(playlist === hash.playlist){ load(); } // hack
-        });
-
-        window.playlist.show(playlist, (r) => {
-
-          $("h2#playlist").text(playlist);
-
-          if(!r.songs.length) {
-            $("p#no-songs").show();
-            return;
-          }
-
-          for(let i = 0; i < r.songs.length; i++){
-            r.songs[i].pos = i;
-          }
-          (new Table({
-            id: "playlist",
-            parent: $("div#playlists"),
-            heads: [{
-              title: "Title",
-              attr: "title",
-              attr_fb: "file"
-            },{
-              title: "Artist",
-              attr: "artist"
-            }],
-            topActions: [
-              {
-                title: "Add URI to playlist",
-                text: "add uri",
-                onclick: () => {
-                  let uri = prompt("URI?");
-                  if(!uri){ return; }
-                  window.playlist.add(playlist, [uri]);
-                }
-              },{
-                title: "Remove selected items from playlist",
-                text: "remove",
-                onclick: (items) => {
-                  if(items.length && confirm("Remove " + items.length + " songs from '" + playlist + "'?")){
-                    let poss = [];
-                    items.forEach(item => {
-                      poss.push(item.pos);
-                    });
-                    window.playlist.remove(playlist, poss);
-                  }
-                }
-              }
-            ],
-            itemActions: [
-              {
-                title: "Load",
-                text: "+",
-                onclick: (item) => window.queue.add(item.file, false)
-              },{
-                title: "Replace",
-                text: "~",
-                onclick: (item) => window.queue.add(item.file, true)
-              }
-            ],
-            onItemClick: (item) => window.queue.add_id(item.file, true)
-          }, r.songs)).render();
-
-          let pos_old;
-          let pos_new;
-          $("table#playlist").sortable({
-            cursor: 'row-resize',
-            placeholder: 'ui-state-highlight',
-            opacity: '0.55',
-            items: 'tr.item',
-            helper:'clone', // fix for #2
-            start: function(event, item){
-              pos_old = $(item.item).index()-1;
-            }, stop: (event, item) => {
-              pos_new = $(item.item).index()-1;
-              console.log(pos_old, pos_new);
-              window.playlist.move(playlist, pos_old, pos_new);
-            }
-          }).disableSelection();
-
-
-
+        (new Playlist(playlist)).get({
+          success: show_playlist
         });
 
       }
-
-
-
     }
 
   });
@@ -519,7 +423,7 @@ function load(){
     $("table#queue-items tr.item").removeClass("active");
     $("table#queue-items tr.item[data-id='"+r.current_song.id+"']").addClass("active");
     if(r.status.consume){
-      window.queue.update();
+      update_queue();
     }
 
   });
@@ -567,251 +471,13 @@ function load(){
     $(".queue-item[data-id='"+r+"']").addClass("active");
   });
 
-  window.player.on("next", r => window.queue.update());
-  window.player.on("previous", r => window.queue.update());
-
-
-  window.queue.on("save", playlist => {
-    notification(NOTYPE_SUCC, "Queue saved to playlist \""+playlist+"\"");
-    $('div#darkness').hide();
-  });
-
-  window.queue.on("update", r => {
-
-    console.log(r);
-
-    if(!r.length){
-      $("p#queue-empty").show();
-      $("table#queue-items").hide();
-      return;
-    }else{
-      $("p#queue-empty").hide();
-      $("table#queue-items").show();
-    }
-
-    (new Table({
-      id: "queue-items",
-      parent: $("div#queue"),
-      heads: [{
-        title: "#",
-        attr: "track"
-      },{
-        title: "Title",
-        attr: "title"
-      },{
-        title: "Album",
-        attr: "album"
-      },{
-        title: "Artist",
-        attr: "artist"
-      }],
-      topActions: [{
-        text: "clear",
-        title: "Clear Queue",
-        onclick: () => { window.queue.clear() }
-      },{
-        text: "shuffle",
-        title: "Shuffle Queue",
-        onclick: () => { window.queue.shuffle() }
-      },{
-        text: "add uri",
-        title: "Add custom URI to Queue",
-        onclick: () => {
-          window.queue.add(prompt('URI?'));
-        }
-      },{
-        text: "save",
-        title: "Add selected items to playlist",
-        onclick: (items) => { select_playlist(playlist => {
-          let uris = [];
-          items.forEach(item => {
-            uris.push(item.file);
-          })
-          window.playlist.add(playlist, uris);
-        }); }
-      },{
-        text: "remove",
-        title: "Remove selected items from Queue",
-        onclick: (items) => {
-          let ids = [];
-          items.forEach(item => ids.push(item.id));
-          window.queue.delete_id(ids);
-        }
-      }],
-      itemActions: [],
-      onItemClick: (item) => { window.player.play_id(item.id) }
-    }, r)).render();
-
-
-    /*$("table#queue-items tr.queue-item").remove();
-
-    for(let i = 0; i < r.length; i++){
-      let q = r[i];
-      $("table#queue-items").append(`
-        <tr class="queue-item" data-id="${q.id}" onclick="window.player.play_id(${q.id})" data-pos="${q.pos}">
-          <td>
-            <button class="inline white" onclick="{
-              event.preventDefault();
-              event.stopPropagation();
-              window.queue.delete_id(${q.id});
-            }" title="Remove from Queue">-</button>
-          </td>
-          <td class="track">${q.track || ""}</td>
-          <td class="title">${q.title || ""}</td>
-          <td class="album">${q.album || ""}</td>
-          <td class="artist">${q.artist || ""}</td>
-        </tr>
-      `);
-    }*/
-
-    let pos_old;
-    let pos_new;
-    $("table#queue-items").sortable({
-      cursor: 'row-resize',
-      placeholder: 'ui-state-highlight',
-      opacity: '0.55',
-      items: 'tr',
-      helper:'clone', // fix for #2
-      start: function(event, item){
-        pos_old = $(item.item).data("pos");
-      }, stop: (event, item) => {
-        pos_new = $(item.item).index()-1;
-        window.queue.move(pos_old, pos_new);
-      }
-    }).disableSelection();
-
-    $("table#queue-items tr.item").removeClass("active");
-    $("table#queue-items tr.item[data-id='"+window.player.data.current_song.id+"']").addClass("active");
-
-    $("div#split-right").scrollTop(localStorage.getItem("scrollTop") || 0);
-
-  });
-
-  window.playlist.on("add", playlist => {
-    notification(NOTYPE_SUCC, "Song saved to playlist \""+playlist+"\"");
-    $('div#darkness').hide();
-  });
+  window.player.on("next", r => update_queue);
+  window.player.on("previous", r => update_queue);
 
 }
 
-function show_playlists(r){
-
-  if(!r.playlists.length){
-    $("p#no-playlists").show();
-    return;
-  }
-
-  let playlists = [];
-  r.playlists.forEach((playlist, i) => {
-    playlists.push({
-      name: playlist
-    });
-  })
-  console.log(playlists);
-
-  (new Table({
-
-    id: "playlists",
-    parent: $("div#playlists"),
-    heads: [{
-      title: "",
-      attr: "name"
-    }],
-    itemActions: [
-      {
-        title: "Load",
-        text: "+",
-        onclick: (item) => window.playlist.load(item.name, false)
-      },{
-        title: "Replace",
-        text: "~",
-        onclick: (item) => window.playlist.load(item.name, true)
-      }
-    ],
-    topActions: [
-      {
-        title: "Create new playlist",
-        text: "create",
-        onclick: () => {
-          let name = prompt("Name?");
-          if(name){
-            window.playlist.create(name);
-          }
-        }
-      },{
-        title: "Delete selected playlists",
-        text: "delete",
-        onclick: (items) => {
-          let pls = [];
-          items.forEach((item, i) => {
-            pls.push(item.name);
-          });
-          if(pls.length && confirm(`Delete ${pls.length} playlist${(pls.length > 1 ? "s" : "")}?`)){
-            window.playlist.delete(pls);
-          }
-        }
-      },{
-        title: "Rename selected playlist",
-        text: "Rename",
-        onclick: (items) => {
-          if(items.length !== 1){ return; }
-          let name = prompt("New Name:", items[0].name);
-          window.playlist.rename(items[0].name, name);
-        }
-      }
-    ],
-    onItemClick: (item) => {
-      window.location.hash = "view=playlists&playlist=" + item.name;
-    }
-
-  }, playlists)).render();
-
-}
-
-function select_playlist(cb = null, preselect = ""){
-
-  if(typeof cb === "function") {
-    window.select_playlist_cb = cb;
-  }
-
-  window.playlist.get((r) => {
-    $("div#darkness").load(window.WEBROOT + "/themes/" + window.THEME + "/html/playlist-selection.html", () => {
-      if(r.playlists.length){
-        r.playlists.forEach((playlist, i) => {
-          $("select#playlist").append(`
-            <option value="${playlist}">${playlist}</option>
-          `);
-        });
-
-        if($("select#playlist > option[value='" + preselect + "']").length){
-          $("select#playlist").val(preselect);
-        }
-
-        $("form#playlist-selection").on("submit", function(e){
-          if(typeof cb === "function"){
-            cb($('select#playlist').val());
-          }
-
-          // hack
-          if(cb === null && typeof window.select_playlist_cb === "function"){
-            window.select_playlist_cb($('select#playlist').val());
-          }
-
-          e.stopPropagation();
-          e.preventDefault();
-          return false;
-        });
-
-      }else{
-        $("form#playlist-selection").hide();
-        $("p#no-playlists").show();
-      }
-
-    }).css("display", "flex");
-  });
 
 
-}
 
 function custom_css_apply(){
   $("style#custom-css").remove();

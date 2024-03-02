@@ -1,21 +1,14 @@
-class Queue extends Events {
+class Queue {
 
   constructor() {
-    super();
-
     this.update.bind(this);
-
-    this.data = {};
-
-    this.events = {
-      onUpdate: [],
-      onMove: [],
-      onSave: [],
-    };
-
   }
 
-  update(){
+  /**
+   * Update the queue.
+   * @param options callback function.
+   */
+  update(options = {}){
 
     window.get({
       url: window.WEBROOT + "/api/queue.php",
@@ -33,39 +26,55 @@ class Queue extends Events {
           }
         }
 
-        this.execOns("update", r.queue);
+        if(typeof options.success === "function"){
+          options.success(r.queue);
+        }
 
-        return r.queue;
-
-      }
+      }, error: r => typeof options.error === "function" && options.error(r)
     });
 
 
   }
 
-  move(from, to){
+  move(options = {}){
+
+    if(!options.from || ! options.to){
+      return false;
+    }
+
     window.post({
       url: window.WEBROOT + "/api/queue.php",
-      data: { "action": "move", "from": from, "to": to },
+      data: { "action": "move", "from": options.from, "to": options.to },
       success: (r) => {
-        this.update();
-        this.execOns("move", { from: from, to: to });
-      }
+
+        if(typeof options.success === "function"){
+          options.success({
+            from: options.from, to: options.to
+          });
+        }
+      }, error: r => typeof options.error === "function" && options.error(r)
     });
   }
 
   // save current queue as playlist
-  save(playlist){
+  save(options = {}){
+
+    if(!options.name){ return false; }
+
     window.post({
       url: window.WEBROOT + "/api/playlist.php",
-      data: { "action": "save", "name": playlist },
+      data: { "action": "save", "name": options.name },
       success: (r) => {
-        this.execOns("save", playlist);
-      }
+        if(typeof options.success === "function"){
+          options.success({
+            name: options.name
+          });
+        }
+      }, error: r => typeof options.error === "function" && options.error(r)
     });
   }
 
-  action(data, onsuccess = null, ondone = null){
+  action(data, onsuccess = null, onerror = null){
     window.post({
       url: window.WEBROOT + "/api/queue.php",
       data: data,
@@ -74,45 +83,59 @@ class Queue extends Events {
         window.player.update();
         if(typeof onsuccess === "function"){ onsuccess(r); }
       },
-      complete: (r) => {
-        if(typeof ondone === "function"){ ondone(r); }
-      }
+      error: r => typeof onerror === "function" && onerror(r),
     });
   }
 
-  add(uri, replace = false){
-    if(!uri){ return; }
-    this.action({"action": "add", uri: uri, "replace": replace });
-  }
-
-  addSearch(filters, replace = false){
-
+  add(options = {}){
+    if(!options.uri){ return false; }
     this.action({
-      "action": "add_search",
-      "filters": filters,
-      "replace": replace
-    });
-
+      action: "add",
+      uri: options.uri,
+      replace: options.replace,
+    }, options.success, options.error);
   }
 
-  add_id(uri, play = false){
-    this.action({ "action": "add_id", "uri": uri, "play": play });
+  addSearch(options = {}){
+    this.action({
+      action: "add_search",
+      filters: options.filters,
+      replace: options.replace
+    }, options.success, options.error);
   }
 
-  replace(uri){
-    this.action({"action": "replace", uri: uri });
+  add_id(options = {}){
+    this.action({
+      action: "add_id",
+      uri: options.uri,
+      play: options.play
+    }, options.success, options.error);
   }
 
-  shuffle(){
-    this.action({ "action": "shuffle" });
+  replace(options = {}){
+    this.action({
+      action: "replace",
+      uri: options.uri
+    }, options.success, options.error);
   }
 
-  clear(){
-    this.action({ "action": "clear" });
+  shuffle(options = {}){
+    this.action({
+      action: "shuffle"
+    }, options.success, options.error);
   }
 
-  delete_id(ids){
-    this.action({ "action": "delete_id", "ids": ids });
+  clear(options = {}){
+    this.action({
+      action: "clear"
+    }, options.success, options.error);
+  }
+
+  delete_id(options = {}){
+    this.action({
+      "action": "delete_id",
+      "ids": options.ids
+    }, options.success, options.error);
   }
 
 }

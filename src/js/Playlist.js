@@ -1,146 +1,142 @@
-class Playlist extends Events {
+class Playlist {
 
-  constructor() {
-    super();
-    this.events = {
-      onUpdate: [],
-      onAdd: [],
-      onRemove: [],
-      onDelete: [],
-      onCreate: [],
-      onLoad: [],
-      onReplace: [],
-      onSave: [],
-      onMove: [],
-      onRename: []
-    }
+  constructor(name = null) {
+    this.name = name;
   }
 
 
-  update(){
-    window.get({
-      url: window.WEBROOT + "/api/playlist.php",
-      success: (r) => {
-        this.execOns("update", r);
-      }
-    });
-  }
-
-  get(cb = null){
-    window.get({
-      url: window.WEBROOT + "/api/playlist.php",
-      success: (r) => {
-        if(typeof cb === "function"){
-          cb(r);
-        }
-      }
-    });
-  }
-
-  show(name, cb = null){
+  get(options = {}){
     window.get({
       url: window.WEBROOT + "/api/playlist.php",
       data: {
         action: "show",
-        name: name
+        name: this.name
       },
       success: (r) => {
-        if(typeof cb === "function"){
-          cb(r);
+        if(typeof options.success === "function"){
+          options.success(this.name, r);
         }
-      }
+      }, error: r => typeof options.error === "function" && options.error(r)
     });
   }
 
-  add(playlist, uris){
+
+  getAll(options = {}){
+    window.get({
+      url: window.WEBROOT + "/api/playlist.php",
+      success: (r) => {
+        if(typeof options.success === "function"){
+          options.success(r);
+        }
+      }, error: r => typeof options.error === "function" && options.error(r)
+    });
+  }
+
+
+  add(options = {}){
     window.post({
       url: window.WEBROOT + "/api/playlist.php",
       data: {
         action: "add",
-        playlist: playlist,
-        uris: uris
+        playlist: this.name,
+        uris: options.uris
       },
       success: r => {
-        this.execOns("add", playlist, uris);
-      }
+        if(typeof options.success === "function"){
+          options.success(this.name, r);
+        }
+      }, error: r => typeof options.error === "function" && options.error(r)
     })
   }
 
-  remove(playlist, poss){
+
+  remove(options = {}){
     window.post({
       url: window.WEBROOT + "/api/playlist.php",
       data: {
         action: "remove",
-        playlist: playlist,
-        poss: poss
+        playlist: this.name,
+        poss: options.positions
       },
       success: r => {
-        this.execOns("remove", playlist, poss);
-      }
+        if(typeof options.success === "function"){
+          options.success(r);
+        }
+      }, error: r => typeof options.error === "function" && options.error(r)
     })
   }
 
-  rename(name_old, name_new){
+
+  rename(options = {}){
     window.post({
       url: window.WEBROOT + "/api/playlist.php",
       data: {
         action: "rename",
-        name_old: name_old,
-        name_new: name_new,
+        name_old: this.name,
+        name_new: options.name,
       },
       success: r => {
-        this.execOns("rename", name_old, name_new);
-      }
+        this.name = options.name;
+        if(typeof options.success === "function"){
+          options.success(options.name);
+        }
+      }, error: r => typeof options.error === "function" && options.error(r)
     })
   }
 
-  move(playlist, from, to){
+
+  move(options = {}){
+
+    if(!options.from || !options.to){ return false; }
+
     window.post({
       url: window.WEBROOT + "/api/playlist.php",
-      data: { "action": "move", "name": playlist, "from": from, "to": to },
+      data: { "action": "move", "name": this.name, "from": options.from, "to": options.to },
       success: (r) => {
-        this.execOns("move", playlist, from, to);
-      }
+        if(typeof options.success === "function"){
+          options.success(r);
+        }
+      }, error: r => typeof options.error === "function" && options.error(r)
     })
   }
 
-  create(name, clear = true){
+
+  create(options = {}){
     window.post({
       url: window.WEBROOT + "/api/playlist.php",
-      data: { "action": "create", "name": name, clear: clear },
+      data: { "action": "create", "name": this.name, clear: options.clear || true },
       success: (r) => {
-        this.execOns("create", name);
-      }
+        if(typeof options.success === "function"){
+          options.success(name);
+        }
+      }, error: r => typeof options.error === "function" && options.error(r)
     })
   }
 
-  load(name){
+
+  load(options = {}){
     window.post({
       url: window.WEBROOT + "/api/playlist.php",
-      data: { "action": "load", "name": name },
+      data: { action: "load", name: this.name, clear: options.clear || false },
       success: (r) => {
-        this.execOns("load", name);
-      }
+        if(typeof options.success === "function"){
+          options.success(this.name);
+        }
+      }, error: r => typeof options.error === "function" && options.error(r)
     })
   }
 
-  replace(name){
-    window.post({
-      url: window.WEBROOT + "/api/playlist.php",
-      data: { "action": "replace", "name": name },
-      success: (r) => {
-        this.execOns("replace", name);
-      }
-    })
-  }
 
-  delete(names){
+  delete(options = {}){
+    console.log(this.name);
     window.post({
       url: window.WEBROOT + "/api/playlist.php",
-      data: { "action": "delete", "names": names },
+      data: { action: "delete", names: [this.name] },
       success: (r) => {
-        this.execOns("delete", names);
-      }
+        if(typeof options.success === "function"){
+          options.success(this.name);
+        }
+      }, error: r => typeof options.error === "function" && options.error(r)
     })
   }
 
