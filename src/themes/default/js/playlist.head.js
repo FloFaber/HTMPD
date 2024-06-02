@@ -121,7 +121,7 @@ function show_playlist(name, r){
     topActions: [
       {
         title: "Add URI to playlist",
-        text: "add uri",
+        text: "add uri...",
         onclick: () => {
           let uri = prompt("URI?");
           if(!uri){ return; }
@@ -136,20 +136,22 @@ function show_playlist(name, r){
         title: "Remove selected items from playlist",
         text: "remove",
         onclick: (items) => {
-          if(items.length && confirm("Remove " + items.length + " songs from '" + name + "'?")){
-            let poss = [];
-            items.forEach(item => {
-              poss.push(item.pos);
-            });
-
-            playlist.remove({
-              positions: poss,
-              success: (r) => {
-                playlist.get({ success: show_playlist });
-              }
-            });
-
+          if(!(items.length && confirm("Remove " + items.length + " songs from '" + name + "'?"))) {
+            return;
           }
+
+          let poss = [];
+          items.forEach(item => {
+            poss.push(item.pos);
+          });
+
+          playlist.remove({
+            positions: poss,
+            success: (r) => {
+              playlist.get({ success: show_playlist });
+            }
+          });
+
         }
       }
     ],

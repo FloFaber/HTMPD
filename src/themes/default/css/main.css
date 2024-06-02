@@ -204,9 +204,6 @@ div#notifications{
 tr.item{
   cursor: pointer;
 }
-tr.item:hover > td.val{
-  background-color: var(--primary);
-}
 
 
 div.notification{
@@ -294,8 +291,9 @@ td.artist,th.artist{
   padding: 0 10px;
 }
 
-table tr.item.active td.val {
+table tr.item.active td.val, tr.item:hover > td.val{
   background-color: var(--primary);
+  color: var(--white);
 }
 
 span.queue-item-artist{
