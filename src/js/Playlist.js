@@ -87,7 +87,7 @@ class Playlist {
 
   move(options = {}){
 
-    if(!options.from || !options.to){ return false; }
+    if(typeof options.from === "undefined" || typeof options.to === "undefined"){ return false; }
 
     window.post({
       url: window.WEBROOT + "/api/playlist.php",
