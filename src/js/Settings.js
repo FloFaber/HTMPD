@@ -1,3 +1,11 @@
+/*
+ * HTMPD
+ * https://github.com/FloFaber/HTMPD
+ *
+ * Copyright (c) 2024 Florian Faber
+ * https://www.flofaber.com
+ */
+
 class Settings extends Events {
 
   constructor() {

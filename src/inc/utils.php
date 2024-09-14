@@ -1,4 +1,11 @@
 <?php
+/*
+ * HTMPD
+ * https://github.com/FloFaber/HTMPD
+ *
+ * Copyright (c) 2024 Florian Faber
+ * https://www.flofaber.com
+ */
 
 // getRequestParam
 function getrp(string $key, string $method = "get", $default = null)

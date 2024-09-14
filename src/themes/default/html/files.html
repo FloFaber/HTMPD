@@ -12,8 +12,8 @@
 <div>
   <div id='library-path'></div>
   <div style="margin-bottom: 15px;">
-    <input type="text" id="search" placeholder="Search" onkeydown="window.filebrowser.search(this.value)">
-    <button class="inline red" onclick="window.onHashChange()">X</button>
+    <input type="text" id="search" placeholder="Search" onkeydown="search(this.value, event)">
+    <button class="inline red" onclick="search('')">X</button>
   </div>
 </div>
 

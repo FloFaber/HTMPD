@@ -1,3 +1,11 @@
+/*
+ * HTMPD
+ * https://github.com/FloFaber/HTMPD
+ *
+ * Copyright (c) 2024 Florian Faber
+ * https://www.flofaber.com
+ */
+
 function show_playlists(r){
 
   if(!r.playlists.length){
@@ -25,11 +33,11 @@ function show_playlists(r){
       {
         title: "Load",
         text: "+",
-        onclick: (item) => (new Playlist(item.name)).load({ clear: false })
+        onclick: (item) => (new Playlist(item.name)).load({ clear: false, success: update_queue })
       },{
         title: "Replace",
         text: "~",
-        onclick: (item) => (new Playlist(item.name)).load({ clear: true })
+        onclick: (item) => (new Playlist(item.name)).load({ clear: true, success: update_queue })
       }
     ],
     topActions: [
@@ -75,6 +83,7 @@ function show_playlists(r){
         onclick: (items) => {
           if(items.length !== 1){ return; }
           let name = prompt("New Name:", items[0].name);
+          if(!name){ return; }
           (new Playlist(items[0].name)).rename({
             name: name,
             success: () => {

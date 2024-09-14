@@ -1,4 +1,11 @@
 <?php
+/*
+ * HTMPD
+ * https://github.com/FloFaber/HTMPD
+ *
+ * Copyright (c) 2024 Florian Faber
+ * https://www.flofaber.com
+ */
 
 require_once __DIR__ . "/../vendor/autoload.php";
 require_once __DIR__ . "/../config.php";
@@ -64,6 +71,7 @@ if($method === "get"){
     $uri = getrp("uri", "get", "");
     $metadata = boolval(getrp("metadata", "get", false));
     $recursive = boolval(getrp("recursive", "get", false));
+
 
     if(($result = $mphpd->db()->ls($uri, $metadata, $recursive)) === false){
       echo new Response(500, "ERR_MPD", $mphpd->get_last_error()["message"]);
@@ -143,9 +151,12 @@ if($method === "get"){
   }elseif($action === "search") {
 
     $path = urldecode(getrp("path", "get", null) ?? "");
-    $keyword = urldecode(getrp("keyword", "get", null) ?? "");
 
-    $filter = new \FloFaber\MphpD\Filter("file", "contains", $keyword);
+    $filter = new \FloFaber\MphpD\Filter();
+    $filters = getrp("filters", "get", null);
+    foreach($filters as $f){
+      $filter->and($f["tag"], $f["operator"], $f["value"]);
+    }
 
     if($path){
       $filter = $filter->and("file", "=~", "^$path");

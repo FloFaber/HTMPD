@@ -1,4 +1,11 @@
 <?php
+/*
+ * HTMPD
+ * https://github.com/FloFaber/HTMPD
+ *
+ * Copyright (c) 2024 Florian Faber
+ * https://www.flofaber.com
+ */
 
 require_once __DIR__ . "/../vendor/autoload.php";
 require_once __DIR__ . "/../config.php";

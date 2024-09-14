@@ -1,3 +1,11 @@
+/*
+ * HTMPD
+ * https://github.com/FloFaber/HTMPD
+ *
+ * Copyright (c) 2024 Florian Faber
+ * https://www.flofaber.com
+ */
+
 window.db = new DB();
 window.queue = new Queue();
 window.player = new Player();
@@ -36,6 +44,21 @@ function volumeWheel(event, elem){
   event.preventDefault();
   event.stopPropagation();
   return false;
+}
+
+function search(keyword, event){
+
+  if(typeof event === "undefined" || event.key === "Enter"){
+    let hash = get_url();
+
+    if(keyword === ""){
+      delete hash.s;
+    }else{
+      hash.s = keyword;
+    }
+
+    set_url(hash);
+  }
 }
 
 function seekTo(event, element){
@@ -103,20 +126,35 @@ function load(){
 
     if(hash.view === "files"){
 
-      window.db.ls({
-        uri: hash.path || "",
+      let s = hash.s || "";
+      let path = hash.path || "";
+      let paths = path.split("/");
+
+      let paths_ = [{
+          name: "C:",
+          path: ""
+      }];
+
+      let fn = window.db.ls;
+      let filters = [];
+      if(s){
+        fn = window.db.search;
+        filters = [
+          {
+            "tag": "file",
+            "operator": "contains",
+            "value": s
+          }
+        ]
+      }
+
+      $("input#search").val(s);
+
+      fn({
+        path: hash.path || "",
+        filters: filters,
         metadata: true,
         success: (r) => {
-
-          let path = hash.path || "";
-          let paths = path.split("/");
-
-          let paths_ = [
-            {
-              name: "C:",
-              path: ""
-            }
-          ]
 
           let x = "";
           for(let i = 0; i < paths.length; i++){
@@ -128,7 +166,7 @@ function load(){
             })
           }
 
-
+          $("div#library-path").html("");
           for(let i = 0; i < paths_.length; i++){
             let path = paths_[i];
             $("div#library-path").append(`
@@ -136,7 +174,7 @@ function load(){
             `);
           }
 
-          if(r.directories.length){
+          if(r.directories && r.directories.length){
             r.directories.map((dir, i ) => {
               dir.display_name = dir.name.split("/").pop() + "/";
               return dir;
@@ -171,10 +209,13 @@ function load(){
           }
 
 
-          if(r.files.length){
+          if(r.files && r.files.length){
+
+            console.log(r.files);
 
             r.files.map((file, i ) => {
-              file.display_name = file.name.split("/").pop();
+              let o = typeof file.name !== "undefined" ? file.name : file.file;
+              file.display_name = o.split("/").pop();
               return file;
             });
 

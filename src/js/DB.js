@@ -1,3 +1,11 @@
+/*
+ * HTMPD
+ * https://github.com/FloFaber/HTMPD
+ *
+ * Copyright (c) 2024 Florian Faber
+ * https://www.flofaber.com
+ */
+
 class DB {
 
   byTagType(tagtype, value = null, group = false, cb = null){
@@ -24,6 +32,7 @@ class DB {
       url: window.WEBROOT + "/api/library.php",
       data: {
         action: "search",
+        path: params.path || "",
         filters: params.filters || []
       },
       success: (r) => {
@@ -38,7 +47,7 @@ class DB {
       url: window.WEBROOT + "/api/library.php",
       data: {
         action: "ls",
-        uri: params.uri || "",
+        uri: params.path || "",
         recursive: (params.recursive ? 1 : 0),
         metadata: (params.metadata ? 1 : 0 )
       },

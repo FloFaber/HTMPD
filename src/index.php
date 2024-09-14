@@ -1,4 +1,12 @@
 <?php
+/*
+ * HTMPD
+ * https://github.com/FloFaber/HTMPD
+ *
+ * Copyright (c) 2024 Florian Faber
+ * https://www.flofaber.com
+ */
+
 require __DIR__ . "/inc/config.loader.php";
 
 if(!empty($_COOKIE["theme"])){

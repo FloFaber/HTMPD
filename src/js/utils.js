@@ -1,3 +1,11 @@
+/*
+ * HTMPD
+ * https://github.com/FloFaber/HTMPD
+ *
+ * Copyright (c) 2024 Florian Faber
+ * https://www.flofaber.com
+ */
+
 const NOTYPE_WARN = 2;
 const NOTYPE_ERR = 1;
 const NOTYPE_SUCC = 0;
@@ -138,9 +146,26 @@ function splitSongByProgress(current_song, percent_played){
 function get_url(hash = window.location.hash){
   return hash.slice(1).split("&").reduce((previous, current)=> {
     const [key, value] = current.split("=");
-    previous[key] = decodeURI(value);
+    if(key && value){
+      previous[key] = decodeURI(value);
+    }
     return previous
   },{});
+}
+
+// the fuck
+function set_url(hash_obj){
+  let hash = "#";
+
+  let i = 0;
+  let len = Object.keys(hash_obj).length;
+
+  for(let key in hash_obj){
+    hash += key + "=" + encodeURI(hash_obj[key]) + (i < len - 1 ? "&" : "");
+    i++;
+  }
+  window.location.hash = hash;
+  load();
 }
 
 function darkness_on(){ darkness(true); }

@@ -1,4 +1,12 @@
 
+/*
+ * HTMPD
+ * https://github.com/FloFaber/HTMPD
+ *
+ * Copyright (c) 2024 Florian Faber
+ * https://www.flofaber.com
+ */
+
 function queue_save(r){
   notification(NOTYPE_SUCC, "Queue saved to playlist \""+playlist+"\"");
   $('div#darkness').hide();
