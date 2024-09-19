@@ -62,11 +62,7 @@ function search(keyword, event){
 }
 
 function add_search(manual = false){
-
   let template = $("template#search-tmpl").html();
-
-
-
   if(manual){
     $("div#search").append(template);
   }
@@ -85,8 +81,10 @@ function submit_search(){
   console.log(filters);
 
   let hash = get_url();
-  let hash_old = hash;
+  let hash_old = { ...hash };
   hash.s = btoa(JSON.stringify(filters));
+
+  console.log(hash, hash_old);
 
   if(hash !== hash_old){
     set_url(hash);
@@ -521,8 +519,9 @@ function load(){
             search.find("[name='value']").val(searches[i]["value"]);
           }
 
-          //add_search();
-          submit_search();
+          if(typeof hash.s !== "undefined"){
+            //submit_search();
+          }
 
         }
       });
