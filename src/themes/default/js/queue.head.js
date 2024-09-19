@@ -17,8 +17,6 @@ function update_queue(){
 }
 
 function queue_update(r){
-  console.log(r);
-
   if(!r.length){
     $("p#queue-empty").show();
     $("table#queue-items").hide();
@@ -82,26 +80,6 @@ function queue_update(r){
   }, r)).render();
 
 
-  /*$("table#queue-items tr.queue-item").remove();
-
-  for(let i = 0; i < r.length; i++){
-    let q = r[i];
-    $("table#queue-items").append(`
-      <tr class="queue-item" data-id="${q.id}" onclick="window.player.play_id(${q.id})" data-pos="${q.pos}">
-        <td>
-          <button class="inline white" onclick="{
-            event.preventDefault();
-            event.stopPropagation();
-            window.queue.delete_id(${q.id});
-          }" title="Remove from Queue">-</button>
-        </td>
-        <td class="track">${q.track || ""}</td>
-        <td class="title">${q.title || ""}</td>
-        <td class="album">${q.album || ""}</td>
-        <td class="artist">${q.artist || ""}</td>
-      </tr>
-    `);
-  }*/
 
   let pos_old;
   let pos_new;
@@ -112,10 +90,10 @@ function queue_update(r){
     items: 'tr',
     helper:'clone', // fix for #2
     start: function(event, item){
-      pos_old = $(item.item).data("pos");
+      pos_old = $(item.item).data("id");
     }, stop: (event, item) => {
       pos_new = $(item.item).index()-1;
-      window.queue.move({ from: pos_old, to: pos_new });
+      window.queue.move_id({ from: pos_old, to: pos_new });
     }
   }).disableSelection();
 

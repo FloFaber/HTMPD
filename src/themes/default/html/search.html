@@ -1,0 +1,47 @@
+<h2>Search</h2>
+<div id="search"></div>
+<div style="margin-bottom: 25px;">
+  <button id="search-submit" onclick="submit_search()">SUBMIT</button>
+  <button id="search-add" onclick="add_search(true)">AND</button>
+</div>
+
+<div id="library-files"></div>
+<p id="no-files" style="display: none;">No files found.</p>
+
+<!-- no examples needed
+<h3 style="margin-top: 30px;">Examples</h3>
+
+<table style="margin-top: 20px;">
+  <tr>
+    <td>Artist</td>
+    <td>=</td>
+    <td>Lindemann</td>
+  </tr>
+  <tr>
+    <td>Album</td>
+    <td>contains</td>
+    <td>Starfish</td>
+  </tr>
+  <tr>
+    <td>Track</td>
+    <td>&lt;=</td>
+    <td>5</td>
+  </tr>
+</table>
+-->
+
+<template id="search-tmpl">
+  <div class="search-container">
+    <button class="inline red remove-search" onclick="{ $(this).parent().remove(); }">X</button>
+    <select name="tag"></select>
+    <select name="operator">
+      <option value="contains">contains</option>
+      <option value="==">==</option>
+      <option value="!=">!=</option>
+      <option value="<">&lt;</option>
+      <option value=">">&gt;</option>
+      <option value="=~">=~</option>
+    </select>
+    <input name="value" type="text" value=""/>
+  </div>
+</template>

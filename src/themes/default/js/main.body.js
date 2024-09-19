@@ -61,6 +61,60 @@ function search(keyword, event){
   }
 }
 
+function add_search(manual = false){
+
+  let template = $("template#search-tmpl").html();
+
+
+
+  if(manual){
+    $("div#search").append(template);
+  }
+}
+
+function submit_search(){
+  let filters = [];
+  for(let i = 0; i < $("div.search-container").length; i++){
+    let s = $("div.search-container")[i];
+    filters.push({
+      tag: $(s).find("[name='tag']").val(),
+      operator: $(s).find("[name='operator']").val(),
+      value: $(s).find("[name='value']").val()
+    });
+  }
+  console.log(filters);
+
+  let hash = get_url();
+  let hash_old = hash;
+  hash.s = btoa(JSON.stringify(filters));
+
+  if(hash !== hash_old){
+    set_url(hash);
+  }
+
+  window.get({
+    url: window.WEBROOT + "/api/library.php",
+    data: {
+      action: "search",
+      filters: filters
+    },
+    success: r => {
+      if(r.files && r.files.length > 0){
+        filetable(r.files);
+        $("p#no-files").hide();
+      }else{
+        $("p#no-files").show();
+      }
+    },
+    error: r => {
+      console.log(r);
+      notification(NOTYPE_ERR, r);
+    }
+  })
+
+}
+
+
 function seekTo(event, element){
   if(typeof window.player.data.status.duration === "undefined"){ return; }
 
@@ -70,6 +124,42 @@ function seekTo(event, element){
   let seek_to = Math.round(map(x, 0, w, 0, window.player.data.status.duration) * 100)/100;
 
   window.player.seek(seek_to);
+}
+
+function filetable(files){
+
+  files.map((file, i ) => {
+    let o = typeof file.name !== "undefined" ? file.name : file.file;
+    file.display_name = o.split("/").pop();
+    return file;
+  });
+
+  (new Table({
+    id: "files",
+    parent: $("div#library-files"),
+    heads: [{
+      title: "",
+      attr: "display_name"
+    }],
+    itemActions: [
+      {
+        title: "Load",
+        text: "+",
+        onclick: (item) => {
+          window.queue.add({uri: item.name, replace: false, success: update_queue });
+        }
+      },{
+        title: "Replace",
+        text: "~",
+        onclick: (item) => {
+          window.queue.add({ uri: item.name, replace: true, success: update_queue });
+        }
+      }
+    ],
+    onItemClick: (item) => {
+      window.queue.add_id({ uri: item.name, play: true, success: update_queue });
+    }
+  }, files)).render();
 }
 
 // Keyboard Shortcuts
@@ -210,41 +300,7 @@ function load(){
 
 
           if(r.files && r.files.length){
-
-            console.log(r.files);
-
-            r.files.map((file, i ) => {
-              let o = typeof file.name !== "undefined" ? file.name : file.file;
-              file.display_name = o.split("/").pop();
-              return file;
-            });
-
-            (new Table({
-              id: "files",
-              parent: $("div#library-files"),
-              heads: [{
-                title: "",
-                attr: "display_name"
-              }],
-              itemActions: [
-                {
-                  title: "Load",
-                  text: "+",
-                  onclick: (item) => {
-                    window.queue.add({uri: item.name, replace: false, success: update_queue });
-                  }
-                },{
-                  title: "Replace",
-                  text: "~",
-                  onclick: (item) => {
-                    window.queue.add({ uri: item.name, replace: true, success: update_queue });
-                  }
-                }
-              ],
-              onItemClick: (item) => {
-                window.queue.add_id({ uri: item.name, play: true, success: update_queue });
-              }
-            }, r.files)).render();
+            filetable(r.files);
           }
 
           if(r.files.length === 0 && r.directories.length === 0){
@@ -421,6 +477,58 @@ function load(){
         });
 
       }
+    }else if(hash.view === "search"){
+
+
+
+      // first get all tagtypes
+      window.get({
+        url: window.WEBROOT + "/api/index.php",
+        data: {
+          "action": "tagtypes"
+        },
+        success: (r) => {
+          if(!r.tagtypes && r.tagtypes.length){ return; }
+          let tagtypes = "";
+          for(let i = 0; i < r.tagtypes.length; i++){
+            if(r.tagtypes[i].endsWith("Sort")){ continue; }
+            tagtypes += `<option value='${r.tagtypes[i]}'>${r.tagtypes[i]}</option>`;
+          }
+
+          window.tagtypes = tagtypes;
+
+          let tmpl = $("template#search-tmpl").html();
+          $("body").append(`<div style="display:none;" id="tmptmpl">${tmpl}</div>`);
+
+
+          $("div#tmptmpl").find("select[name='tag']").append(tagtypes);
+          $("template#search-tmpl").html($("div#tmptmpl").html());
+          $("div#tmptmpl").remove();
+
+          let hash = get_url();
+          let searches = [];
+          if(typeof hash.s !== "undefined"){
+            searches = JSON.parse(atob(hash.s));
+          }
+          $("div#search").html("");
+          let template = $("template#search-tmpl").html();
+          for(let i = 0; i < searches.length; i++){
+            console.log(searches[i]);
+            $("div#search").append(template);
+            let search = $($("div#search").find("div.search-container")[i]);
+            search.find("[name='tag']").val(searches[i]["tag"]);
+            search.find("[name='operator']").val(searches[i]["operator"]);
+            search.find("[name='value']").val(searches[i]["value"]);
+          }
+
+          //add_search();
+          submit_search();
+
+        }
+      });
+
+
+
     }
 
   });

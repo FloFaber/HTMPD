@@ -60,16 +60,23 @@ window.ajax = (params) => {
     init.body = form || null;
   }
 
-  fetch(params.url || "/", init).then(data => data.json())
-    .then(data => {
+  fetch(params.url || "/", init).then(data => {
+
+    if (!data.ok) {
+      throw new Error("HTTP status " + data.status);
+    }
+
+    data.json().then(data => {
+      console.log(data);
       if(typeof params.success === "function"){ params.success(data); }
       if(typeof params.complete === "function"){ params.complete(data); }
-    })
-    .catch(error => {
-      console.error(error);
-      if(typeof params.error === "function"){ params.error(error); }
-      if(typeof params.complete === "function"){ params.complete(error); }
     });
+  }).catch(error => {
+    console.error(error);
+    if(typeof params.error === "function"){ params.error(error); }
+    if(typeof params.complete === "function"){ params.complete(error); }
+  })
+
 }
 
 window.get = (params) => {

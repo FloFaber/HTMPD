@@ -64,6 +64,26 @@ class Queue {
     });
   }
 
+  move_id(options = {}){
+
+    if(!options.from || ! options.to){
+      return false;
+    }
+
+    window.post({
+      url: window.WEBROOT + "/api/queue.php",
+      data: { "action": "move_id", "from": options.from, "to": options.to },
+      success: (r) => {
+
+        if(typeof options.success === "function"){
+          options.success({
+            from: options.from, to: options.to
+          });
+        }
+      }, error: r => typeof options.error === "function" && options.error(r)
+    });
+  }
+
   // save current queue as playlist
   save(options = {}){
 

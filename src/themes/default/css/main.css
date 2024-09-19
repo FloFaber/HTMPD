@@ -98,25 +98,25 @@ h2{
 
 div#split-view{
   display: flex;
-  height: calc(100% - 60px);
+  height: calc(100% - 69px); /* nice */
 }
 
 div#split-view >*{
   padding: 20px;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
+  flex: 1 1 0;
+  width: 0;
 }
 
 div#split-left{
-  width: 35%;
+
 }
 
 div#split-right{
   border-left: 1px solid var(--light-grey);
   display: flex;
   flex-flow: column;
-  flex-grow: 1;
-  width: 65%;
 }
 
 a{
@@ -323,4 +323,10 @@ div.popup{
 
 div.search-item{
   margin-bottom: 15px;
+}
+
+div.search-container{
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--light-grey);
+  margin-bottom: 8px;
 }

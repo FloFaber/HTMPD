@@ -1,11 +1,26 @@
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px">
   <h2 style="margin:0">Files</h2>
+  <!-- how much can fit inside an onclick-function? -->
   <button id="db-update" onclick="{
     window.db.update({
       success: (r) => {
         notification(NOTYPE_SUCC, 'Updating DB with Job #' + r.job);
+        let interval = setInterval(() => {
+          window.ajax({
+            method: 'GET',
+            url: window.WEBROOT + '/api/index.php',
+            data: { action: 'status' },
+            success: (r_) => {
+              console.log(r);
+              if(!r_.updating_db){
+                notification(NOTYPE_SUCC, 'DB Update Job #'+r.job+' finished');
+                clearInterval(interval);
+              }
+            }
+          })
+        }, 1000)
       }
-    });
+    })
   }">Update DB</button>
 </div>
 

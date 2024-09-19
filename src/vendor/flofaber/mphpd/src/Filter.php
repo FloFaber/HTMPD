@@ -51,6 +51,8 @@ class Filter
 
     if($value === ""){
       $value = "''";
+    }elseif(is_numeric($value)){
+      $value = (int)$value;
     }else{
       $value = Utils::escape_params([ $value ], MPD_ESCAPE_DOUBLE_QUOTES);
     }

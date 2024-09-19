@@ -155,6 +155,7 @@ if($method === "get"){
     $filter = new \FloFaber\MphpD\Filter();
     $filters = getrp("filters", "get", null);
     foreach($filters as $f){
+      if(is_numeric($f["value"])){ $f["value"] = (int)$f["value"]; }
       $filter->and($f["tag"], $f["operator"], $f["value"]);
     }
 
